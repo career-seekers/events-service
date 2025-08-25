@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: cs-events-service
+  aop:
+    auto: true
+    proxy-target-class: true
+  kafka:
+    bootstrap-servers: ${KAFKA1_BOOTSTRAP_SERVICE_URL},${KAFKA2_BOOTSTRAP_SERVICE_URL},${KAFKA3_BOOTSTRAP_SERVICE_URL}
+    consumer:
+      properties:
+        session:
+          timeout:
+            ms: 60000
+        reconnect:
+          backoff:
+            ms: 1000
+            max:
+              ms: 20000
+
+server:
+  port: ${SERVER_INTERNAL_PORT}
+
+database:
+  url: ${MS_DB_URL}
+  username: ${MS_DB_USER}
+  password: ${MS_DB_PASSWORD}
+  schema: ${MS_DB_SCHEMA}
+
+config:
+  jwt:
+    secret: ${JWT_SECRET}
