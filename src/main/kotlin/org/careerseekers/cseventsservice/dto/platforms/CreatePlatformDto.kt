@@ -7,5 +7,5 @@ data class CreatePlatformDto(
     val shortName: String,
     val address: String,
     val verified: Boolean? = false,
-    val userId: Long? = null,
+    val userId: Long,
 ) : DtoClass
