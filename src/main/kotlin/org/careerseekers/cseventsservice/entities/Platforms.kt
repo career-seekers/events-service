@@ -28,6 +28,6 @@ data class Platforms(
     @Column(nullable = false)
     var verified: Boolean = false,
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     var userId: Long? = null,
 ) : ConvertableToHttpResponse<Platforms>
