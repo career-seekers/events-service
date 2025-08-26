@@ -29,7 +29,7 @@ class PlatformsService(
     }
 
     @Transactional
-    override fun createAll(items: List<CreatePlatformDto>): Any {
+    override fun createAll(items: List<CreatePlatformDto>): String {
         for (dto in items) {
             create(dto)
         }
@@ -60,10 +60,12 @@ class PlatformsService(
     }
 
     @Transactional
-    fun updatePlatformVerification(platformId: Long) {
+    fun updatePlatformVerification(platformId: Long): String {
         getById(platformId, message = "Platform with id $platformId not found")?.apply {
             verified = !verified
         }
+
+        return "Platform verification updated successfully."
     }
 
     @Transactional
@@ -76,7 +78,7 @@ class PlatformsService(
     }
 
     @Transactional
-    override fun deleteAll(): Any? {
+    override fun deleteAll(): String {
         getAll().forEach { deleteById(it.id) }
 
         return "All platforms deleted successfully."
