@@ -1,6 +1,5 @@
 package org.careerseekers.cseventsservice.services
 
-import jakarta.transaction.Transactional
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.platforms.ChangePlatformOwnerDto
 import org.careerseekers.cseventsservice.dto.platforms.CreatePlatformDto
@@ -11,6 +10,7 @@ import org.careerseekers.cseventsservice.mappers.PlatformsMapper
 import org.careerseekers.cseventsservice.repositories.PlatformsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PlatformsService(
