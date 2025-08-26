@@ -1,0 +1,41 @@
+package org.careerseekers.cseventsservice.config
+
+import org.careerseekers.cseventsservice.dto.CachesDto
+import org.careerseekers.cseventsservice.serializers.PolymorphicRedisSerializer
+import org.springframework.cache.CacheManager
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.cache.RedisCacheConfiguration
+import org.springframework.data.redis.cache.RedisCacheManager
+import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.serializer.RedisSerializationContext
+import java.time.Duration
+
+@Configuration
+class CacheConfig(
+    private val serializer: PolymorphicRedisSerializer<out CachesDto>
+) {
+    @Bean
+    fun cacheConfiguration30min(): RedisCacheConfiguration {
+        return RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(30))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
+            .disableCachingNullValues()
+    }
+
+    @Bean
+    fun cacheConfiguration5min(): RedisCacheConfiguration {
+        return RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(5))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
+            .disableCachingNullValues()
+    }
+
+    @Bean
+    fun cacheManager(connectionFactory: RedisConnectionFactory): CacheManager {
+        return RedisCacheManager.builder(connectionFactory)
+            .withCacheConfiguration("verification_code", cacheConfiguration5min())
+            .cacheDefaults(cacheConfiguration30min())
+            .build()
+    }
+}
