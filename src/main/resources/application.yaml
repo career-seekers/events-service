@@ -21,10 +21,10 @@ server:
   port: ${SERVER_INTERNAL_PORT}
 
 database:
-  url: ${MS_DB_URL}
-  username: ${MS_DB_USER}
-  password: ${MS_DB_PASSWORD}
-  schema: ${MS_DB_SCHEMA}
+  url: ${ES_DB_URL}
+  username: ${ES_DB_USER}
+  password: ${ES_DB_PASSWORD}
+  schema: ${ES_DB_SCHEMA}
 
 config:
   jwt:
