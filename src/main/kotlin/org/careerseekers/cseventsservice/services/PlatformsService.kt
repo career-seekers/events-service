@@ -22,9 +22,8 @@ class PlatformsService(
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
-            repository.save(platformsMapper.platformFromDto(item))
-
             // TODO("Made kafka notification about platform creation")
+            repository.save(platformsMapper.platformFromDto(item))
         } ?: throw NotFoundException("User with id ${item.userId} not found.")
     }
 
