@@ -42,6 +42,8 @@ class PlatformsService(
             item.fullName?.let { fullName = it }
             item.shortName?.let { shortName = it }
             item.address?.let { address = it }
+
+            repository.save(this)
         }
 
         return "Platform data updated successfully."
@@ -52,6 +54,7 @@ class PlatformsService(
         getById(item.id, message = "Platform with id ${item.id} not found")?.apply {
             usersCacheClient.getItemFromCache(item.userId)?.let {
                 userId = it.id
+                repository.save(this)
             } ?: throw NotFoundException("User with id ${item.userId} not found.")
         }
 
@@ -62,6 +65,7 @@ class PlatformsService(
     fun updatePlatformVerification(platformId: Long): String {
         getById(platformId, message = "Platform with id $platformId not found")?.apply {
             verified = !verified
+            repository.save(this)
         }
 
         return "Platform verification updated successfully."
