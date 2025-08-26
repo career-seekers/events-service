@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.mocks.generators
 
+import org.careerseekers.cseventsservice.dto.platforms.CreatePlatformDto
 import org.careerseekers.cseventsservice.entities.Platforms
 import org.careerseekers.cseventsservice.mocks.generators.MocksGenerator.randomString
 import kotlin.random.Random.Default.nextLong
@@ -12,5 +13,13 @@ object PlatformGenerator {
         address = randomString(12),
         verified = false,
         userId = nextLong(1, 100000),
+    )
+
+    fun createPlatformDto(item: Platforms) = CreatePlatformDto(
+        fullName = item.fullName,
+        shortName = item.shortName,
+        address = item.address,
+        verified = item.verified,
+        userId = item.userId!!
     )
 }
