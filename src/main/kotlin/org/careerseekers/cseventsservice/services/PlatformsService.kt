@@ -79,7 +79,7 @@ class PlatformsService(
 
     @Transactional
     override fun deleteAll(): String {
-        getAll().forEach { deleteById(it.id) }
+        repository.deleteAll()
 
         return "All platforms deleted successfully."
     }
