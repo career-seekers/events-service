@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 
 @Entity
 @Table(name = "platforms")
@@ -29,4 +30,4 @@ data class Platforms(
 
     @Column(nullable = false)
     var userId: Long? = null,
-)
+) : ConvertableToHttpResponse<Platforms>
