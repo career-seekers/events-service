@@ -1,9 +1,6 @@
 name: project-tester-ci.yml
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
