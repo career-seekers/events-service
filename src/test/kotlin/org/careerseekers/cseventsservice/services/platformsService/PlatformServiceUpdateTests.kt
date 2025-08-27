@@ -138,4 +138,40 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
             verify(exactly = 0) { repository.save(any()) }
         }
     }
+
+    @Nested
+    inner class UpdatePlatformVerificationTests {
+
+        @Test
+        fun `Should update platform verification and return String`() {
+            val platform = createPlatform().copy(userId = 1L)
+            val oldVerification = platform.verified
+
+            every { serviceUnderTest.getById(any(), any(), any()) } returns platform
+            every { repository.save(any()) } returns platform
+
+            val result = serviceUnderTest.updatePlatformVerification(platform.id)
+
+            assertThat(result).isNotNull.isEqualTo("Platform verification updated successfully.")
+            assertThat(platform.verified).isNotEqualTo(oldVerification)
+
+            verify { serviceUnderTest.getById(any(), any(), any()) }
+            verify { repository.save(any()) }
+        }
+
+        @Test
+        fun `Should return NotFoundException when platform is null`() {
+            val platform = createPlatform().copy(userId = 1L)
+            every { serviceUnderTest.getById(any(), any(), any()) } throws NotFoundException("Platform with id ${platform.id} not found")
+
+            val exception = assertFailsWith<NotFoundException> {
+                serviceUnderTest.updatePlatformVerification(platform.id)
+            }
+
+            assertThat(exception.message).isEqualTo("Platform with id ${platform.id} not found")
+
+            verify { serviceUnderTest.getById(any(), any(), any()) }
+            verify(exactly = 0) { repository.save(any()) }
+        }
+    }
 }
