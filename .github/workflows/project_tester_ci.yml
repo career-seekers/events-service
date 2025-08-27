@@ -7,8 +7,10 @@ on:
   pull_request:
 
 jobs:
-  build:
+  project-testing:
     runs-on: ubuntu-latest
+
+    environment: production-testing
 
     steps:
       - uses: actions/checkout@v3
