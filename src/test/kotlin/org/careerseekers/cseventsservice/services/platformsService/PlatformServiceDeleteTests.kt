@@ -48,4 +48,19 @@ class PlatformServiceDeleteTests : PlatformServiceMocks() {
             verify(exactly = 0) { repository.delete(any()) }
         }
     }
+
+    @Nested
+    inner class DeleteAllTests {
+
+        @Test
+        fun `Should delete all platforms`() {
+            every { repository.deleteAll() } just Runs
+
+            val result = serviceUnderTest.deleteAll()
+
+            assertThat(result).isEqualTo("All platforms deleted successfully.")
+
+            verify { repository.deleteAll() }
+        }
+    }
 }
