@@ -1,14 +1,17 @@
 package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
+import org.careerseekers.cseventsservice.dto.PlatformCreation
 import org.careerseekers.cseventsservice.dto.platforms.ChangePlatformOwnerDto
 import org.careerseekers.cseventsservice.dto.platforms.CreatePlatformDto
 import org.careerseekers.cseventsservice.dto.platforms.UpdatePlatformDto
 import org.careerseekers.cseventsservice.entities.Platforms
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
+import org.careerseekers.cseventsservice.io.converters.extensions.toKafkaPlatformDto
 import org.careerseekers.cseventsservice.mappers.PlatformsMapper
 import org.careerseekers.cseventsservice.repositories.PlatformsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
+import org.careerseekers.cseventsservice.services.kafka.producers.PlatformCreationKafkaProducer
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,13 +20,17 @@ class PlatformsService(
     override val repository: PlatformsRepository,
     private val usersCacheClient: UsersCacheClient,
     private val platformsMapper: PlatformsMapper,
+    private val platformCreationKafkaProducer: PlatformCreationKafkaProducer
 ) : CrudService<Platforms, Long, CreatePlatformDto, UpdatePlatformDto> {
 
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
-            // TODO("Made kafka notification about platform creation")
-            repository.save(platformsMapper.platformFromDto(item))
+            val platform = repository.save(platformsMapper.platformFromDto(item))
+
+            platformCreationKafkaProducer.sendMessage(PlatformCreation(platform.toKafkaPlatformDto()))
+
+            platform
         } ?: throw NotFoundException("User with id ${item.userId} not found.")
     }
 
