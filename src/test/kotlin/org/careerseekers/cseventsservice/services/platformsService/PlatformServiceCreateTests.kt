@@ -26,6 +26,7 @@ class PlatformServiceCreateTests : PlatformServiceMocks() {
             every { usersCacheClient.getItemFromCache(any()) } returns user
             every { platformsMapper.platformFromDto(any()) } returns platform
             every { repository.save(any()) } returns platform
+            every { platformCreationKafkaProducer.sendMessage(any()) } returns Unit
 
             val result = serviceUnderTest.create(platformDto)
 
