@@ -20,6 +20,16 @@ spring:
 server:
   port: ${SERVER_INTERNAL_PORT}
 
+grpc:
+  server:
+    port: ${GRPC_SERVER_PORT}
+    security:
+      enabled: false
+  client:
+    users-service:
+      address: ${USERS_SERVICE_URL}
+      negotiation-type: plaintext
+
 database:
   url: ${ES_DB_URL}
   username: ${ES_DB_USER}
