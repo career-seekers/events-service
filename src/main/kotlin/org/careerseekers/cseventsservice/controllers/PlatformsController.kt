@@ -8,6 +8,7 @@ import org.careerseekers.cseventsservice.entities.Platforms
 import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.services.PlatformsService
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -47,10 +48,12 @@ class PlatformsController(
     override fun update(@RequestBody item: UpdatePlatformDto): BasicSuccessfulResponse<String> =
         service.update(item).toHttpResponse()
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/updatePlatformOwner")
     fun updatePlatformOwner(@RequestBody item: ChangePlatformOwnerDto): BasicSuccessfulResponse<String> =
         service.updatePlatformOwner(item).toHttpResponse()
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/verify/{id}")
     fun updatePlatformVerification(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.updatePlatformVerification(id).toHttpResponse()
@@ -59,6 +62,7 @@ class PlatformsController(
     override fun deleteById(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.deleteById(id).toHttpResponse()
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/")
     override fun deleteAll(): BasicSuccessfulResponse<String> = service.deleteAll().toHttpResponse()
 }
