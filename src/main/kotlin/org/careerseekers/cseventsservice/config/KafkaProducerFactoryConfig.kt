@@ -1,8 +1,8 @@
-package org.careerseekers.cseventsservice.config.kafka.producers
+package org.careerseekers.cseventsservice.config
 
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
-import org.careerseekers.cseventsservice.dto.PlatformCreation
+import org.careerseekers.cseventsservice.dto.KafkaMessagesDto
 import org.careerseekers.cseventsservice.serializers.PolymorphicKafkaSerializer
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -10,15 +10,17 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
+import kotlin.jvm.java
+import kotlin.to
 
 @Configuration
 @ConfigurationProperties(prefix = "spring.kafka")
-class PlatformCreationProducerConfig {
+class KafkaProducerFactoryConfig<T : KafkaMessagesDto> {
 
     lateinit var bootstrapServers: String
 
     @Bean
-    fun producerFactory(): ProducerFactory<String, PlatformCreation> {
+    fun producerFactory(): ProducerFactory<String, T> {
         val configProps = mapOf(
 
             /**
@@ -63,7 +65,7 @@ class PlatformCreationProducerConfig {
     }
 
     @Bean
-    fun emailSendingKafkaProducer(): KafkaTemplate<String, PlatformCreation> {
+    fun emailSendingKafkaProducer(): KafkaTemplate<String, T> {
         return KafkaTemplate(producerFactory())
     }
 }
