@@ -25,7 +25,7 @@ data class UsersCacheDto(
     val dateOfBirth: Date,
     val email: String,
     val mobileNumber: String,
-    val password: String,
+    val password: String?,
     val role: UsersRoles,
     val avatarId: Long,
     val verified: Boolean,
