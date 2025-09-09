@@ -10,7 +10,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.careerseekers.cseventsservice.enums.DirectionDocumentsTypes
+import org.careerseekers.cseventsservice.enums.FileTypes
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 import java.time.LocalDateTime
 
@@ -22,7 +22,7 @@ data class DirectionDocuments(
     val id: Long,
 
     @Column(nullable = false)
-    var documentType: DirectionDocumentsTypes,
+    var documentType: FileTypes,
 
     @Column(nullable = false)
     var documentId: Long,

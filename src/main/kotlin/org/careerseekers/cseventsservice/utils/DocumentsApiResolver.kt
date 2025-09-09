@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.careerseekers.cseventsservice.dto.files.FileStructure
-import org.careerseekers.cseventsservice.enums.DirectionDocumentsTypes
+import org.careerseekers.cseventsservice.enums.FileTypes
 import org.careerseekers.cseventsservice.exceptions.BadRequestException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.io.BasicErrorResponse
@@ -33,7 +33,7 @@ class DocumentsApiResolver(
     fun loadDocId(
         url: String,
         file: MultipartFile?,
-        docType: DirectionDocumentsTypes? = null,
+        docType: FileTypes? = null,
         isDirection: Boolean = false
     ): Long? =
         file?.let { file ->
@@ -55,7 +55,7 @@ class DocumentsApiResolver(
     private fun loadDocument(
         url: String,
         file: MultipartFile,
-        docType: DirectionDocumentsTypes? = null,
+        docType: FileTypes? = null,
         isDirection: Boolean = false
     ): FileStructure? {
         val resource = object : ByteArrayResource(file.bytes) {
