@@ -10,5 +10,6 @@ data class CreateDirectionDto(
     val ageCategory: DirectionAgeCategory,
     val icon: MultipartFile? = null,
     val iconId: Long? = null,
-    val userId: Long? = null
+    val userId: Long? = null,
+    val expertId: Long? = null,
 ) : DtoClass
