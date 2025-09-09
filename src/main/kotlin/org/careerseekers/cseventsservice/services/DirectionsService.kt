@@ -1,9 +1,11 @@
 package org.careerseekers.cseventsservice.services
 
+import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
+import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionsMapper
 import org.careerseekers.cseventsservice.repositories.DirectionsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
@@ -17,6 +19,7 @@ class DirectionsService(
     override val repository: DirectionsRepository,
     private val directionsMapper: DirectionsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
+    private val usersCacheClient: UsersCacheClient,
 ) : CrudService<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
 
     fun getByUserId(userId: Long): List<Directions> = repository.getByUserId(userId)
@@ -25,6 +28,9 @@ class DirectionsService(
 
     @Transactional
     override fun create(item: CreateDirectionDto): Directions {
+        item.userId?.let { usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.") }
+        item.expertId?.let { usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.") }
+
         return repository.save(
             directionsMapper.directionFromDto(item.copy(
                 iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
@@ -51,6 +57,10 @@ class DirectionsService(
 
                 iconId = documentsApiResolver.loadDocId("uploadDirectionIcon", it)
                 oldIconId?.let { iconId -> documentsApiResolver.deleteDocument(iconId) }
+            }
+            item.expertId?.let {
+                usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+                expertId = it
             }
         }.also(repository::save)
 

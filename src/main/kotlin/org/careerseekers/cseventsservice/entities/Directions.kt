@@ -1,6 +1,5 @@
 package org.careerseekers.cseventsservice.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -34,6 +33,12 @@ data class Directions(
 
     @Column(nullable = true)
     var userId: Long? = null,
+
+    @Column(nullable = true)
+    var expertId: Long? = null,
+
+    @Column(nullable = false)
+    var participantsCount: Long = 0L,
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)

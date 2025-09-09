@@ -8,4 +8,5 @@ data class UpdateDirectionDto(
     val name: String? = null,
     val description: String? = null,
     val icon: MultipartFile? = null,
+    val expertId: Long? = null,
 ) : DtoClass
