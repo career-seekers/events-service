@@ -63,7 +63,7 @@ class DirectionController(
             id = id.toLongOrThrow(),
             icon = file
         )
-    )
+    ).toHttpResponse()
 
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
