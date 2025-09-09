@@ -48,12 +48,12 @@ class PlatformsController(
     override fun update(@RequestBody item: UpdatePlatformDto): BasicSuccessfulResponse<String> =
         service.update(item).toHttpResponse()
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/updatePlatformOwner")
     fun updatePlatformOwner(@RequestBody item: ChangePlatformOwnerDto): BasicSuccessfulResponse<String> =
         service.updatePlatformOwner(item).toHttpResponse()
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/verify/{id}")
     fun updatePlatformVerification(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.updatePlatformVerification(id).toHttpResponse()
@@ -62,7 +62,7 @@ class PlatformsController(
     override fun deleteById(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.deleteById(id).toHttpResponse()
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
     override fun deleteAll(): BasicSuccessfulResponse<String> = service.deleteAll().toHttpResponse()
 }
