@@ -24,6 +24,8 @@ class DirectionsService(
 
     fun getByUserId(userId: Long): List<Directions> = repository.getByUserId(userId)
 
+    fun getByExpertId(expertId: Long): List<Directions> = repository.findByExpertId(expertId)
+
     fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> = repository.getByAgeCategory(ageCategory)
 
     @Transactional
