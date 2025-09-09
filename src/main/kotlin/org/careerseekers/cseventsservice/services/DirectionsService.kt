@@ -24,7 +24,7 @@ class DirectionsService(
     fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> = repository.getByAgeCategory(ageCategory)
 
     @Transactional
-    override fun create(item: CreateDirectionDto): Any {
+    override fun create(item: CreateDirectionDto): Directions {
         return repository.save(
             directionsMapper.directionFromDto(item.copy(
                 iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
@@ -42,7 +42,7 @@ class DirectionsService(
     }
 
     @Transactional
-    override fun update(item: UpdateDirectionDto): Any {
+    override fun update(item: UpdateDirectionDto): String {
         getById(item.id, message = "Direction with id '${item.id}' not found.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
