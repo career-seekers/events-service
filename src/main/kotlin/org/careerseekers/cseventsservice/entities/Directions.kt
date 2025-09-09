@@ -16,17 +16,17 @@ data class Directions(
     var id: Long,
 
     @Column(nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(nullable = false)
-    val description: String,
+    var description: String,
 
     @Column(nullable = false)
-    val ageCategory: DirectionAgeCategory,
+    var ageCategory: DirectionAgeCategory,
 
     @Column(nullable = true)
-    val iconId: Long? = null,
+    var iconId: Long? = null,
 
     @Column(nullable = true)
-    val userId: Long? = null,
+    var userId: Long? = null,
 )
