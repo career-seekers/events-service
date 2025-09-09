@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.careerseekers.cseventsservice.enums.DirectionDocumentsTypes
+import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 import java.time.LocalDateTime
 
 @Entity
@@ -36,4 +37,4 @@ data class DirectionDocuments(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direction_id")
     var direction: Directions? = null,
-)
+) : ConvertableToHttpResponse<DirectionDocuments>
