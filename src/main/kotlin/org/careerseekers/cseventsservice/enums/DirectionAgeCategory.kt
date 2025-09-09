@@ -8,7 +8,7 @@ enum class DirectionAgeCategory {
     SCHOOL_3;
 
     companion object {
-        fun getAgeCategory(age: Int): DirectionAgeCategory {
+        fun getAgeCategory(age: Short): DirectionAgeCategory {
             return when (age) {
                 in 4..5 -> PRESCHOOL_1
                 in 6..7 -> PRESCHOOL_2
