@@ -22,11 +22,11 @@ class DirectionsService(
     private val usersCacheClient: UsersCacheClient,
 ) : CrudService<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
 
-    fun getByUserId(userId: Long): List<Directions> = repository.getByUserId(userId)
+    fun getByUserId(userId: Long): List<Directions> = repository.findByUserId(userId)
 
     fun getByExpertId(expertId: Long): List<Directions> = repository.findByExpertId(expertId)
 
-    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> = repository.getByAgeCategory(ageCategory)
+    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> = repository.findByAgeCategory(ageCategory)
 
     @Transactional
     override fun create(item: CreateDirectionDto): Directions {
