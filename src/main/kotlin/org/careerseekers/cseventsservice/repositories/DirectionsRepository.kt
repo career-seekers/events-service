@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface DirectionsRepository : JpaRepository<Directions, Long> {
-    fun getByUserId(userId: Long): List<Directions>
-    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions>
+    fun findByUserId(userId: Long): List<Directions>
+    fun findByExpertId(expertId: Long): List<Directions>
+    fun findByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions>
 }
