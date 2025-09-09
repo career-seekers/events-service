@@ -49,7 +49,7 @@ class DirectionController(
     override fun create(@RequestBody item: CreateDirectionDto) = service.create(item).toHttpResponse()
 
     @PostMapping("/createAll")
-    override fun createAll(items: List<CreateDirectionDto>) = service.createAll(items).toHttpResponse()
+    override fun createAll(@RequestBody items: List<CreateDirectionDto>) = service.createAll(items).toHttpResponse()
 
     @PatchMapping("/")
     override fun update(@RequestBody item: UpdateDirectionDto) = service.update(item).toHttpResponse()
