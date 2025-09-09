@@ -38,7 +38,7 @@ class DirectionController(
     fun getByUserId(@PathVariable userId: Long) = service.getByUserId(userId).toHttpResponse()
 
     @GetMapping("/getByAgeCategory/{ageCategory}")
-    fun getByAgeCAtegory(@PathVariable ageCategory: DirectionAgeCategory) =
+    fun getByAgeCategory(@PathVariable ageCategory: DirectionAgeCategory) =
         service.getByAgeCategory(ageCategory).toHttpResponse()
 
     @GetMapping("/getByAge/{age}")
