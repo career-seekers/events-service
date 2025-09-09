@@ -46,7 +46,12 @@ class DirectionsService(
         getById(item.id, message = "Direction with id '${item.id}' not found.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
-            item.icon?.let { iconId = documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
+            item.icon?.let {
+                val oldIconId = this.iconId
+
+                iconId = documentsApiResolver.loadDocId("uploadDirectionIcon", it)
+                oldIconId?.let { iconId -> documentsApiResolver.deleteDocument(iconId) }
+            }
         }.also(repository::save)
 
         return "Direction updated successfully."
