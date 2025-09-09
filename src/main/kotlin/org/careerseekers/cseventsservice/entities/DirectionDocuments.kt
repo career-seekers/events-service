@@ -21,16 +21,16 @@ data class DirectionDocuments(
     val id: Long,
 
     @Column(nullable = false)
-    val documentType: DirectionDocumentsTypes,
+    var documentType: DirectionDocumentsTypes,
 
     @Column(nullable = false)
-    val documentId: Long,
+    var documentId: Long,
 
     @Column(nullable = true)
-    val createdAt: LocalDateTime? = null,
+    var createdAt: LocalDateTime? = null,
 
     @Column(nullable = true)
-    val userId: Long? = null,
+    var userId: Long? = null,
 
     @JsonIgnoreProperties(value = ["documents"])
     @ManyToOne(fetch = FetchType.LAZY)
