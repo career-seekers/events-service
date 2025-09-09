@@ -6,7 +6,9 @@ import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
+import org.careerseekers.cseventsservice.io.converters.extensions.toLongOrThrow
 import org.careerseekers.cseventsservice.services.DirectionsService
+import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/events-service/v1/directions")
@@ -49,6 +53,17 @@ class DirectionController(
 
     @PatchMapping("/")
     override fun update(@RequestBody item: UpdateDirectionDto) = service.update(item).toHttpResponse()
+
+    @PatchMapping("/uploadDirectionIcon", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun uploadDirectionIcon(
+        @RequestPart("id") id: String,
+        @RequestPart("file") file: MultipartFile,
+    ) = service.update(
+        UpdateDirectionDto(
+            id = id.toLongOrThrow(),
+            icon = file
+        )
+    )
 
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
