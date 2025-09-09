@@ -66,5 +66,9 @@ class DirectionDocumentsService(
     }
 
     @Transactional
-    override fun deleteAll() = repository.deleteAll()
+    override fun deleteAll(): String {
+        repository.deleteAll()
+
+        return "All direction documents deleted successfully."
+    }
 }
