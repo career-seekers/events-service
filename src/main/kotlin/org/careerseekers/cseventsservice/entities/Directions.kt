@@ -37,8 +37,8 @@ data class Directions(
     @Column(nullable = true)
     var expertId: Long? = null,
 
-    @Column(nullable = true)
-    var participantsCount: Long? = 0L,
+    @Column(nullable = false)
+    var participantsCount: Long = 0L,
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
