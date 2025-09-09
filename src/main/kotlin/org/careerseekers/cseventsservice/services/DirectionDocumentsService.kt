@@ -20,6 +20,7 @@ class DirectionDocumentsService(
     override val repository: DirectionDocumentsRepository,
     private val directionDocumentsMapper: DirectionDocumentsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
+    private val directionsService: DirectionsService,
     private val usersCacheClient: UsersCacheClient,
 ) : IReadService<DirectionDocuments, Long>,
     ICreateService<DirectionDocuments, Long, CreateDirectionDocumentDto>,
@@ -34,6 +35,9 @@ class DirectionDocumentsService(
         usersCacheClient.getItemFromCache(item.userId)
             ?: throw NotFoundException("User with id ${item.userId} not found.")
 
+        val direction =
+            directionsService.getById(item.directionId, message = "Direction with id ${item.directionId} not found.")
+
         return repository.save(
             directionDocumentsMapper.directionDocsFromDto(
                 item.copy(
@@ -44,6 +48,7 @@ class DirectionDocumentsService(
                         isDirection = true
                     ),
                     createdAt = LocalDateTime.now(),
+                    direction = direction
                 )
             )
         )
