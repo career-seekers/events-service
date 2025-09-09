@@ -1,6 +1,10 @@
 spring:
   application:
     name: cs-events-service
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
   data:
     redis:
       host: ${REDIS_HOST}

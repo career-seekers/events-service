@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.careerseekers.cseventsservice.dto.files.FileStructure
+import org.careerseekers.cseventsservice.enums.FileTypes
 import org.careerseekers.cseventsservice.exceptions.BadRequestException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.io.BasicErrorResponse
@@ -29,9 +30,14 @@ class DocumentsApiResolver(
     private fun deleteDocumentAsync(id: Long) =
         documentCleanupScope.launch { deleteDocument(id) }
 
-    fun loadDocId(url: String, file: MultipartFile?): Long? =
+    fun loadDocId(
+        url: String,
+        file: MultipartFile?,
+        docType: FileTypes? = null,
+        isDirection: Boolean = false
+    ): Long? =
         file?.let { file ->
-            val id = loadDocument(url, file)?.id
+            val id = loadDocument(url, file, docType, isDirection)?.id
             id?.let { registerFileForRollback(it) }
             id
         }
@@ -46,13 +52,21 @@ class DocumentsApiResolver(
         })
     }
 
-    private fun loadDocument(url: String, file: MultipartFile): FileStructure? {
+    private fun loadDocument(
+        url: String,
+        file: MultipartFile,
+        docType: FileTypes? = null,
+        isDirection: Boolean = false
+    ): FileStructure? {
         val resource = object : ByteArrayResource(file.bytes) {
             override fun getFilename(): String? = file.originalFilename
         }
 
         val multipartData = LinkedMultiValueMap<String, Any>()
         multipartData.add("file", resource)
+        if (isDirection) {
+            multipartData.add("type", docType)
+        }
 
         return httpClient.post()
             .uri("/file-service/v1/files/$url")
