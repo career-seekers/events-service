@@ -1,0 +1,39 @@
+package org.careerseekers.cseventsservice.entities
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import org.careerseekers.cseventsservice.enums.DirectionDocumentsTypes
+import java.time.LocalDateTime
+
+@Entity
+@Table(name = "direction_documents")
+data class DirectionDocuments(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long,
+
+    @Column(nullable = false)
+    val documentType: DirectionDocumentsTypes,
+
+    @Column(nullable = false)
+    val documentId: Long,
+
+    @Column(nullable = true)
+    val createdAt: LocalDateTime? = null,
+
+    @Column(nullable = true)
+    val userId: Long? = null,
+
+    @JsonIgnoreProperties(value = ["documents"])
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "direction_id")
+    var direction: Directions? = null,
+)
