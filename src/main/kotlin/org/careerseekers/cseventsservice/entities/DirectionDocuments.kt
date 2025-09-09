@@ -34,7 +34,7 @@ data class DirectionDocuments(
     var userId: Long? = null,
 
     @JsonIgnoreProperties(value = ["documents"])
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id")
     var direction: Directions? = null,
 ) : ConvertableToHttpResponse<DirectionDocuments>
