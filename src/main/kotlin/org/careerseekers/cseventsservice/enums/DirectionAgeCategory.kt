@@ -1,5 +1,7 @@
 package org.careerseekers.cseventsservice.enums
 
+import org.careerseekers.cseventsservice.exceptions.BadRequestException
+
 enum class DirectionAgeCategory {
     PRESCHOOL_1,
     PRESCHOOL_2,
@@ -15,7 +17,7 @@ enum class DirectionAgeCategory {
                 in 7..8 -> SCHOOL_1
                 in 9..11 -> SCHOOL_2
                 in 12..13 -> SCHOOL_3
-                else -> throw IllegalArgumentException("This age not supported.")
+                else -> throw BadRequestException("This age not supported.")
             }
         }
     }
