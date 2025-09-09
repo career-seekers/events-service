@@ -42,5 +42,5 @@ data class Directions(
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val documents: MutableList<DirectionDocuments?> = mutableListOf(),
+    val documents: MutableList<DirectionDocuments>? = mutableListOf(),
 ) : ConvertableToHttpResponse<Directions>
