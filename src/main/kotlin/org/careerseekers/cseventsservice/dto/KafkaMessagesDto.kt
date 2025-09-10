@@ -22,3 +22,11 @@ data class PlatformDto(
 data class PlatformCreation (
     val platform: PlatformDto
 ) : KafkaMessagesDto()
+
+@Serializable
+@SerialName("DirectionCreation")
+data class DirectionCreation(
+    val name: String,
+    val tutor: UsersCacheDto,
+    val expert: UsersCacheDto,
+) : KafkaMessagesDto()
