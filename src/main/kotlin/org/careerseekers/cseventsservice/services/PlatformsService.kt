@@ -60,9 +60,11 @@ class PlatformsService(
             item.shortName?.let { shortName = it }
             item.address?.let { address = it }
             item.email?.let {
-                repository.findByEmail(item.email)
-                    ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
-                email = it
+                if (it != this.email) {
+                    repository.findByEmail(item.email)
+                        ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
+                    email = it
+                }
             }
             item.website?.let { website = it }
 
