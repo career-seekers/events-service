@@ -1,5 +1,5 @@
 ALTER TABLE platforms
-    ADD email VARCHAR(255);
+    ADD email VARCHAR(255) DEFAULT '';
 
 ALTER TABLE platforms
     ADD website VARCHAR(255);
@@ -9,6 +9,3 @@ ALTER TABLE platforms
 
 ALTER TABLE platforms
     ADD CONSTRAINT uc_platforms_email UNIQUE (email);
-
-ALTER TABLE platforms
-    ADD CONSTRAINT uc_platforms_userid UNIQUE (user_id);
