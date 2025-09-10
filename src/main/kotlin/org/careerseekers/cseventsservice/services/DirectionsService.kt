@@ -1,6 +1,7 @@
 package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
+import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.entities.Directions
@@ -9,6 +10,7 @@ import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionsMapper
 import org.careerseekers.cseventsservice.repositories.DirectionsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
+import org.careerseekers.cseventsservice.services.kafka.producers.DirectionCreationKafkaProducer
 import org.careerseekers.cseventsservice.utils.DocumentsApiResolver
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,24 +22,39 @@ class DirectionsService(
     private val directionsMapper: DirectionsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
     private val usersCacheClient: UsersCacheClient,
+    private val directionCreationKafkaProducer: DirectionCreationKafkaProducer
 ) : CrudService<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
 
     fun getByUserId(userId: Long): List<Directions> = repository.findByUserId(userId)
 
     fun getByExpertId(expertId: Long): List<Directions> = repository.findByExpertId(expertId)
 
-    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> = repository.findByAgeCategory(ageCategory)
+    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> =
+        repository.findByAgeCategory(ageCategory)
 
     @Transactional
     override fun create(item: CreateDirectionDto): Directions {
-        item.userId?.let { usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.") }
-        item.expertId?.let { usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.") }
+        val tutor = item.userId?.let {
+            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+        }
+        val expert = item.expertId?.let {
+            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+        }
 
         return repository.save(
-            directionsMapper.directionFromDto(item.copy(
+            directionsMapper.directionFromDto(
+                item.copy(
                 iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
             ))
-        )
+        ).also { direction ->
+            directionCreationKafkaProducer.sendMessage(
+                DirectionCreation(
+                    name = direction.name,
+                    tutor = tutor!!,
+                    expert = expert!!
+                )
+            )
+        }
     }
 
     @Transactional
