@@ -36,6 +36,9 @@ class PlatformsController(
         )!!.toHttpResponse()
     }
 
+    @GetMapping("/getByUserId/{userId}")
+    fun getByUserId(@PathVariable userId: Long) = service.getByUserId(userId).toHttpResponse()
+
     @PostMapping("/")
     override fun create(@RequestBody item: CreatePlatformDto): BasicSuccessfulResponse<Platforms> =
         service.create(item).toHttpResponse()

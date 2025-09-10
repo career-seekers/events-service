@@ -23,6 +23,8 @@ class PlatformsService(
     private val platformCreationKafkaProducer: PlatformCreationKafkaProducer
 ) : CrudService<Platforms, Long, CreatePlatformDto, UpdatePlatformDto> {
 
+    fun getByUserId(userId: Long): List<Platforms> = repository.findByUserId(userId)
+
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
