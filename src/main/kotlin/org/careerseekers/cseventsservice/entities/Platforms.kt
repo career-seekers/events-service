@@ -25,9 +25,15 @@ data class Platforms(
     @Column(nullable = false)
     var address: String,
 
+    @Column(nullable = false, unique = true)
+    var email: String,
+
+    @Column(nullable = true)
+    var website: String? = null,
+
     @Column(nullable = false)
     var verified: Boolean = false,
 
-    @Column(nullable = true)
-    var userId: Long? = null,
+    @Column(nullable = true, unique = true)
+    var userId: Long,
 ) : ConvertableToHttpResponse<Platforms>
