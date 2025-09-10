@@ -7,4 +7,6 @@ data class UpdatePlatformDto(
     val fullName: String?,
     val shortName: String?,
     val address: String?,
+    val email: String?,
+    val website: String? = null
 ) : DtoClass

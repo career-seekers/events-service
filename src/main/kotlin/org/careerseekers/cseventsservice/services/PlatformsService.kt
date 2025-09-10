@@ -6,6 +6,7 @@ import org.careerseekers.cseventsservice.dto.platforms.ChangePlatformOwnerDto
 import org.careerseekers.cseventsservice.dto.platforms.CreatePlatformDto
 import org.careerseekers.cseventsservice.dto.platforms.UpdatePlatformDto
 import org.careerseekers.cseventsservice.entities.Platforms
+import org.careerseekers.cseventsservice.exceptions.DoubleRecordException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.io.converters.extensions.toKafkaPlatformDto
 import org.careerseekers.cseventsservice.mappers.PlatformsMapper
@@ -32,6 +33,9 @@ class PlatformsService(
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
+            repository.findByEmail(item.email)
+                ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
+
             val platform = repository.save(platformsMapper.platformFromDto(item))
 
             platformCreationKafkaProducer.sendMessage(PlatformCreation(platform.toKafkaPlatformDto()))
@@ -55,6 +59,12 @@ class PlatformsService(
             item.fullName?.let { fullName = it }
             item.shortName?.let { shortName = it }
             item.address?.let { address = it }
+            item.email?.let {
+                repository.findByEmail(item.email)
+                    ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
+                email = it
+            }
+            item.website?.let { website = it }
 
             repository.save(this)
         }
