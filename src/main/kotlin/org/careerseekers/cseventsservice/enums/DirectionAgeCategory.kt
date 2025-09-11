@@ -2,12 +2,12 @@ package org.careerseekers.cseventsservice.enums
 
 import org.careerseekers.cseventsservice.exceptions.BadRequestException
 
-enum class DirectionAgeCategory {
-    PRESCHOOL_1,
-    PRESCHOOL_2,
-    SCHOOL_1,
-    SCHOOL_2,
-    SCHOOL_3;
+enum class DirectionAgeCategory(private val ageAlias: String) {
+    PRESCHOOL_1("4-5 лет"),
+    PRESCHOOL_2("6-7 лет"),
+    SCHOOL_1("7-9 лет"),
+    SCHOOL_2("9-11 лет"),
+    SCHOOL_3("12-13 лет");
 
     companion object {
         fun getAgeCategory(age: Short): DirectionAgeCategory {
@@ -20,5 +20,7 @@ enum class DirectionAgeCategory {
                 else -> throw BadRequestException("This age not supported.")
             }
         }
+
+        fun DirectionAgeCategory.getAgeAlias() = this.ageAlias
     }
 }
