@@ -3,7 +3,6 @@ package org.careerseekers.cseventsservice.dto
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.careerseekers.cseventsservice.enums.FileTypes
 
 @Serializable
 @Polymorphic
@@ -35,7 +34,7 @@ data class DirectionCreation(
 @Serializable
 @SerialName("DirectionDocumentsCreation")
 data class DirectionDocumentsCreation (
-    val documentType: FileTypes,
+    val documentType: String,
     val directionName: String,
     val expert: UsersCacheDto,
     val tutor: UsersCacheDto,

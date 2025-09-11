@@ -5,6 +5,7 @@ import org.careerseekers.cseventsservice.dto.DirectionDocumentsCreation
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
+import org.careerseekers.cseventsservice.enums.FileTypes.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
 import org.careerseekers.cseventsservice.repositories.DirectionDocumentsRepository
@@ -61,7 +62,7 @@ class DirectionDocumentsService(
         ).also {
             directionDocumentsCreationKafkaProducer.sendMessage(
                 DirectionDocumentsCreation(
-                    documentType = item.documentType,
+                    documentType = item.documentType.getAlias(),
                     directionName = direction.name,
                     expert = expert,
                     tutor = tutor
