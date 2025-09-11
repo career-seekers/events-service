@@ -36,7 +36,7 @@ data class DirectionCreation(
 @SerialName("DirectionDocumentsCreation")
 data class DirectionDocumentsCreation (
     val documentType: FileTypes,
-    val platformName: String,
+    val directionName: String,
     val expert: UsersCacheDto,
     val tutor: UsersCacheDto,
 ) : KafkaMessagesDto()
