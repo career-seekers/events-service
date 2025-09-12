@@ -71,6 +71,7 @@ class DirectionsService(
         getById(item.id, message = "Direction with id '${item.id}' not found.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
+            item.ageCategory?.let { ageCategory = it }
             item.icon?.let {
                 val oldIconId = this.iconId
 
