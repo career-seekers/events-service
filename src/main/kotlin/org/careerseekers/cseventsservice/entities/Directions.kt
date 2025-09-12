@@ -22,7 +22,7 @@ data class Directions(
     @Column(nullable = false)
     var name: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     var description: String,
 
     @Column(nullable = false)
