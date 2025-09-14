@@ -5,7 +5,6 @@ import org.careerseekers.cseventsservice.dto.DirectionDocumentsCreation
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
-import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.FileTypes.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
