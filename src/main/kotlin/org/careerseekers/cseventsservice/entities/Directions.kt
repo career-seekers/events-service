@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 
 @Entity
@@ -25,9 +24,6 @@ data class Directions(
     @Column(nullable = false, columnDefinition = "TEXT")
     var description: String,
 
-    @Column(nullable = false)
-    var ageCategory: DirectionAgeCategory,
-
     @Column(nullable = true)
     var iconId: Long? = null,
 
@@ -39,6 +35,10 @@ data class Directions(
 
     @Column(nullable = false)
     var participantsCount: Long = 0L,
+
+    @JsonIgnoreProperties(value = ["direction"])
+    @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val ageCategories: MutableList<DirectionAgeCategories>? = mutableListOf(),
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
