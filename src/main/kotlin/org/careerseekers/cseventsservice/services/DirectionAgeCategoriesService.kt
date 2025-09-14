@@ -36,10 +36,11 @@ class DirectionAgeCategoriesService(
         }
     }
 
-    override fun deleteAll() {
+    override fun deleteAll(): String {
         directionsService.getAll().forEach { direction ->
             direction.ageCategories?.clear()
         }
         repository.deleteAll()
+        return "All direction age categories deleted"
     }
 }
