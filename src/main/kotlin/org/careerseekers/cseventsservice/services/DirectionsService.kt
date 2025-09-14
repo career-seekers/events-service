@@ -4,6 +4,8 @@ import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
+import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
@@ -22,7 +24,8 @@ class DirectionsService(
     private val directionsMapper: DirectionsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
     private val usersCacheClient: UsersCacheClient,
-    private val directionCreationKafkaProducer: DirectionCreationKafkaProducer
+    private val directionCreationKafkaProducer: DirectionCreationKafkaProducer,
+    private val directionAgeCategoriesService: DirectionAgeCategoriesService,
 ) : CrudService<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
 
     fun getByUserId(userId: Long): List<Directions> = repository.findByUserId(userId)
@@ -44,9 +47,24 @@ class DirectionsService(
         return repository.save(
             directionsMapper.directionFromDto(
                 item.copy(
-                iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
-            ))
-        ).also { direction ->
+                    iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
+                ))
+        ).let { direction ->
+            val categories = mutableListOf<DirectionAgeCategories>()
+            item.ageCategory.forEach { ageCategory ->
+                categories.add(
+                    directionAgeCategoriesService.create(
+                        CreateAgeCategory(
+                            ageCategory = ageCategory,
+                            direction = direction
+                        )
+                    )
+                )
+            }
+
+            direction.ageCategories = categories
+            repository.save(direction)
+        }.also { direction ->
             directionCreationKafkaProducer.sendMessage(
                 DirectionCreation(
                     name = direction.name,
@@ -71,7 +89,24 @@ class DirectionsService(
         getById(item.id, message = "Direction with id '${item.id}' not found.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
-            item.ageCategory?.let { ageCategory = it }
+            item.ageCategory?.let {
+                directionAgeCategoriesService.getAll()
+                    .filter { category -> category.direction == this }
+                    .forEach { category -> directionAgeCategoriesService.deleteById(category.id) }
+
+                ageCategories?.clear()
+
+                item.ageCategory.forEach { category ->
+                    ageCategories?.add(
+                        directionAgeCategoriesService.create(
+                            CreateAgeCategory(
+                                ageCategory = category,
+                                direction = this
+                            )
+                        )
+                    )
+                }
+            }
             item.icon?.let {
                 val oldIconId = this.iconId
 

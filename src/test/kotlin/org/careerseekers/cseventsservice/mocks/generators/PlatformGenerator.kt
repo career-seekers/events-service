@@ -13,6 +13,8 @@ object PlatformGenerator {
         address = randomString(12),
         verified = false,
         userId = nextLong(1, 100000),
+        email = randomString(12),
+        website = randomString(12),
     )
 
     fun createPlatformDto(item: Platforms) = CreatePlatformDto(
@@ -20,6 +22,8 @@ object PlatformGenerator {
         shortName = item.shortName,
         address = item.address,
         verified = item.verified,
-        userId = item.userId!!
+        userId = item.userId,
+        email = randomString(12),
+        website = randomString(12),
     )
 }
