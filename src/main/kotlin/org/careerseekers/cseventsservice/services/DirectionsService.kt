@@ -5,6 +5,7 @@ import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
+import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
@@ -49,8 +50,9 @@ class DirectionsService(
                     iconId = item.icon?.let { documentsApiResolver.loadDocId("uploadDirectionIcon", it) }
                 ))
         ).let { direction ->
+            val categories = mutableListOf<DirectionAgeCategories>()
             item.ageCategory.forEach { ageCategory ->
-                direction.ageCategories?.add(
+                categories.add(
                     directionAgeCategoriesService.create(
                         CreateAgeCategory(
                             ageCategory = ageCategory,
@@ -59,6 +61,8 @@ class DirectionsService(
                     )
                 )
             }
+
+            direction.ageCategories = categories
             repository.save(direction)
         }.also { direction ->
             directionCreationKafkaProducer.sendMessage(

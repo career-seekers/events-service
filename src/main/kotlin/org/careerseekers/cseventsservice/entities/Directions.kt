@@ -38,7 +38,7 @@ data class Directions(
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val ageCategories: MutableList<DirectionAgeCategories>? = mutableListOf(),
+    var ageCategories: MutableList<DirectionAgeCategories>? = mutableListOf(),
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
