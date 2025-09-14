@@ -8,7 +8,7 @@ data class UpdateDirectionDto(
     val id: Long,
     val name: String? = null,
     val description: String? = null,
-    val ageCategory: DirectionAgeCategory? = null,
+    val ageCategory: List<DirectionAgeCategory>? = null,
     val icon: MultipartFile? = null,
     val expertId: Long? = null,
 ) : DtoClass
