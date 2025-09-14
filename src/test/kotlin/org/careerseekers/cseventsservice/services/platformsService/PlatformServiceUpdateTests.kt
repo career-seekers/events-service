@@ -26,9 +26,12 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
                 fullName = "New full name",
                 shortName = null,
                 address = "New address",
+                email = "Email",
+                website = "Web",
             )
 
             every { serviceUnderTest.getById(any(), any(), any()) } returns platform
+            every { repository.findByEmail(any()) } returns null
             every { repository.save(any()) } returns platform
 
             val result = serviceUnderTest.update(updateDto)
@@ -50,7 +53,9 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
                 id = platform.id,
                 fullName = null,
                 shortName = null,
-                address = null
+                address = null,
+                email = null,
+                website = null
             )
 
             every {
