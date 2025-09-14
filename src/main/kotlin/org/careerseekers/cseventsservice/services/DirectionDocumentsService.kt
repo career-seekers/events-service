@@ -65,7 +65,6 @@ class DirectionDocumentsService(
                 DirectionDocumentsCreation(
                     documentType = item.documentType.getAlias(),
                     directionName = direction.name,
-                    directionAgeCategory = direction.ageCategory.getAgeAlias(),
                     expert = expert,
                     tutor = tutor
                 )
