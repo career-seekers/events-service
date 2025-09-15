@@ -30,6 +30,9 @@ data class DirectionDocuments(
     @Column(nullable = true)
     var createdAt: LocalDateTime? = null,
 
+    @Column(nullable = false)
+    var verified: Boolean = false,
+
     @Column(nullable = true)
     var userId: Long? = null,
 
