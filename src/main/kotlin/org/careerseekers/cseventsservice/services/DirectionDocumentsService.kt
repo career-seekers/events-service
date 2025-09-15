@@ -81,6 +81,16 @@ class DirectionDocumentsService(
     }
 
     @Transactional
+    fun verifyDirectionDocs(id: Long): String {
+        return getById(id, throwable = false)?.let { doc ->
+            doc.verified = !doc.verified
+            repository.save(doc)
+
+            "Direction document verified successfully."
+        } ?: throw NotFoundException("Direction document with id $id not found.")
+    }
+
+    @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Document with id '${id}' not found.")!!.apply(repository::delete)
 
