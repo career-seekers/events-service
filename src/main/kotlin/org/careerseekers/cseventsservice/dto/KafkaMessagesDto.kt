@@ -36,6 +36,7 @@ data class DirectionCreation(
 data class DirectionDocumentsCreation (
     val documentType: String,
     val directionName: String,
+    val ageCategory: String,
     val expert: UsersCacheDto,
     val tutor: UsersCacheDto,
 ) : KafkaMessagesDto()

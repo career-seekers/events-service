@@ -5,6 +5,7 @@ import org.careerseekers.cseventsservice.dto.DirectionDocumentsCreation
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
+import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.FileTypes.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
@@ -64,6 +65,7 @@ class DirectionDocumentsService(
                 DirectionDocumentsCreation(
                     documentType = item.documentType.getAlias(),
                     directionName = direction.name,
+                    ageCategory = item.ageCategory.getAgeAlias(),
                     expert = expert,
                     tutor = tutor
                 )
@@ -72,9 +74,10 @@ class DirectionDocumentsService(
     }
 
     @Transactional
-    fun updateDocumentType(item: UpdateDirectionDocumentDto): String {
+    fun update(item: UpdateDirectionDocumentDto): String {
         getById(item.id, message = "Document with id '${item.id}' not found.")!!.apply {
-            documentType = item.documentType
+            item.documentType?.let { documentType = it}
+            item.ageCategory?.let { ageCategory = it }
         }.also(repository::save)
 
         return "Direction document updated successfully."
