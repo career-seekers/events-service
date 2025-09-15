@@ -5,6 +5,7 @@ import org.careerseekers.cseventsservice.controllers.interfaces.crud.IReadContro
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
+import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.FileTypes
 import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
@@ -45,12 +46,14 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     @PostMapping("/")
     fun create(
         @RequestPart("documentType") documentType: String,
+        @RequestPart("ageCategory") ageCategory: String,
         @RequestPart("document") document: MultipartFile,
         @RequestPart("userId") userId: String,
         @RequestPart("directionId") directionId: String,
     ): BasicSuccessfulResponse<DirectionDocuments> {
         return service.create(CreateDirectionDocumentDto(
             documentType = FileTypes.valueOf(documentType.uppercase().trim().trim('"')),
+            ageCategory = DirectionAgeCategory.valueOf(ageCategory.uppercase().trim().trim('"')),
             document = document,
             userId = userId.toLongOrThrow(),
             directionId = directionId.toLongOrThrow(),
@@ -59,7 +62,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
 
     @PatchMapping("/")
     fun updateDocumentType(@RequestBody item: UpdateDirectionDocumentDto) =
-        service.updateDocumentType(item).toHttpResponse()
+        service.update(item).toHttpResponse()
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/verify/{id}")

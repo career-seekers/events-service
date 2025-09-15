@@ -1,9 +1,11 @@
 package org.careerseekers.cseventsservice.dto.docs
 
 import org.careerseekers.cseventsservice.dto.DtoClass
+import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.FileTypes
 
 data class UpdateDirectionDocumentDto(
     val id: Long,
-    val documentType: FileTypes,
+    val documentType: FileTypes?,
+    val ageCategory: DirectionAgeCategory?,
 ) : DtoClass
