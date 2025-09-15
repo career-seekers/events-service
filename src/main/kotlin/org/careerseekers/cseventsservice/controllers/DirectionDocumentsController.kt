@@ -56,7 +56,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
             ageCategory = DirectionAgeCategory.valueOf(ageCategory.uppercase().trim().trim('"')),
             document = document,
             userId = userId.toLongOrThrow(),
-            directionId = directionId.toLongOrThrow()
+            directionId = directionId.toLongOrThrow(),
         )).toHttpResponse()
     }
 
