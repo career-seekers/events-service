@@ -61,7 +61,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun updateDocumentType(@RequestBody item: UpdateDirectionDocumentDto) =
         service.updateDocumentType(item).toHttpResponse()
 
-    @PreAuthorize("hasAuthority('SUPER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/verify/{id}")
     fun verify(@PathVariable id: Long) = service.verifyDirectionDocs(id).toHttpResponse()
 
