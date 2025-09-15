@@ -86,7 +86,11 @@ class DirectionDocumentsService(
             doc.verified = !doc.verified
             repository.save(doc)
 
-            "Direction document verified successfully."
+            if (doc.verified) {
+                "Direction document verified successfully."
+            } else {
+                "Direction document unverified successfully."
+            }
         } ?: throw NotFoundException("Direction document with id $id not found.")
     }
 
