@@ -27,7 +27,7 @@ class PlatformsService(
     fun getByUserId(userId: Long): Platforms? {
         usersCacheClient.getItemFromCache(userId) ?: throw NotFoundException("User with id $userId not found.")
 
-        return repository.findByUserId(userId)
+        return repository.findByUserId(userId) ?: throw NotFoundException("Platform with userId $userId not found.")
     }
 
     @Transactional
