@@ -10,6 +10,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.FileTypes
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 import java.time.LocalDateTime
@@ -23,6 +24,9 @@ data class DirectionDocuments(
 
     @Column(nullable = false)
     var documentType: FileTypes,
+
+    @Column(nullable = true)
+    var ageCategory: DirectionAgeCategory? = null,
 
     @Column(nullable = false)
     var documentId: Long,
