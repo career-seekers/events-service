@@ -61,6 +61,10 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun updateDocumentType(@RequestBody item: UpdateDirectionDocumentDto) =
         service.updateDocumentType(item).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('SUPER')")
+    @PatchMapping("/verify/{id}")
+    fun verify(@PathVariable id: Long) = service.verifyDirectionDocs(id).toHttpResponse()
+
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
