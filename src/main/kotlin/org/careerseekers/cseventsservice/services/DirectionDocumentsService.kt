@@ -1,11 +1,12 @@
 package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
-import org.careerseekers.cseventsservice.dto.DirectionDocumentsCreation
+import org.careerseekers.cseventsservice.dto.DirectionDocumentsTask
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
+import org.careerseekers.cseventsservice.enums.DirectionDocsEventTypes
 import org.careerseekers.cseventsservice.enums.FileTypes.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
@@ -62,7 +63,8 @@ class DirectionDocumentsService(
             )
         ).also {
             directionDocumentsTasksKafkaProducer.sendMessage(
-                DirectionDocumentsCreation(
+                DirectionDocumentsTask(
+                    eventType = DirectionDocsEventTypes.CREATION,
                     documentType = item.documentType.getAlias(),
                     directionName = direction.name,
                     ageCategory = item.ageCategory.getAgeAlias(),
