@@ -13,7 +13,7 @@ import org.careerseekers.cseventsservice.repositories.DirectionDocumentsReposito
 import org.careerseekers.cseventsservice.services.interfaces.crud.ICreateService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IDeleteService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IReadService
-import org.careerseekers.cseventsservice.services.kafka.producers.DirectionDocumentsCreationKafkaProducer
+import org.careerseekers.cseventsservice.services.kafka.producers.DirectionDocumentsTasksKafkaProducer
 import org.careerseekers.cseventsservice.utils.DocumentsApiResolver
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +26,7 @@ class DirectionDocumentsService(
     private val documentsApiResolver: DocumentsApiResolver,
     private val directionsService: DirectionsService,
     private val usersCacheClient: UsersCacheClient,
-    private val directionDocumentsCreationKafkaProducer: DirectionDocumentsCreationKafkaProducer,
+    private val directionDocumentsTasksKafkaProducer: DirectionDocumentsTasksKafkaProducer,
 ) : IReadService<DirectionDocuments, Long>,
     ICreateService<DirectionDocuments, Long, CreateDirectionDocumentDto>,
     IDeleteService<DirectionDocuments, Long> {
@@ -61,7 +61,7 @@ class DirectionDocumentsService(
                 )
             )
         ).also {
-            directionDocumentsCreationKafkaProducer.sendMessage(
+            directionDocumentsTasksKafkaProducer.sendMessage(
                 DirectionDocumentsCreation(
                     documentType = item.documentType.getAlias(),
                     directionName = direction.name,

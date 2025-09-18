@@ -6,8 +6,8 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 
 @Service
-class DirectionDocumentsCreationKafkaProducer(
+class DirectionDocumentsTasksKafkaProducer(
     override val template: KafkaTemplate<String, DirectionDocumentsCreation>
 ) : CustomKafkaProducer<DirectionDocumentsCreation> {
-    override val topic = KafkaTopics.DIRECTION_DOCUMENTS_CREATION
+    override val topic = KafkaTopics.DIRECTION_DOCUMENTS_TASKS
 }
