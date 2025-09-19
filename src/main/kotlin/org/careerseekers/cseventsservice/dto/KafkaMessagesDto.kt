@@ -3,6 +3,7 @@ package org.careerseekers.cseventsservice.dto
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.careerseekers.cseventsservice.enums.DirectionDocsEventTypes
 
 @Serializable
 @Polymorphic
@@ -33,7 +34,8 @@ data class DirectionCreation(
 
 @Serializable
 @SerialName("DirectionDocumentsCreation")
-data class DirectionDocumentsCreation (
+data class DirectionDocumentsTask (
+    val eventType: DirectionDocsEventTypes,
     val documentType: String,
     val directionName: String,
     val ageCategory: String,

@@ -1,19 +1,16 @@
 package org.careerseekers.cseventsservice.services
 
-import org.careerseekers.cseventsservice.cache.UsersCacheClient
-import org.careerseekers.cseventsservice.dto.DirectionDocumentsCreation
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
-import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
-import org.careerseekers.cseventsservice.enums.FileTypes.Companion.getAlias
+import org.careerseekers.cseventsservice.enums.DirectionDocsEventTypes
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
 import org.careerseekers.cseventsservice.repositories.DirectionDocumentsRepository
 import org.careerseekers.cseventsservice.services.interfaces.crud.ICreateService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IDeleteService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IReadService
-import org.careerseekers.cseventsservice.services.kafka.producers.DirectionDocumentsCreationKafkaProducer
+import org.careerseekers.cseventsservice.services.notification.DirectionDocsNotificationService
 import org.careerseekers.cseventsservice.utils.DocumentsApiResolver
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,8 +22,7 @@ class DirectionDocumentsService(
     private val directionDocumentsMapper: DirectionDocumentsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
     private val directionsService: DirectionsService,
-    private val usersCacheClient: UsersCacheClient,
-    private val directionDocumentsCreationKafkaProducer: DirectionDocumentsCreationKafkaProducer,
+    private val directionDocsNotificationService: DirectionDocsNotificationService,
 ) : IReadService<DirectionDocuments, Long>,
     ICreateService<DirectionDocuments, Long, CreateDirectionDocumentDto>,
     IDeleteService<DirectionDocuments, Long> {
@@ -37,15 +33,8 @@ class DirectionDocumentsService(
 
     @Transactional
     override fun create(item: CreateDirectionDocumentDto): DirectionDocuments {
-        val expert = usersCacheClient.getItemFromCache(item.userId)
-            ?: throw NotFoundException("User with id ${item.userId} not found.")
-
         val direction =
             directionsService.getById(item.directionId, message = "Direction with id ${item.directionId} not found.")!!
-
-        val tutor = direction.userId?.let {
-            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
-        }!!
 
         return repository.save(
             directionDocumentsMapper.directionDocsFromDto(
@@ -60,23 +49,13 @@ class DirectionDocumentsService(
                     direction = direction
                 )
             )
-        ).also {
-            directionDocumentsCreationKafkaProducer.sendMessage(
-                DirectionDocumentsCreation(
-                    documentType = item.documentType.getAlias(),
-                    directionName = direction.name,
-                    ageCategory = item.ageCategory.getAgeAlias(),
-                    expert = expert,
-                    tutor = tutor
-                )
-            )
-        }
+        ).also { directionDocsNotificationService.sendNotification(it, DirectionDocsEventTypes.CREATION) }
     }
 
     @Transactional
     fun update(item: UpdateDirectionDocumentDto): String {
         getById(item.id, message = "Document with id '${item.id}' not found.")!!.apply {
-            item.documentType?.let { documentType = it}
+            item.documentType?.let { documentType = it }
             item.ageCategory?.let { ageCategory = it }
         }.also(repository::save)
 
@@ -87,7 +66,7 @@ class DirectionDocumentsService(
     fun verifyDirectionDocs(id: Long): String {
         return getById(id, throwable = false)?.let { doc ->
             doc.verified = !doc.verified
-            repository.save(doc)
+            repository.save(doc).also { directionDocsNotificationService.sendNotification(it, DirectionDocsEventTypes.VERIFICATION) }
 
             if (doc.verified) {
                 "Direction document verified successfully."
