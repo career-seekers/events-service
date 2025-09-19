@@ -28,7 +28,7 @@ class DirectionDocsNotificationService(
         val expert = usersCacheClient.getItemFromCache(direction.expertId!!)
             ?: throw BadRequestException("Пользователь с ID ${direction.expertId} не найден.")
         val tutor = usersCacheClient.getItemFromCache(direction.userId!!)
-            ?: throw BadRequestException("Пользователь с ID ${direction.expertId} не найден.")
+            ?: throw BadRequestException("Пользователь с ID ${direction.userId} не найден.")
 
         notify(
             DirectionDocumentsTask(
