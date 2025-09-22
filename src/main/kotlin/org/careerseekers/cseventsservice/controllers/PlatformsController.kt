@@ -32,7 +32,7 @@ class PlatformsController(
         return service.getById(
             id,
             throwable = true,
-            message = "Platform with id $id not found."
+            message = "Площадка с ID $id не найдена."
         )!!.toHttpResponse()
     }
 

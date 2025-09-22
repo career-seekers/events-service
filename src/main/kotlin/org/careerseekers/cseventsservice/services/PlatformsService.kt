@@ -25,23 +25,23 @@ class PlatformsService(
 ) : CrudService<Platforms, Long, CreatePlatformDto, UpdatePlatformDto> {
 
     fun getByUserId(userId: Long): Platforms? {
-        usersCacheClient.getItemFromCache(userId) ?: throw NotFoundException("User with id $userId not found.")
+        usersCacheClient.getItemFromCache(userId) ?: throw NotFoundException("Пользователь с ID $userId не найден.")
 
-        return repository.findByUserId(userId) ?: throw NotFoundException("Platform with userId $userId not found.")
+        return repository.findByUserId(userId) ?: throw NotFoundException("Площадка с userID $userId не найдена.")
     }
 
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
             repository.findByEmail(item.email)
-                ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
+                ?.let { throw DoubleRecordException("Площадка с электронной почтой ${item.email} уже существует.") }
 
             val platform = repository.save(platformsMapper.platformFromDto(item))
 
             platformCreationKafkaProducer.sendMessage(PlatformCreation(platform.toKafkaPlatformDto()))
 
             platform
-        } ?: throw NotFoundException("User with id ${item.userId} not found.")
+        } ?: throw NotFoundException("Пользователь с ID ${item.userId} не найден")
     }
 
     @Transactional
@@ -50,19 +50,19 @@ class PlatformsService(
             create(dto)
         }
 
-        return "Platforms created successfully."
+        return "Все площадки успешно созданы."
     }
 
     @Transactional
     override fun update(item: UpdatePlatformDto): String {
-        getById(item.id, message = "Platform with id ${item.id} not found")?.apply {
+        getById(item.id, message = "Площадка с ID ${item.id} не найдена.")?.apply {
             item.fullName?.let { fullName = it }
             item.shortName?.let { shortName = it }
             item.address?.let { address = it }
             item.email?.let {
                 if (it != this.email) {
                     repository.findByEmail(item.email)
-                        ?.let { throw DoubleRecordException("Platform with email ${item.email} already exists.") }
+                        ?.let { throw DoubleRecordException("Площадка с электронной почтой ${item.email} уже существует.") }
                     email = it
                 }
             }
@@ -71,44 +71,44 @@ class PlatformsService(
             repository.save(this)
         }
 
-        return "Platform data updated successfully."
+        return "Данные площадки успешно обновлены."
     }
 
     @Transactional
     fun updatePlatformOwner(item: ChangePlatformOwnerDto): String {
-        getById(item.id, message = "Platform with id ${item.id} not found")?.apply {
+        getById(item.id, message = "Площадка с ID ${item.id} не найдена.")?.apply {
             usersCacheClient.getItemFromCache(item.userId)?.let {
                 userId = it.id
                 repository.save(this)
-            } ?: throw NotFoundException("User with id ${item.userId} not found.")
+            } ?: throw NotFoundException("Пользователь с ID ${item.userId} не найден.")
         }
 
-        return "Platform owner updated successfully."
+        return "Владелец площадки изменен успешно."
     }
 
     @Transactional
     fun updatePlatformVerification(platformId: Long): String {
-        getById(platformId, message = "Platform with id $platformId not found")?.apply {
+        getById(platformId, message = "Площадка с ID $platformId не найдена.")?.apply {
             verified = !verified
             repository.save(this)
         }
 
-        return "Platform verification updated successfully."
+        return "Платформа верифицирована успешно."
     }
 
     @Transactional
     override fun deleteById(id: Long): String {
-        getById(id, message = "Platform with id $id not found")?.let {
+        getById(id, message = "Платформа с ID $id не найдена.")?.let {
             repository.delete(it)
         }
 
-        return "Platform deleted successfully."
+        return "Платформа удалена успешно."
     }
 
     @Transactional
     override fun deleteAll(): String {
         repository.deleteAll()
 
-        return "All platforms deleted successfully."
+        return "Все платформы удалены успешно."
     }
 }

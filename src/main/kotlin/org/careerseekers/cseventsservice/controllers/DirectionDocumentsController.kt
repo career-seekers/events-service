@@ -35,7 +35,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
 
     @GetMapping("/{id}")
     override fun getById(@PathVariable id: Long) =
-        service.getById(id, message = "Direction document with id $id not found.")!!.toHttpResponse()
+        service.getById(id, message = "Документ компетенции с ID $id не найден.")!!.toHttpResponse()
 
     @GetMapping("/getByUserId/{userId}")
     fun getByUserId(@PathVariable userId: Long) = service.getByUserId(userId).toHttpResponse()

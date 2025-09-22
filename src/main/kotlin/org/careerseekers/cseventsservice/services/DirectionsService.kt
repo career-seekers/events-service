@@ -38,10 +38,10 @@ class DirectionsService(
     @Transactional
     override fun create(item: CreateDirectionDto): Directions {
         val tutor = item.userId?.let {
-            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("Пользователь с ID $it не найден.")
         }
         val expert = item.expertId?.let {
-            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+            usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("Пользователь с ID $it не найден.")
         }
 
         return repository.save(
@@ -81,12 +81,12 @@ class DirectionsService(
             create(item)
         }
 
-        return "All directions have been created."
+        return "Все компетенции созданы успешно."
     }
 
     @Transactional
     override fun update(item: UpdateDirectionDto): String {
-        getById(item.id, message = "Direction with id '${item.id}' not found.")!!.apply {
+        getById(item.id, message = "Компетенция с ID '${item.id}' не найдена.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
             item.ageCategory?.let {
@@ -114,21 +114,21 @@ class DirectionsService(
                 oldIconId?.let { iconId -> documentsApiResolver.deleteDocument(iconId) }
             }
             item.expertId?.let {
-                usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("User with id $it not found.")
+                usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("Пользователь с ID $it не найден.")
                 expertId = it
             }
         }.also(repository::save)
 
-        return "Direction updated successfully."
+        return "Данные компетенции обновлены успешно."
     }
 
     @Transactional
     override fun deleteById(id: Long): String {
-        getById(id, message = "Direction with id '${id}' not found.")!!.run {
+        getById(id, message = "Компетенция с ID '${id}' не найдена.")!!.run {
             this.iconId?.run { documentsApiResolver.deleteDocument(this) }
             repository.delete(this)
 
-            return "Direction deleted successfully."
+            return "Компетенция удалена успешно."
         }
     }
 
@@ -139,6 +139,6 @@ class DirectionsService(
             repository.delete(direction)
         }
 
-        return "All directions have been deleted."
+        return "Все компетенции удалены успешно."
     }
 }
