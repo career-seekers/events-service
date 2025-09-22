@@ -59,7 +59,7 @@ class DirectionDocumentsService(
             item.ageCategory?.let { ageCategory = it }
         }.also(repository::save)
 
-        return "Документ компетенции загружен успешно."
+        return "Документ компетенции обновлен успешно."
     }
 
     @Transactional
