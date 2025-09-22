@@ -50,7 +50,7 @@ class PlatformServiceCreateTests : PlatformServiceMocks() {
                 serviceUnderTest.create(platformDto)
             }
 
-            assertThat(exception.message).isEqualTo("Пользователь с ID $userId не найден")
+            assertThat(exception.message).isEqualTo("Пользователь с ID $userId не найден.")
 
             verify { usersCacheClient.getItemFromCache(platformDto.userId) }
 
