@@ -41,7 +41,7 @@ class PlatformsService(
             platformCreationKafkaProducer.sendMessage(PlatformCreation(platform.toKafkaPlatformDto()))
 
             platform
-        } ?: throw NotFoundException("Пользователь с ID ${item.userId} не найден")
+        } ?: throw NotFoundException("Пользователь с ID ${item.userId} не найден.")
     }
 
     @Transactional
