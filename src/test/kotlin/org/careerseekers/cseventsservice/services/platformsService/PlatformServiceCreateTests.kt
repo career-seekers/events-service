@@ -50,7 +50,7 @@ class PlatformServiceCreateTests : PlatformServiceMocks() {
                 serviceUnderTest.create(platformDto)
             }
 
-            assertThat(exception.message).isEqualTo("User with id $userId not found.")
+            assertThat(exception.message).isEqualTo("Пользователь с ID $userId не найден.")
 
             verify { usersCacheClient.getItemFromCache(platformDto.userId) }
 
@@ -71,7 +71,7 @@ class PlatformServiceCreateTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.createAll(platforms)
 
-            assertThat(result).isNotNull.isEqualTo("Platforms created successfully.")
+            assertThat(result).isNotNull.isEqualTo("Все площадки успешно созданы.")
 
             verify(exactly = 5) { serviceUnderTest.create(any())  }
         }

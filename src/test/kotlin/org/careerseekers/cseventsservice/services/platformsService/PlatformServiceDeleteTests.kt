@@ -26,7 +26,7 @@ class PlatformServiceDeleteTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.deleteById(platform.id)
 
-            assertThat(result).isNotNull.isEqualTo("Platform deleted successfully.")
+            assertThat(result).isNotNull.isEqualTo("Платформа удалена успешно.")
 
             verify { serviceUnderTest.getById(any(), any(), any()) }
             verify { repository.delete(any()) }
@@ -58,7 +58,7 @@ class PlatformServiceDeleteTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.deleteAll()
 
-            assertThat(result).isEqualTo("All platforms deleted successfully.")
+            assertThat(result).isEqualTo("Все платформы удалены успешно.")
 
             verify { repository.deleteAll() }
         }

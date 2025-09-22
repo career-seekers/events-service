@@ -18,9 +18,9 @@ class JwtUtil(private val usersCacheClient: UsersCacheClient) {
     private lateinit var jwtSecret: String
 
     fun verifyToken(token: String, throwTimeLimit: Boolean = true): Boolean {
-        val claims = getClaims(token) ?: throw JwtAuthenticationException("Invalid token claims")
+        val claims = getClaims(token) ?: throw JwtAuthenticationException("Невалидное содержание токена.")
         if (!claims.expiration.after(Date()) && throwTimeLimit) {
-            throw JwtAuthenticationException("Token expired")
+            throw JwtAuthenticationException("Срок жизни токена истёк.")
         }
 
         return true
@@ -30,7 +30,7 @@ class JwtUtil(private val usersCacheClient: UsersCacheClient) {
         val claims = getClaims(token)
 
         return usersCacheClient.getItemFromCache((claims?.get("id") as Int).toLong())
-            ?: throw NotFoundException("User with id ${claims["id"]} not found")
+            ?: throw NotFoundException("Пользователь с ID ${claims["id"]} не найден.")
     }
 
     fun getClaims(token: String): Claims? {
@@ -41,7 +41,7 @@ class JwtUtil(private val usersCacheClient: UsersCacheClient) {
                 .parseSignedClaims(token)
                 .payload
         } catch (_: ExpiredJwtException) {
-            throw JwtAuthenticationException("Jwt token expired")
+            throw JwtAuthenticationException("Срок жизни токена истёк.")
         }
 
         return claims

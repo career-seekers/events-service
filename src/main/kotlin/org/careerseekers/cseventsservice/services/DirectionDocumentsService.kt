@@ -34,7 +34,7 @@ class DirectionDocumentsService(
     @Transactional
     override fun create(item: CreateDirectionDocumentDto): DirectionDocuments {
         val direction =
-            directionsService.getById(item.directionId, message = "Direction with id ${item.directionId} not found.")!!
+            directionsService.getById(item.directionId, message = "Компетенция с ID ${item.directionId} не найдена.")!!
 
         return repository.save(
             directionDocumentsMapper.directionDocsFromDto(
@@ -54,12 +54,12 @@ class DirectionDocumentsService(
 
     @Transactional
     fun update(item: UpdateDirectionDocumentDto): String {
-        getById(item.id, message = "Document with id '${item.id}' not found.")!!.apply {
+        getById(item.id, message = "Документ с ID '${item.id}' не найден.")!!.apply {
             item.documentType?.let { documentType = it }
             item.ageCategory?.let { ageCategory = it }
         }.also(repository::save)
 
-        return "Direction document updated successfully."
+        return "Документ компетенции обновлен успешно."
     }
 
     @Transactional
@@ -69,24 +69,24 @@ class DirectionDocumentsService(
             repository.save(doc).also { directionDocsNotificationService.sendNotification(it, DirectionDocsEventTypes.VERIFICATION) }
 
             if (doc.verified) {
-                "Direction document verified successfully."
+                "Документ верифицирован."
             } else {
-                "Direction document unverified successfully."
+                "Верификация документа отменена."
             }
-        } ?: throw NotFoundException("Direction document with id $id not found.")
+        } ?: throw NotFoundException("Документ компетенции с ID $id не найден.")
     }
 
     @Transactional
     override fun deleteById(id: Long): String {
-        getById(id, message = "Document with id '${id}' not found.")!!.apply(repository::delete)
+        getById(id, message = "Документ с ID '${id}' не найден.")!!.apply(repository::delete)
 
-        return "Direction document deleted successfully."
+        return "Документ удален успешно."
     }
 
     @Transactional
     override fun deleteAll(): String {
         repository.deleteAll()
 
-        return "All direction documents deleted successfully."
+        return "Все документы компетенций удалены успешно."
     }
 }

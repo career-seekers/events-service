@@ -32,7 +32,7 @@ class DirectionController(
 
     @GetMapping("/{id}")
     override fun getById(@PathVariable id: Long) =
-        service.getById(id, message = "Direction with id $id not found.")!!.toHttpResponse()
+        service.getById(id, message = "Компетенция с ID $id не найдена.")!!.toHttpResponse()
 
     @GetMapping("/getByUserId/{userId}")
     fun getByUserId(@PathVariable userId: Long) = service.getByUserId(userId).toHttpResponse()

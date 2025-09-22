@@ -41,8 +41,8 @@ class UsersCacheClient(
             ).toCache()
         } catch (e: StatusRuntimeException) {
             when (e.status.code) {
-                Status.Code.NOT_FOUND -> throw NotFoundException("User with id $id not found")
-                Status.Code.UNAVAILABLE -> throw GrpcServiceUnavailableException("Users gRPC service unavailable now.")
+                Status.Code.NOT_FOUND -> throw NotFoundException("Пользователь с ID $id не найден.")
+                Status.Code.UNAVAILABLE -> throw GrpcServiceUnavailableException("GRPC сервис пользователей недоступен в данный момент.")
 
                 else -> throw e
             }

@@ -17,7 +17,7 @@ enum class DirectionAgeCategory(private val ageAlias: String) {
                 in 7..8 -> SCHOOL_1
                 in 9..11 -> SCHOOL_2
                 in 12..13 -> SCHOOL_3
-                else -> throw BadRequestException("This age not supported.")
+                else -> throw BadRequestException("Данный возраст не поддерживается.")
             }
         }
 

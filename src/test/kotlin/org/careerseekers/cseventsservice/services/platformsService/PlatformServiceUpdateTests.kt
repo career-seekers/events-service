@@ -36,7 +36,7 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.update(updateDto)
 
-            assertThat(result).isEqualTo("Platform data updated successfully.")
+            assertThat(result).isEqualTo("Данные площадки успешно обновлены.")
 
             assertThat(platform.fullName).isEqualTo("New full name")
             assertThat(platform.shortName).isEqualTo("ShortName")
@@ -99,7 +99,7 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.updatePlatformOwner(dto)
 
-            assertThat(result).isNotNull.isEqualTo("Platform owner updated successfully.")
+            assertThat(result).isNotNull.isEqualTo("Владелец площадки изменен успешно.")
 
             verify { serviceUnderTest.getById(any(), any(), any()) }
             verify { usersCacheClient.getItemFromCache(any()) }
@@ -157,7 +157,7 @@ class PlatformServiceUpdateTests : PlatformServiceMocks() {
 
             val result = serviceUnderTest.updatePlatformVerification(platform.id)
 
-            assertThat(result).isNotNull.isEqualTo("Platform verification updated successfully.")
+            assertThat(result).isNotNull.isEqualTo("Платформа верифицирована успешно.")
             assertThat(platform.verified).isNotEqualTo(oldVerification)
 
             verify { serviceUnderTest.getById(any(), any(), any()) }
