@@ -73,7 +73,7 @@ class DirectionDocumentsService(
             } else {
                 "Верификация документа отменена."
             }
-        } ?: throw NotFoundException("Компетенция с ID $id не найдена.")
+        } ?: throw NotFoundException("Документ компетенции с ID $id не найден.")
     }
 
     @Transactional
