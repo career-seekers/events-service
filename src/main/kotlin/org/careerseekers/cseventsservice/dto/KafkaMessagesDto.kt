@@ -41,4 +41,5 @@ data class DirectionDocumentsTask (
     val ageCategory: String,
     val expert: UsersCacheDto,
     val tutor: UsersCacheDto,
+    val verification: Boolean,
 ) : KafkaMessagesDto()

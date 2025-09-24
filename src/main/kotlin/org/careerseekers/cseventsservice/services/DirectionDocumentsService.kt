@@ -63,16 +63,14 @@ class DirectionDocumentsService(
     }
 
     @Transactional
-    fun verifyDirectionDocs(id: Long): String {
+    fun verifyDirectionDocs(id: Long, verification: Boolean): String {
         return getById(id, throwable = false)?.let { doc ->
-            doc.verified = !doc.verified
-            repository.save(doc).also { directionDocsNotificationService.sendNotification(it, DirectionDocsEventTypes.VERIFICATION) }
-
-            if (doc.verified) {
-                "Документ верифицирован."
-            } else {
-                "Верификация документа отменена."
+            doc.verified = verification
+            repository.save(doc).also {
+                directionDocsNotificationService.sendNotification(it, DirectionDocsEventTypes.VERIFICATION)
             }
+
+            "Верификация документа обновлена."
         } ?: throw NotFoundException("Документ компетенции с ID $id не найден.")
     }
 
