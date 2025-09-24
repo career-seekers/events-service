@@ -39,6 +39,7 @@ class DirectionDocsNotificationService(
                     ?: throw BadRequestException("У документа должна быть указана возрастная категория."),
                 expert = expert,
                 tutor = tutor,
+                verification = docs.verified
             )
         )
     }
