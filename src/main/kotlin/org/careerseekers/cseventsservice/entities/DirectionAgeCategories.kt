@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.validation.constraints.Min
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 
 @Entity
@@ -23,5 +24,23 @@ data class DirectionAgeCategories(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id", nullable = false)
-    var direction: Directions
-)
+    var direction: Directions,
+
+    @field:Min(0)
+    @Column(nullable = false)
+    var maxParticipantsCount: Long = 0L,
+
+    @field:Min(0)
+    @Column(nullable = false)
+    var currentParticipantsCount: Long = 0L,
+) {
+    fun increaseCurrentParticipantsCount() {
+        this.currentParticipantsCount += 1
+        this.direction.participantsCount += 1
+    }
+
+    fun decreaseCurrentParticipantsCount() {
+        this.currentParticipantsCount -= 1
+        this.direction.participantsCount -= 1
+    }
+}

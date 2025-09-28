@@ -3,10 +3,12 @@ package org.careerseekers.cseventsservice.controllers
 import org.careerseekers.cseventsservice.controllers.interfaces.CrudController
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toLongOrThrow
+import org.careerseekers.cseventsservice.services.DirectionAgeCategoriesService
 import org.careerseekers.cseventsservice.services.DirectionsService
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/events-service/v1/directions")
 class DirectionController(
     override val service: DirectionsService,
+    private val directionAgeCategoriesService: DirectionAgeCategoriesService
 ) : CrudController<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
 
     @GetMapping("/")
@@ -56,6 +59,10 @@ class DirectionController(
 
     @PatchMapping("/")
     override fun update(@RequestBody item: UpdateDirectionDto) = service.update(item).toHttpResponse()
+
+    @PatchMapping("/updateAgeCategory")
+    fun updateAgeCategory(@RequestBody item: UpdateAgeCategoryDto) =
+        directionAgeCategoriesService.update(item).toHttpResponse()
 
     @PatchMapping("/uploadDirectionIcon", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadDirectionIcon(
