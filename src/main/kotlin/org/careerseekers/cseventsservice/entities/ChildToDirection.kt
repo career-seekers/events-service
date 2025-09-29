@@ -13,6 +13,7 @@ import jakarta.persistence.Table
 import org.careerseekers.cseventsservice.enums.ParticipantStatus
 import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
+import java.util.Date
 
 @Entity
 @Table(name = "child_to_direction")
@@ -29,6 +30,9 @@ data class ChildToDirection(
 
     @Column(nullable = false)
     var queueStatus: QueueStatus,
+
+    @Column(nullable = false)
+    var createdAt: Date,
 
     @JsonIgnoreProperties(value = ["documents", "participants", "ageCategories"])
     @ManyToOne(fetch = FetchType.EAGER)
