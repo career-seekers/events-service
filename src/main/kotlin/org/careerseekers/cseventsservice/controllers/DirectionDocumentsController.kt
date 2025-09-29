@@ -7,11 +7,13 @@ import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.FileTypes
+import org.careerseekers.cseventsservice.exceptions.BadRequestException
 import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toLongOrThrow
 import org.careerseekers.cseventsservice.services.DirectionDocumentsService
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -50,7 +52,15 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
         @RequestPart("document") document: MultipartFile,
         @RequestPart("userId") userId: String,
         @RequestPart("directionId") directionId: String,
+        authentication: Authentication
     ): BasicSuccessfulResponse<DirectionDocuments> {
+        val authorities = authentication.authorities
+
+
+        if (!authorities.any { it.authority == "ADMIN" }) {
+            throw BadRequestException("Время на загрузку документов истекло.")
+        }
+
         return service.create(CreateDirectionDocumentDto(
             documentType = FileTypes.valueOf(documentType.uppercase().trim().trim('"')),
             ageCategory = DirectionAgeCategory.valueOf(ageCategory.uppercase().trim().trim('"')),
