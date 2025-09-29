@@ -1,0 +1,42 @@
+package org.careerseekers.cseventsservice.entities
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import org.careerseekers.cseventsservice.enums.ParticipantStatus
+import org.careerseekers.cseventsservice.enums.QueueStatus
+import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
+
+@Entity
+@Table(name = "child_to_direction")
+data class ChildToDirection(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long,
+
+    @Column(nullable = false)
+    var childId: Long,
+
+    @Column(nullable = false)
+    var status: ParticipantStatus,
+
+    @Column(nullable = false)
+    var queueStatus: QueueStatus,
+
+    @JsonIgnoreProperties(value = ["documents", "participants", "ageCategories"])
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "direction_id", nullable = false)
+    var direction: Directions,
+
+    @JsonIgnoreProperties(value = ["participants", "direction"])
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "direction_age_category_id", nullable = false)
+    var directionAgeCategory: DirectionAgeCategories,
+) : ConvertableToHttpResponse<ChildToDirection>

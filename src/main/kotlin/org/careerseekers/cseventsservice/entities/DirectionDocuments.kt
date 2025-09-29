@@ -40,7 +40,7 @@ data class DirectionDocuments(
     @Column(nullable = true)
     var userId: Long? = null,
 
-    @JsonIgnoreProperties(value = ["documents"])
+    @JsonIgnoreProperties(value = ["documents", "participants"])
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id")
     var direction: Directions? = null,
