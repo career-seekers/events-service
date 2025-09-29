@@ -30,12 +30,12 @@ data class ChildToDirection(
     @Column(nullable = false)
     var queueStatus: QueueStatus,
 
-    @JsonIgnoreProperties(value = ["documents", "participants"])
+    @JsonIgnoreProperties(value = ["documents", "participants", "ageCategories"])
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id")
     var direction: Directions? = null,
 
-    @JsonIgnoreProperties(value = ["participants"])
+    @JsonIgnoreProperties(value = ["participants", "direction"])
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_age_category_id", nullable = false)
     var directionAgeCategory: DirectionAgeCategories,
