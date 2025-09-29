@@ -32,8 +32,8 @@ data class ChildToDirection(
 
     @JsonIgnoreProperties(value = ["documents", "participants", "ageCategories"])
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "direction_id")
-    var direction: Directions? = null,
+    @JoinColumn(name = "direction_id", nullable = false)
+    var direction: Directions,
 
     @JsonIgnoreProperties(value = ["participants", "direction"])
     @ManyToOne(fetch = FetchType.EAGER)
