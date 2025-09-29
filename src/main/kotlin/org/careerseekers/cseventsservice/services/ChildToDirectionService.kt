@@ -1,6 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
-import org.careerseekers.cseventsservice.dto.directions.childToDirection.LinkChildWithDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
 import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.exceptions.BadRequestException
@@ -17,13 +17,13 @@ class ChildToDirectionService(
     private val directionAgeCategoriesService: DirectionAgeCategoriesService,
     private val childToDirectionMapper: ChildToDirectionMapper
 ) : IReadService<ChildToDirection, Long>,
-    ICreateService<ChildToDirection, Long, LinkChildWithDirectionDto> {
+    ICreateService<ChildToDirection, Long, CreateChildWithDirectionDto> {
 
     fun getByChildId(childId: Long): List<ChildToDirection> = repository.findByChildId(childId)
 
     fun getByDirectionId(directionId: Long): List<ChildToDirection> = repository.findByDirectionId(directionId)
 
-    override fun create(item: LinkChildWithDirectionDto): ChildToDirection {
+    override fun create(item: CreateChildWithDirectionDto): ChildToDirection {
         val direction =
             directionService.getById(item.directionId, message = "Компетенция с ID ${item.directionId} не найдена.")!!
 
@@ -36,7 +36,10 @@ class ChildToDirectionService(
 
         item.apply {
             queueStatus =
-                if (ageCategory.currentParticipantsCount >= ageCategory.maxParticipantsCount) QueueStatus.IN_QUEUE else QueueStatus.PARTICIPATES
+                if (ageCategory.currentParticipantsCount >= ageCategory.maxParticipantsCount && ageCategory.maxParticipantsCount != 0L)
+                    QueueStatus.IN_QUEUE
+                else
+                    QueueStatus.PARTICIPATES
 
             item.direction = direction
             item.directionAgeCategory = ageCategory
