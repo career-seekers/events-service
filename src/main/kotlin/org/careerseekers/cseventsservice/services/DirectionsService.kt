@@ -8,8 +8,10 @@ import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCate
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
+import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionsMapper
+import org.careerseekers.cseventsservice.repositories.ChildToDirectionRepository
 import org.careerseekers.cseventsservice.repositories.DirectionsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
 import org.careerseekers.cseventsservice.services.kafka.producers.DirectionCreationKafkaProducer
@@ -21,6 +23,7 @@ import kotlin.also
 @Service
 class DirectionsService(
     override val repository: DirectionsRepository,
+    private val childToDirectionRepository: ChildToDirectionRepository,
     private val directionsMapper: DirectionsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
     private val usersCacheClient: UsersCacheClient,
@@ -120,6 +123,30 @@ class DirectionsService(
         }.also(repository::save)
 
         return "Данные компетенции обновлены успешно."
+    }
+
+    @Transactional
+    fun updateDirectionParticipants(direction: Directions) {
+        childToDirectionRepository.findByDirectionId(direction.id)
+            .sortedBy { it.createdAt }
+            .forEach { childToDirection ->
+                if (childToDirection.queueStatus == QueueStatus.IN_QUEUE &&
+                    childToDirection.directionAgeCategory.currentParticipantsCount < childToDirection.directionAgeCategory.maxParticipantsCount &&
+                    childToDirection.directionAgeCategory.maxParticipantsCount != 0L)
+                {
+                    childToDirection.queueStatus = QueueStatus.PARTICIPATES
+                }
+
+                if (childToDirection.queueStatus == QueueStatus.PARTICIPATES &&
+                    childToDirection.directionAgeCategory.currentParticipantsCount > childToDirection.directionAgeCategory.maxParticipantsCount &&
+                    childToDirection.directionAgeCategory.maxParticipantsCount != 0L
+
+                ) {
+                    childToDirection.queueStatus = QueueStatus.IN_QUEUE
+                }
+
+                childToDirectionRepository.save(childToDirection)
+            }
     }
 
     @Transactional
