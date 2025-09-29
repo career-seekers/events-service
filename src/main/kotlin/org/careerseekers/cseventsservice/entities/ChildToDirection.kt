@@ -10,38 +10,33 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
-import org.careerseekers.cseventsservice.enums.FileTypes
+import org.careerseekers.cseventsservice.enums.ParticipantStatus
+import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "direction_documents")
-data class DirectionDocuments(
+@Table(name = "child_to_direction")
+data class ChildToDirection(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
     @Column(nullable = false)
-    var documentType: FileTypes,
-
-    @Column(nullable = true)
-    var ageCategory: DirectionAgeCategory? = null,
+    var childId: Long,
 
     @Column(nullable = false)
-    var documentId: Long,
+    var status: ParticipantStatus,
 
-    @Column(nullable = true)
-    var createdAt: LocalDateTime? = null,
-
-    @Column(nullable = true)
-    var verified: Boolean? = null,
-
-    @Column(nullable = true)
-    var userId: Long? = null,
+    @Column(nullable = false)
+    var queueStatus: QueueStatus,
 
     @JsonIgnoreProperties(value = ["documents", "participants"])
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id")
     var direction: Directions? = null,
-) : ConvertableToHttpResponse<DirectionDocuments>
+
+    @JsonIgnoreProperties(value = ["participants"])
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "direction_age_category_id", nullable = false)
+    var directionAgeCategory: DirectionAgeCategories,
+) : ConvertableToHttpResponse<ChildToDirection>
