@@ -1,6 +1,6 @@
 package org.careerseekers.cseventsservice.controllers
 
-import org.careerseekers.cseventsservice.dto.directions.childToDirection.LinkChildWithDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,5 +28,5 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
     fun getByDirectionId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
 
     @PostMapping("/")
-    fun create(@RequestBody item: LinkChildWithDirectionDto) = service.create(item).toHttpResponse()
+    fun create(@RequestBody item: CreateChildWithDirectionDto) = service.create(item).toHttpResponse()
 }
