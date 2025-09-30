@@ -11,6 +11,9 @@ import org.careerseekers.cseventsservice.services.interfaces.crud.ICreateService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IDeleteService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IReadService
 import org.careerseekers.cseventsservice.services.interfaces.crud.IUpdateService
+import org.springframework.dao.OptimisticLockingFailureException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -29,6 +32,7 @@ class ChildToDirectionService(
 
     fun getByDirectionId(directionId: Long): List<ChildToDirection> = repository.findByDirectionId(directionId)
 
+    @Retryable(value = [OptimisticLockingFailureException::class], maxAttempts = 5, backoff = Backoff(delay = 500))
     @Transactional
     override fun create(item: CreateChildWithDirectionDto): ChildToDirection {
         val direction =
