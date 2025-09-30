@@ -129,7 +129,7 @@ class DirectionsService(
     @Transactional
     fun updateDirectionParticipants(direction: Directions) {
         val records = childToDirectionRepository.findByDirectionId(direction.id)
-            .sortedBy { it.createdAt }
+            .sortedByDescending { it.createdAt }
 
         val activeCountsByCategory = records
             .filter { it.queueStatus == QueueStatus.PARTICIPATES }
@@ -145,10 +145,16 @@ class DirectionsService(
             val maxCount = child.directionAgeCategory.maxParticipantsCount
 
             var statusChanged = false
-            if (child.queueStatus == QueueStatus.IN_QUEUE && activeCount < maxCount && maxCount != 0L) {
-                child.queueStatus = QueueStatus.PARTICIPATES
-                activeCountsByCategory[catId] = activeCount + 1
-                statusChanged = true
+            if (child.queueStatus == QueueStatus.IN_QUEUE) {
+                if (maxCount != 0L && activeCount < maxCount) {
+                    child.queueStatus = QueueStatus.PARTICIPATES
+                    activeCountsByCategory[catId] = activeCount + 1
+                    statusChanged = true
+                } else if (maxCount == 0L) {
+                    child.queueStatus = QueueStatus.PARTICIPATES
+                    activeCountsByCategory[catId] = activeCount + 1
+                    statusChanged = true
+                }
             } else if (child.queueStatus == QueueStatus.PARTICIPATES && activeCount > maxCount && maxCount != 0L) {
                 child.queueStatus = QueueStatus.IN_QUEUE
                 activeCountsByCategory[catId] = activeCount - 1
