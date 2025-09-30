@@ -10,6 +10,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.Version
 import org.careerseekers.cseventsservice.enums.ParticipantStatus
 import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
@@ -33,6 +34,9 @@ data class ChildToDirection(
 
     @Column(nullable = false)
     var createdAt: Date,
+
+    @Version
+    var version: Int? = null,
 
     @JsonIgnoreProperties(value = ["documents", "participants", "ageCategories"])
     @ManyToOne(fetch = FetchType.EAGER)
