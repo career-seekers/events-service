@@ -85,17 +85,17 @@ class ChildToDirectionService(
     }
 
     override fun deleteAll(): String {
-        getAll().forEach { childToDirection ->
-            childToDirection.direction?.ageCategories?.let {
-                for (category in it) {
+        val entitiesToDelete = getAll()
+        entitiesToDelete.forEach { childToDirection ->
+            childToDirection.direction?.ageCategories?.let { ageCategories ->
+                for (category in ageCategories) {
                     if (category == childToDirection.directionAgeCategory) {
                         category.decreaseCurrentParticipantsCount()
                     }
                 }
             }
-            repository.delete(childToDirection)
         }
-
+        repository.deleteAll(entitiesToDelete)
         return "Все записи на компетенции удалены."
     }
 }
