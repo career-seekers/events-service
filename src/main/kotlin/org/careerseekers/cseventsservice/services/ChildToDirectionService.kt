@@ -88,7 +88,7 @@ class ChildToDirectionService(
         getAll().forEach { childToDirection ->
             childToDirection.direction?.ageCategories?.let {
                 for (category in it) {
-                    if (category == it) {
+                    if (category == childToDirection.directionAgeCategory) {
                         category.decreaseCurrentParticipantsCount()
                     }
                 }
