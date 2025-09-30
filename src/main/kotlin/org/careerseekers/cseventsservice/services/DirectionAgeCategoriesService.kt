@@ -50,11 +50,9 @@ class DirectionAgeCategoriesService(
     @Transactional
     override fun deleteById(id: Long) {
         getById(id, message = "Direction age category with id $id not found")?.let { category ->
-            category.direction.ageCategories
-                ?.removeAll { it == category }
-                .also { directionsRepository.save(category.direction) }
+            category.direction.ageCategories?.remove(category)
 
-            repository.delete(category)
+            directionsRepository.save(category.direction)
         }
     }
 
