@@ -42,19 +42,14 @@ class ChildToDirectionService(
         if (ageCategory.direction != direction) throw BadRequestException("Возрастная категория должна принадлежать компетенции.")
 
         item.apply {
-            queueStatus =
-                if (ageCategory.currentParticipantsCount >= ageCategory.maxParticipantsCount && ageCategory.maxParticipantsCount != 0L)
-                    QueueStatus.IN_QUEUE
-                else
-                    QueueStatus.PARTICIPATES
-
-            item.direction = direction
-            item.directionAgeCategory = ageCategory
+            this.queueStatus = QueueStatus.IN_QUEUE
+            this.direction = direction
+            this.directionAgeCategory = ageCategory
         }
 
         return repository.save(childToDirectionMapper.objectFromDto(item)).also {
             ageCategory.increaseCurrentParticipantsCount()
-        }
+        }.also { directionService.updateDirectionParticipants(direction) }
     }
 
     @Transactional

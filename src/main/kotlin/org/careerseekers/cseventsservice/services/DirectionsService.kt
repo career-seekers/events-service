@@ -127,26 +127,30 @@ class DirectionsService(
 
     @Transactional
     fun updateDirectionParticipants(direction: Directions) {
-        childToDirectionRepository.findByDirectionId(direction.id)
+        val records = childToDirectionRepository.findByDirectionId(direction.id)
             .sortedBy { it.createdAt }
-            .forEach { childToDirection ->
-                if (childToDirection.queueStatus == QueueStatus.IN_QUEUE &&
-                    childToDirection.directionAgeCategory.currentParticipantsCount < childToDirection.directionAgeCategory.maxParticipantsCount &&
-                    childToDirection.directionAgeCategory.maxParticipantsCount != 0L)
-                {
-                    childToDirection.queueStatus = QueueStatus.PARTICIPATES
-                }
 
-                if (childToDirection.queueStatus == QueueStatus.PARTICIPATES &&
-                    childToDirection.directionAgeCategory.currentParticipantsCount > childToDirection.directionAgeCategory.maxParticipantsCount &&
-                    childToDirection.directionAgeCategory.maxParticipantsCount != 0L
+        val activeCountsByCategory = records
+            .filter { it.queueStatus == QueueStatus.PARTICIPATES }
+            .groupingBy { it.directionAgeCategory.id }
+            .eachCount()
+            .mapValues { it.value.toLong() }
+            .toMutableMap()
 
-                ) {
-                    childToDirection.queueStatus = QueueStatus.IN_QUEUE
-                }
+        for (child in records) {
+            val catId = child.directionAgeCategory.id
+            val activeCount = activeCountsByCategory.getOrDefault(catId, 0L)
+            val maxCount = child.directionAgeCategory.maxParticipantsCount
 
-                childToDirectionRepository.save(childToDirection)
+            if (child.queueStatus == QueueStatus.IN_QUEUE && activeCount < maxCount && maxCount != 0L) {
+                child.queueStatus = QueueStatus.PARTICIPATES
+                activeCountsByCategory[catId] = activeCount + 1
+            } else if (child.queueStatus == QueueStatus.PARTICIPATES && activeCount > maxCount && maxCount != 0L) {
+                child.queueStatus = QueueStatus.IN_QUEUE
+                activeCountsByCategory[catId] = activeCount - 1
             }
+            childToDirectionRepository.save(child)
+        }
     }
 
     @Transactional
