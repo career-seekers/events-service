@@ -5,11 +5,14 @@ import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
+import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
+import org.careerseekers.cseventsservice.enums.QueueStatus
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionsMapper
+import org.careerseekers.cseventsservice.repositories.ChildToDirectionRepository
 import org.careerseekers.cseventsservice.repositories.DirectionsRepository
 import org.careerseekers.cseventsservice.services.interfaces.CrudService
 import org.careerseekers.cseventsservice.services.kafka.producers.DirectionCreationKafkaProducer
@@ -21,6 +24,7 @@ import kotlin.also
 @Service
 class DirectionsService(
     override val repository: DirectionsRepository,
+    private val childToDirectionRepository: ChildToDirectionRepository,
     private val directionsMapper: DirectionsMapper,
     private val documentsApiResolver: DocumentsApiResolver,
     private val usersCacheClient: UsersCacheClient,
@@ -120,6 +124,41 @@ class DirectionsService(
         }.also(repository::save)
 
         return "Данные компетенции обновлены успешно."
+    }
+
+    @Transactional
+    fun updateDirectionParticipants(direction: Directions) {
+        val records = childToDirectionRepository.findByDirectionId(direction.id)
+            .sortedBy { it.createdAt }
+
+        val activeCountsByCategory = records
+            .filter { it.queueStatus == QueueStatus.PARTICIPATES }
+            .groupingBy { it.directionAgeCategory.id }
+            .eachCount()
+            .mapValues { it.value.toLong() }
+            .toMutableMap()
+
+        val modifiedChildren = mutableListOf<ChildToDirection>()
+        for (child in records) {
+            val catId = child.directionAgeCategory.id
+            val activeCount = activeCountsByCategory.getOrDefault(catId, 0L)
+            val maxCount = child.directionAgeCategory.maxParticipantsCount
+
+            var statusChanged = false
+            if (child.queueStatus == QueueStatus.IN_QUEUE && activeCount < maxCount && maxCount != 0L) {
+                child.queueStatus = QueueStatus.PARTICIPATES
+                activeCountsByCategory[catId] = activeCount + 1
+                statusChanged = true
+            } else if (child.queueStatus == QueueStatus.PARTICIPATES && activeCount > maxCount && maxCount != 0L) {
+                child.queueStatus = QueueStatus.IN_QUEUE
+                activeCountsByCategory[catId] = activeCount - 1
+                statusChanged = true
+            }
+
+            if (statusChanged) modifiedChildren.add(child)
+        }
+
+        if (modifiedChildren.isNotEmpty()) childToDirectionRepository.saveAll(modifiedChildren)
     }
 
     @Transactional

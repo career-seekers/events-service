@@ -42,7 +42,7 @@ class DirectionAgeCategoriesService(
                 directionsRepository.save(this.direction)
                 repository.save(this)
             }
-        }
+        }.also { directionsService.updateDirectionParticipants(it.direction) }
 
         return "Данные по возрастной линейке обновлены успешно."
     }
