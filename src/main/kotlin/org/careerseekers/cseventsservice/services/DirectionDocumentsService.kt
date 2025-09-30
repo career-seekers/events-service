@@ -63,6 +63,15 @@ class DirectionDocumentsService(
     }
 
     @Transactional
+    fun fixDirectionDocsExpertId(id: Long): String {
+        getById(id, message = "Документ с ID '${id}' не найден.")!!.apply {
+            this.userId = this.direction?.expertId
+        }
+
+        return "ID эксперта обновлено успешно."
+    }
+
+    @Transactional
     fun verifyDirectionDocs(id: Long, verification: Boolean): String {
         return getById(id, throwable = false)?.let { doc ->
             doc.verified = verification
