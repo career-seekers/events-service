@@ -5,6 +5,7 @@ import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
+import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
@@ -137,20 +138,27 @@ class DirectionsService(
             .mapValues { it.value.toLong() }
             .toMutableMap()
 
+        val modifiedChildren = mutableListOf<ChildToDirection>()
         for (child in records) {
             val catId = child.directionAgeCategory.id
             val activeCount = activeCountsByCategory.getOrDefault(catId, 0L)
             val maxCount = child.directionAgeCategory.maxParticipantsCount
 
+            var statusChanged = false
             if (child.queueStatus == QueueStatus.IN_QUEUE && activeCount < maxCount && maxCount != 0L) {
                 child.queueStatus = QueueStatus.PARTICIPATES
                 activeCountsByCategory[catId] = activeCount + 1
+                statusChanged = true
             } else if (child.queueStatus == QueueStatus.PARTICIPATES && activeCount > maxCount && maxCount != 0L) {
                 child.queueStatus = QueueStatus.IN_QUEUE
                 activeCountsByCategory[catId] = activeCount - 1
+                statusChanged = true
             }
-            childToDirectionRepository.save(child)
+
+            if (statusChanged) modifiedChildren.add(child)
         }
+
+        if (modifiedChildren.isNotEmpty()) childToDirectionRepository.saveAll(modifiedChildren)
     }
 
     @Transactional
