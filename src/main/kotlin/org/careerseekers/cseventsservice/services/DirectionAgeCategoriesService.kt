@@ -34,9 +34,7 @@ class DirectionAgeCategoriesService(
             item.maxParticipantsCount?.let { maxParticipantsCount = it }
             item.currentParticipantsCount?.let {
                 val oldCount = this.currentParticipantsCount
-                val diff = it - oldCount
 
-                this.direction.participantsCount += diff
                 this.currentParticipantsCount = it
 
                 directionsRepository.save(this.direction)

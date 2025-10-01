@@ -43,11 +43,9 @@ data class DirectionAgeCategories(
 ) {
     fun increaseCurrentParticipantsCount() {
         this.currentParticipantsCount += 1
-        this.direction.participantsCount += 1
     }
 
     fun decreaseCurrentParticipantsCount() {
         this.currentParticipantsCount -= 1
-        this.direction.participantsCount -= 1
     }
 }

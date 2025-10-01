@@ -33,8 +33,8 @@ data class Directions(
     @Column(nullable = true)
     var expertId: Long? = null,
 
-    @Column(nullable = false)
-    var participantsCount: Long = 0L,
+    @Transient
+    private var _participantsCount: Long = 0L,
 
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -47,4 +47,8 @@ data class Directions(
     @JsonIgnoreProperties(value = ["direction"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<ChildToDirection>? = mutableListOf(),
-) : ConvertableToHttpResponse<Directions>
+) : ConvertableToHttpResponse<Directions> {
+
+    val participantsCount: Long
+        get() = ageCategories?.sumOf { it.currentParticipantsCount } ?: 0L
+}
