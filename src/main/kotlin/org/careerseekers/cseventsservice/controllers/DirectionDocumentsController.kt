@@ -72,6 +72,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     @PatchMapping("/verify/{id}/{status}")
     fun verify(@PathVariable id: Long, @PathVariable status: Boolean) = service.verifyDirectionDocs(id, status).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 

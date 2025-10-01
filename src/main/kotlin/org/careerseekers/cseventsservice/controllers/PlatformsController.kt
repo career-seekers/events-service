@@ -39,10 +39,12 @@ class PlatformsController(
     @GetMapping("/getByUserId/{userId}")
     fun getByUserId(@PathVariable userId: Long) = service.getByUserId(userId)!!.toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
     override fun create(@RequestBody item: CreatePlatformDto): BasicSuccessfulResponse<Platforms> =
         service.create(item).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/createAll")
     override fun createAll(@RequestBody items: List<CreatePlatformDto>): BasicSuccessfulResponse<String> =
         service.createAll(items).toHttpResponse()
@@ -61,6 +63,7 @@ class PlatformsController(
     fun updatePlatformVerification(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.updatePlatformVerification(id).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long): BasicSuccessfulResponse<String> =
         service.deleteById(id).toHttpResponse()

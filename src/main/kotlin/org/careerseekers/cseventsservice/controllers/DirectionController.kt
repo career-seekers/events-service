@@ -52,19 +52,24 @@ class DirectionController(
     fun getByAge(@PathVariable age: Short) =
         service.getByAgeCategory(DirectionAgeCategory.getAgeCategory(age)).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
     override fun create(@RequestBody item: CreateDirectionDto) = service.create(item).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/createAll")
     override fun createAll(@RequestBody items: List<CreateDirectionDto>) = service.createAll(items).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/")
     override fun update(@RequestBody item: UpdateDirectionDto) = service.update(item).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/updateAgeCategory")
     fun updateAgeCategory(@RequestBody item: UpdateAgeCategoryDto) =
         directionAgeCategoriesService.update(item).toHttpResponse()
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/uploadDirectionIcon", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadDirectionIcon(
         @RequestPart("id") id: String,
@@ -76,8 +81,7 @@ class DirectionController(
         )
     ).toHttpResponse()
 
-
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
