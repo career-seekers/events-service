@@ -116,24 +116,6 @@ class DirectionsService(
         getById(item.id, message = "Компетенция с ID '${item.id}' не найдена.")!!.apply {
             item.name?.let { name = it }
             item.description?.let { description = it }
-            item.ageCategory?.let {
-                directionAgeCategoriesService.getAll()
-                    .filter { category -> category.direction == this }
-                    .forEach { category -> directionAgeCategoriesService.deleteById(category.id) }
-
-                ageCategories?.clear()
-
-                item.ageCategory.forEach { category ->
-                    ageCategories?.add(
-                        directionAgeCategoriesService.create(
-                            CreateAgeCategory(
-                                ageCategory = category,
-                                direction = this
-                            )
-                        )
-                    )
-                }
-            }
             item.icon?.let {
                 val oldIconId = this.iconId
 
