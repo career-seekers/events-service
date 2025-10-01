@@ -69,7 +69,7 @@ class ChildToDirectionService(
     @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Запись ребенка на компетенцию с ID $id не найдена.")!!.apply {
-            this.direction?.ageCategories?.let {
+            this.direction.ageCategories?.let {
                 for (category in it) {
                     if (category == this.directionAgeCategory) {
                         category.decreaseCurrentParticipantsCount()
@@ -78,17 +78,37 @@ class ChildToDirectionService(
             }
             repository.delete(this)
         }.also {
-            it.direction?.let { direction -> directionService.updateDirectionParticipants(direction) }
+            it.direction.let { direction -> directionService.updateDirectionParticipants(direction) }
         }
 
         return "Запись на компетенцию отменена."
+    }
+
+    @Transactional
+    fun deleteByChildId(childId: Long): String {
+        getByChildId(childId).forEach { item ->
+            item.apply {
+                this.direction.ageCategories?.let {
+                    for (category in it) {
+                        if (category == this.directionAgeCategory) {
+                            category.decreaseCurrentParticipantsCount()
+                        }
+                    }
+                }
+                repository.delete(this)
+            }.also {
+                it.direction.let { direction -> directionService.updateDirectionParticipants(direction) }
+            }
+        }
+
+        return "Все записи ребёнка с ID $childId на компетенцию отменены."
     }
 
     override fun deleteAll(): String {
         val entitiesToDelete = getAll()
 
         entitiesToDelete.forEach { childToDirection ->
-            childToDirection.direction?.ageCategories?.let { ageCategories ->
+            childToDirection.direction.ageCategories?.let { ageCategories ->
                 for (category in ageCategories) {
                     if (category == childToDirection.directionAgeCategory) {
                         category.decreaseCurrentParticipantsCount()

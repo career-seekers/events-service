@@ -45,6 +45,9 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
+    @DeleteMapping("/deleteByChildId/{id}")
+    fun deleteByChildId(@PathVariable id: Long) = service.deleteByChildId(id).toHttpResponse()
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
     fun deleteAll() = service.deleteAll().toHttpResponse()
