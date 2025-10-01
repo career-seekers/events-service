@@ -6,5 +6,6 @@ import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 
 data class CreateAgeCategory(
     val ageCategory: DirectionAgeCategory,
+    var directionId: Long? = null,
     var direction: Directions? = null
 ) : DtoClass

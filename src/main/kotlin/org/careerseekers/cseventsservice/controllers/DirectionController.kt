@@ -3,6 +3,7 @@ package org.careerseekers.cseventsservice.controllers
 import org.careerseekers.cseventsservice.controllers.interfaces.CrudController
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
@@ -75,10 +76,20 @@ class DirectionController(
         )
     ).toHttpResponse()
 
+
+
     @DeleteMapping("/{id}")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
     override fun deleteAll() = service.deleteAll().toHttpResponse()
+
+
+    /** Age categories management */
+    @PostMapping("/addAgeCategory")
+    fun addAgeCategory(@RequestBody item: CreateAgeCategory) = service.addAgeCategory(item).toHttpResponse()
+
+    @DeleteMapping("/removeAgeCategory/{id}")
+    fun removeAgeCategory(@PathVariable id: Long) = service.removeAgeCategory(id).toHttpResponse()
 }

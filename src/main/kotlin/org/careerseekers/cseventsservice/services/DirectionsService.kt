@@ -89,6 +89,29 @@ class DirectionsService(
     }
 
     @Transactional
+    fun addAgeCategory(item: CreateAgeCategory): Directions {
+        val direction = getById(item.directionId, message = "Компетенция с ID ${item.directionId} не найдена.")!!
+
+        val newAgeCategory = directionAgeCategoriesService.create(item.apply { this.direction = direction })
+
+        direction.ageCategories?.add(newAgeCategory)
+
+        return repository.save(direction)
+    }
+
+    @Transactional
+    fun removeAgeCategory(id: Long): Directions {
+        val ageCategory =
+            directionAgeCategoriesService.getById(id, message = "Возрастная группа с ID $id не  найдена")!!
+        val direction = ageCategory.direction
+
+        direction.ageCategories?.remove(ageCategory)
+        directionAgeCategoriesService.deleteById(id)
+
+        return repository.save(direction)
+    }
+
+    @Transactional
     override fun update(item: UpdateDirectionDto): String {
         getById(item.id, message = "Компетенция с ID '${item.id}' не найдена.")!!.apply {
             item.name?.let { name = it }
