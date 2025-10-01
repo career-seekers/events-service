@@ -2,6 +2,8 @@ package org.careerseekers.cseventsservice.controllers
 
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
+import org.careerseekers.cseventsservice.entities.ChildToDirection
+import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -26,7 +28,10 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
         service.getById(id, message = "Запись об участии в компетенции с ID $id не найдена.")!!.toHttpResponse()
 
     @GetMapping("/getByChildId/{id}")
-    fun getByChildId(@PathVariable id: Long) = service.getByChildId(id).toHttpResponse()
+    fun getByChildId(@PathVariable id: Long): BasicSuccessfulResponse<List<ChildToDirection>> {
+        println(Pair(id, id::class))
+        return service.getByChildId(id).toHttpResponse()
+    }
 
     @GetMapping("/getByDirectionId/{id}")
     fun getByDirectionId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
