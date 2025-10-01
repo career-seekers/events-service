@@ -33,19 +33,13 @@ data class DirectionAgeCategories(
     @Column(nullable = false)
     var maxParticipantsCount: Long = 0L,
 
-    @field:Min(0)
-    @Column(nullable = false)
-    var currentParticipantsCount: Long = 0L,
+    @Transient
+    private var _currentParticipantsCount: Long = 0L,
 
     @JsonIgnoreProperties(value = ["directionAgeCategory"])
     @OneToMany(mappedBy = "directionAgeCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<ChildToDirection>? = mutableListOf(),
 ) {
-    fun increaseCurrentParticipantsCount() {
-        this.currentParticipantsCount += 1
-    }
-
-    fun decreaseCurrentParticipantsCount() {
-        this.currentParticipantsCount -= 1
-    }
+    val currentParticipantsCount: Long
+        get() = participants?.size?.toLong() ?: 0L
 }

@@ -51,9 +51,8 @@ class ChildToDirectionService(
             this.directionAgeCategory = ageCategory
         }
 
-        return repository.save(childToDirectionMapper.objectFromDto(item)).also {
-            ageCategory.increaseCurrentParticipantsCount()
-        }.also { directionService.updateDirectionParticipants(direction) }
+        return repository.save(childToDirectionMapper.objectFromDto(item))
+            .also { directionService.updateDirectionParticipants(direction) }
     }
 
     @Transactional
@@ -69,13 +68,6 @@ class ChildToDirectionService(
     @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Запись ребенка на компетенцию с ID $id не найдена.")!!.apply {
-            this.direction.ageCategories?.let {
-                for (category in it) {
-                    if (category == this.directionAgeCategory) {
-                        category.decreaseCurrentParticipantsCount()
-                    }
-                }
-            }
             repository.delete(this)
         }.also {
             it.direction.let { direction -> directionService.updateDirectionParticipants(direction) }
@@ -88,13 +80,6 @@ class ChildToDirectionService(
     fun deleteByChildId(childId: Long): String {
         getByChildId(childId).forEach { item ->
             item.apply {
-                this.direction.ageCategories?.let {
-                    for (category in it) {
-                        if (category == this.directionAgeCategory) {
-                            category.decreaseCurrentParticipantsCount()
-                        }
-                    }
-                }
                 repository.delete(this)
             }.also {
                 it.direction.let { direction -> directionService.updateDirectionParticipants(direction) }
@@ -105,18 +90,7 @@ class ChildToDirectionService(
     }
 
     override fun deleteAll(): String {
-        val entitiesToDelete = getAll()
-
-        entitiesToDelete.forEach { childToDirection ->
-            childToDirection.direction.ageCategories?.let { ageCategories ->
-                for (category in ageCategories) {
-                    if (category == childToDirection.directionAgeCategory) {
-                        category.decreaseCurrentParticipantsCount()
-                    }
-                }
-            }
-        }
-        repository.deleteAll(entitiesToDelete)
+        repository.deleteAll()
 
         return "Все записи на компетенции удалены."
     }

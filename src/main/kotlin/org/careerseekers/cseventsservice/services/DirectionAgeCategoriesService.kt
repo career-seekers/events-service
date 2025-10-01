@@ -32,14 +32,6 @@ class DirectionAgeCategoriesService(
     override fun update(item: UpdateAgeCategoryDto): String {
         getById(item.id, message = "Возрастная категория с ID ${item.id} не найдена.")!!.apply {
             item.maxParticipantsCount?.let { maxParticipantsCount = it }
-            item.currentParticipantsCount?.let {
-                val oldCount = this.currentParticipantsCount
-
-                this.currentParticipantsCount = it
-
-                directionsRepository.save(this.direction)
-                repository.save(this)
-            }
         }.also { directionsService.updateDirectionParticipants(it.direction) }
 
         return "Данные по возрастной линейке обновлены успешно."
