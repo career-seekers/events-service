@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface DirectionDocumentsRepository : JpaRepository<DirectionDocuments, Long> {
     fun findByUserId(userId: Long): List<DirectionDocuments>
     fun findByDirectionId(id: Long): List<DirectionDocuments>
+    fun findByDocumentId(id: Long): DirectionDocuments?
 }

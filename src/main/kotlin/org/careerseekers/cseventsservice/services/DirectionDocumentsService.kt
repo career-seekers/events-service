@@ -64,9 +64,9 @@ class DirectionDocumentsService(
 
     @Transactional
     fun fixDirectionDocsExpertId(id: Long): String {
-        getById(id, message = "Документ с ID '${id}' не найден.")!!.apply {
+        repository.findByDocumentId(id)?.apply {
             this.userId = this.direction?.expertId
-        }
+        } ?: throw NotFoundException("Запись с ID документа $id не найдена.")
 
         return "ID эксперта обновлено успешно."
     }
