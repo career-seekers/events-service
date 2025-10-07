@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/events-service/v1/direction-docs/")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'TUTOR', 'EXPERT')")
 class DirectionDocumentsController(override val service: DirectionDocumentsService) :
     IReadController<DirectionDocuments, Long>,
     IDeleteController<DirectionDocuments, Long> {
@@ -44,6 +43,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun getByDirectoryId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     fun create(
         @RequestPart("documentType") documentType: String,
         @RequestPart("ageCategory") ageCategory: String,
@@ -61,22 +61,23 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     }
 
     @PatchMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     fun updateDocumentType(@RequestBody item: UpdateDirectionDocumentDto) =
         service.update(item).toHttpResponse()
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PatchMapping("/fix/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     fun fixDirectionDocsExpertId(@PathVariable id: Long) = service.fixDirectionDocsExpertId(id).toHttpResponse()
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/verify/{id}/{status}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun verify(@PathVariable id: Long, @PathVariable status: Boolean) = service.verifyDirectionDocs(id, status).toHttpResponse()
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
+    @PreAuthorize("hasAuthority('ADMIN')")
     override fun deleteAll() = service.deleteAll().toHttpResponse()
 }
