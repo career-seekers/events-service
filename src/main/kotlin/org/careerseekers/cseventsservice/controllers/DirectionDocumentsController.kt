@@ -43,7 +43,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun getByDirectoryId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
 
     @PostMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun create(
         @RequestPart("documentType") documentType: String,
         @RequestPart("ageCategory") ageCategory: String,
@@ -61,7 +61,7 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     }
 
     @PatchMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun updateDocumentType(@RequestBody item: UpdateDirectionDocumentDto) =
         service.update(item).toHttpResponse()
 
