@@ -32,6 +32,15 @@ data class ChildToDirection(
     @Column(nullable = false)
     var queueStatus: QueueStatus,
 
+    @Column(nullable = true)
+    var teacherName: String?,
+
+    @Column(nullable = true)
+    var institution: String?,
+
+    @Column(nullable = true)
+    var post: String?,
+
     @Column(nullable = false)
     var createdAt: Date,
 
