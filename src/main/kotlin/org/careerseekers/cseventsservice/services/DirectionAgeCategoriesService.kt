@@ -38,6 +38,24 @@ class DirectionAgeCategoriesService(
     }
 
     @Transactional
+    fun openAgeCategory(id: Long): String {
+        getById(id, message = "Возрастная категория с ID $id не найдена.")!!.apply {
+            isDisabled = false
+        }.also(repository::save)
+
+        return "Возрастная категория открыта для записи."
+    }
+
+    @Transactional
+    fun closeAgeCategory(id: Long): String {
+        getById(id, message = "Возрастная категория с ID $id не найдена.")!!.apply {
+            isDisabled = true
+        }.also(repository::save)
+
+        return "Возрастная категория закрыта для записи."
+    }
+
+    @Transactional
     override fun deleteById(id: Long) {
         getById(id, message = "Direction age category with id $id not found")?.let { category ->
             category.direction.ageCategories?.remove(category)
