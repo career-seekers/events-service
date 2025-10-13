@@ -39,7 +39,7 @@ class DirectionAgeCategoriesService(
     }
 
     @Transactional
-    fun updateCategoryOpenness(item: UpdateCategoryOpennessDto): String {
+    fun updatePublicity(item: UpdateCategoryOpennessDto): String {
         getById(item.id, message = "Возрастная категория с ID ${item.id} не найдена.")!!.apply {
             isDisabled = item.status
         }.also(repository::save)
