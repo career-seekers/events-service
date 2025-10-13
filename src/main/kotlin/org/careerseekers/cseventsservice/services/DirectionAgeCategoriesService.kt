@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
+import org.careerseekers.cseventsservice.dto.directions.categories.UpdateCategoryOpennessDto
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.mappers.DirectionAgeCategoriesMapper
 import org.careerseekers.cseventsservice.repositories.DirectionAgeCategoriesRepository
@@ -38,21 +39,12 @@ class DirectionAgeCategoriesService(
     }
 
     @Transactional
-    fun openAgeCategory(id: Long): String {
-        getById(id, message = "Возрастная категория с ID $id не найдена.")!!.apply {
-            isDisabled = false
+    fun updateCategoryOpenness(item: UpdateCategoryOpennessDto): String {
+        getById(item.id, message = "Возрастная категория с ID ${item.id} не найдена.")!!.apply {
+            isDisabled = item.status
         }.also(repository::save)
 
-        return "Возрастная категория открыта для записи."
-    }
-
-    @Transactional
-    fun closeAgeCategory(id: Long): String {
-        getById(id, message = "Возрастная категория с ID $id не найдена.")!!.apply {
-            isDisabled = true
-        }.also(repository::save)
-
-        return "Возрастная категория закрыта для записи."
+        return if (item.status) "Возрастная категория открыта для записи." else "Возрастная категория закрыта для записи."
     }
 
     @Transactional
