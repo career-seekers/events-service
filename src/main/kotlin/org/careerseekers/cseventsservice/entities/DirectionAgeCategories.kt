@@ -33,6 +33,9 @@ data class DirectionAgeCategories(
     @Column(nullable = false)
     var maxParticipantsCount: Long = 0L,
 
+    @Column(nullable = false)
+    var isDisabled: Boolean = false,
+
     @Transient
     private var _currentParticipantsCount: Long = 0L,
 

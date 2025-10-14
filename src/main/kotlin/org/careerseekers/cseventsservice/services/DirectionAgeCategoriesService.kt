@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
+import org.careerseekers.cseventsservice.dto.directions.categories.UpdateCategoryOpennessDto
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.mappers.DirectionAgeCategoriesMapper
 import org.careerseekers.cseventsservice.repositories.DirectionAgeCategoriesRepository
@@ -35,6 +36,15 @@ class DirectionAgeCategoriesService(
         }.also { directionsService.updateDirectionParticipants(it.direction) }
 
         return "Данные по возрастной линейке обновлены успешно."
+    }
+
+    @Transactional
+    fun updatePublicity(item: UpdateCategoryOpennessDto): String {
+        getById(item.id, message = "Возрастная категория с ID ${item.id} не найдена.")!!.apply {
+            isDisabled = item.status
+        }.also(repository::save)
+
+        return if (item.status) "Возрастная категория закрыта для записи." else "Возрастная категория открыта для записи."
     }
 
     @Transactional
