@@ -1,6 +1,7 @@
 package org.careerseekers.cseventsservice.controllers
 
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetTeacherInfoDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
 import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
@@ -41,6 +42,12 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
 
     @PatchMapping("/")
     fun update(@RequestBody item: UpdateChildToDirectionsDto) = service.update(item).toHttpResponse()
+
+    @PatchMapping("/setTeacherInfo")
+    fun setTeacherInfo(@RequestBody item: SetTeacherInfoDto) = service.setTeacherInfo(item).toHttpResponse()
+
+    @PatchMapping("/clearTeacherInfo/{recordId}")
+    fun clearTeacherInfo(@PathVariable recordId: Long) = service.clearTeacherInfo(recordId).toHttpResponse()
 
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
