@@ -4,6 +4,7 @@ import org.careerseekers.cseventsservice.dto.directions.categories.UpdateCategor
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.services.DirectionAgeCategoriesService
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -12,5 +13,5 @@ import org.springframework.web.bind.annotation.RestController
 class AgeCategoriesController(private val service: DirectionAgeCategoriesService) {
 
     @PatchMapping("/updatePublicity")
-    fun updatePublicity(item: UpdateCategoryOpennessDto) = service.updatePublicity(item).toHttpResponse()
+    fun updatePublicity(@RequestBody item: UpdateCategoryOpennessDto) = service.updatePublicity(item).toHttpResponse()
 }

@@ -44,7 +44,7 @@ class DirectionAgeCategoriesService(
             isDisabled = item.status
         }.also(repository::save)
 
-        return if (item.status) "Возрастная категория открыта для записи." else "Возрастная категория закрыта для записи."
+        return if (item.status) "Возрастная категория закрыта для записи." else "Возрастная категория открыта для записи."
     }
 
     @Transactional
