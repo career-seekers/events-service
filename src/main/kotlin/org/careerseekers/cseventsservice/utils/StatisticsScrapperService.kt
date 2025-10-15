@@ -3,17 +3,16 @@ package org.careerseekers.cseventsservice.utils
 import org.careerseekers.cseventsservice.services.DirectionDocumentsService
 import org.careerseekers.cseventsservice.services.DirectionsService
 import org.careerseekers.cseventsservice.services.PlatformsService
-import javax.annotation.PostConstruct
+import org.springframework.beans.factory.SmartInitializingSingleton
 
 @Utility
 class StatisticsScrapperService(
     private val platformsService: PlatformsService,
     private val directionsService: DirectionsService,
     private val directionDocumentsService: DirectionDocumentsService
-) {
+) : SmartInitializingSingleton {
 
-    @PostConstruct
-    fun init() {
+    override fun afterSingletonsInstantiated() {
         setPlatformsCount()
         setDirectionsCount()
         setDirectionsWithoutDocs()
@@ -21,7 +20,13 @@ class StatisticsScrapperService(
         setLastDocumentUpload()
     }
 
-    fun setPlatformsCount() = StatisticsStorage.setPlatformsCount(platformsService.getAll().size.toLong())
+
+    fun setPlatformsCount() {
+        val platforms = platformsService.getAll()
+
+        StatisticsStorage.setPlatformsCount(platforms.size.toLong())
+        StatisticsStorage.setVerifiedPlatformsCount(platforms.filter { it.verified }.size.toLong())
+    }
 
     fun setDirectionsCount() = StatisticsStorage.setDirectionsCount(directionsService.getAll().size.toLong())
 
