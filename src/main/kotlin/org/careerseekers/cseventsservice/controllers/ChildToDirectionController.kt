@@ -32,7 +32,6 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
 
     @GetMapping("/getByChildId/{id}")
     fun getByChildId(@PathVariable id: Long): BasicSuccessfulResponse<List<ChildToDirection>> {
-        println(Pair(id, id::class))
         return service.getByChildId(id).toHttpResponse()
     }
 
