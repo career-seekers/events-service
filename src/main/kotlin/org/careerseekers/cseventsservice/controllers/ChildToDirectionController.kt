@@ -1,9 +1,11 @@
 package org.careerseekers.cseventsservice.controllers
 
+import org.careerseekers.cseventsservice.annotations.AccessUntil
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetTeacherInfoDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
 import org.careerseekers.cseventsservice.entities.ChildToDirection
+import org.careerseekers.cseventsservice.enums.UsersRoles
 import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
@@ -38,9 +40,19 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
     fun getByDirectionId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
 
     @PostMapping("/")
+    @AccessUntil(
+        until = "2025-10-15T23:59:59+03:00",
+        allowedRoles = [UsersRoles.ADMIN],
+        errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
+    )
     fun create(@RequestBody item: CreateChildWithDirectionDto) = service.create(item).toHttpResponse()
 
     @PatchMapping("/")
+    @AccessUntil(
+        until = "2025-10-15T23:59:59+03:00",
+        allowedRoles = [UsersRoles.ADMIN],
+        errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
+    )
     fun update(@RequestBody item: UpdateChildToDirectionsDto) = service.update(item).toHttpResponse()
 
     @PatchMapping("/setTeacherInfo")
@@ -50,12 +62,27 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
     fun clearTeacherInfo(@PathVariable recordId: Long) = service.clearTeacherInfo(recordId).toHttpResponse()
 
     @DeleteMapping("/{id}")
+    @AccessUntil(
+        until = "2025-10-15T23:59:59+03:00",
+        allowedRoles = [UsersRoles.ADMIN],
+        errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
+    )
     fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
     @DeleteMapping("/deleteByChildId/{id}")
+    @AccessUntil(
+        until = "2025-10-15T23:59:59+03:00",
+        allowedRoles = [UsersRoles.ADMIN],
+        errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
+    )
     fun deleteByChildId(@PathVariable id: Long) = service.deleteByChildId(id).toHttpResponse()
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
+    @AccessUntil(
+        until = "2025-10-15T23:59:59+03:00",
+        allowedRoles = [UsersRoles.ADMIN],
+        errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
+    )
     fun deleteAll() = service.deleteAll().toHttpResponse()
 }
