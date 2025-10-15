@@ -28,6 +28,5 @@ object StatisticsStorage {
     fun setDirectionsWithoutDocs(count: Long) = apply { this.directionsWithoutDocs = count }
 
     fun setDirectionDocsCount(count: Long) = apply { this.directionDocsCount = count }
-
     fun setLastDocumentUpload(lastDocumentUpload: LocalDateTime?) = apply { this.lastDocumentUpload = lastDocumentUpload }
 }
