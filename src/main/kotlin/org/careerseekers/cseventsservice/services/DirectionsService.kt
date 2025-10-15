@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
+import org.careerseekers.cseventsservice.annotations.DirectionsUpdate
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
@@ -39,6 +40,7 @@ class DirectionsService(
     fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> =
         repository.findByAgeCategory(ageCategory)
 
+    @DirectionsUpdate
     @Transactional
     override fun create(item: CreateDirectionDto): Directions {
         val tutor = item.userId?.let {
@@ -79,6 +81,7 @@ class DirectionsService(
         }
     }
 
+    @DirectionsUpdate
     @Transactional
     override fun createAll(items: List<CreateDirectionDto>): String {
         for (item in items) {
@@ -172,6 +175,7 @@ class DirectionsService(
         if (modifiedChildren.isNotEmpty()) childToDirectionRepository.saveAll(modifiedChildren)
     }
 
+    @DirectionsUpdate
     @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Компетенция с ID '${id}' не найдена.")!!.run {
@@ -182,6 +186,7 @@ class DirectionsService(
         }
     }
 
+    @DirectionsUpdate
     @Transactional
     override fun deleteAll(): String {
         getAll().forEach { direction ->
