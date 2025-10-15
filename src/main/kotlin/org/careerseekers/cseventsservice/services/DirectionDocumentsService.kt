@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
+import org.careerseekers.cseventsservice.annotations.DirectionDocsUpdate
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
@@ -31,6 +32,7 @@ class DirectionDocumentsService(
 
     fun getByDirectionId(id: Long) = repository.findByDirectionId(id)
 
+    @DirectionDocsUpdate
     @Transactional
     override fun create(item: CreateDirectionDocumentDto): DirectionDocuments {
         val direction =
@@ -83,6 +85,7 @@ class DirectionDocumentsService(
         } ?: throw NotFoundException("Документ компетенции с ID $id не найден.")
     }
 
+    @DirectionDocsUpdate
     @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Документ с ID '${id}' не найден.")!!.apply(repository::delete)
@@ -90,6 +93,7 @@ class DirectionDocumentsService(
         return "Документ удален успешно."
     }
 
+    @DirectionDocsUpdate
     @Transactional
     override fun deleteAll(): String {
         repository.deleteAll()

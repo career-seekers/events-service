@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
+import org.careerseekers.cseventsservice.annotations.PlatformsUpdate
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.PlatformCreation
 import org.careerseekers.cseventsservice.dto.platforms.ChangePlatformOwnerDto
@@ -30,6 +31,7 @@ class PlatformsService(
         return repository.findByUserId(userId) ?: throw NotFoundException("Площадка с userID $userId не найдена.")
     }
 
+    @PlatformsUpdate
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
@@ -96,6 +98,7 @@ class PlatformsService(
         return "Платформа верифицирована успешно."
     }
 
+    @PlatformsUpdate
     @Transactional
     override fun deleteById(id: Long): String {
         getById(id, message = "Платформа с ID $id не найдена.")?.let {
