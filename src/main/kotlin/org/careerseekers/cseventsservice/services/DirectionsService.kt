@@ -4,6 +4,7 @@ import org.careerseekers.cseventsservice.annotations.DirectionsUpdate
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.DirectionsOutputDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.entities.ChildToDirection
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.also
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 @Service
 class DirectionsService(
     override val repository: DirectionsRepository,
@@ -37,8 +39,8 @@ class DirectionsService(
 
     fun getByExpertId(expertId: Long): List<Directions> = repository.findByExpertId(expertId)
 
-    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<Directions> =
-        repository.findByAgeCategory(ageCategory)
+    fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<DirectionsOutputDto> =
+        directionsMapper.directionsToOutputDto(repository.findByAgeCategory(ageCategory))
 
     @DirectionsUpdate
     @Transactional
