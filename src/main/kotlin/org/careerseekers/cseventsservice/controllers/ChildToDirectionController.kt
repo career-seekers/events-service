@@ -71,7 +71,7 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
     @DeleteMapping("/deleteByChildId/{id}")
     @AccessUntil(
         until = "2025-10-15T23:59:59+03:00",
-        allowedRoles = [UsersRoles.ADMIN],
+        allowedRoles = [UsersRoles.ADMIN, UsersRoles.EXPERT],
         errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
     )
     fun deleteByChildId(@PathVariable id: Long) = service.deleteByChildId(id).toHttpResponse()
