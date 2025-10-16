@@ -26,6 +26,8 @@ class DirectionAgeCategoriesService(
     IUpdateService<DirectionAgeCategories, Long, UpdateAgeCategoryDto>,
     IDeleteService<DirectionAgeCategories, Long> {
 
+    fun getByDirectionId(id: Long) = repository.findByDirectionId(id)
+
     @Transactional
     override fun create(item: CreateAgeCategory) = repository.save(mapper.ageCategoryFromDto(item))
 

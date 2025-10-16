@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface DirectionAgeCategoriesRepository : JpaRepository<DirectionAgeCategories, Long>
+interface DirectionAgeCategoriesRepository : JpaRepository<DirectionAgeCategories, Long> {
+    fun findByDirectionId(directionId: Long): List<DirectionAgeCategories>
+}
