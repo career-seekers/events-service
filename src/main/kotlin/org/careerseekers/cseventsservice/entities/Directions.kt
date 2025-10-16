@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -36,7 +37,7 @@ data class Directions(
     @Transient
     private var _participantsCount: Long = 0L,
 
-    @JsonIgnoreProperties(value = ["direction"])
+    @JsonIgnoreProperties(value = ["direction", "participants"])
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
     var ageCategories: MutableList<DirectionAgeCategories>? = mutableListOf(),
 
@@ -44,7 +45,7 @@ data class Directions(
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
     val documents: MutableList<DirectionDocuments>? = mutableListOf(),
 
-    @JsonIgnoreProperties(value = ["direction"])
+    @JsonIgnore
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<ChildToDirection>? = mutableListOf(),
 ) : ConvertableToHttpResponse<Directions> {

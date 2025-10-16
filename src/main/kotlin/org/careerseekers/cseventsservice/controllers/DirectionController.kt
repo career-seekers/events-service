@@ -4,16 +4,13 @@ import org.careerseekers.cseventsservice.controllers.interfaces.crud.ICreateCont
 import org.careerseekers.cseventsservice.controllers.interfaces.crud.IDeleteController
 import org.careerseekers.cseventsservice.controllers.interfaces.crud.IUpdateController
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
-import org.careerseekers.cseventsservice.dto.directions.DirectionFullOutputDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
-import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toLongOrThrow
-import org.careerseekers.cseventsservice.mappers.DirectionsMapper
 import org.careerseekers.cseventsservice.services.DirectionAgeCategoriesService
 import org.careerseekers.cseventsservice.services.DirectionsService
 import org.springframework.http.MediaType
@@ -34,15 +31,12 @@ import org.springframework.web.multipart.MultipartFile
 class DirectionController(
     override val service: DirectionsService,
     private val directionAgeCategoriesService: DirectionAgeCategoriesService,
-    private val directionsMapper: DirectionsMapper,
 ) : ICreateController<Directions, Long, CreateDirectionDto>,
     IUpdateController<Directions, Long, UpdateDirectionDto>,
     IDeleteController<Directions, Long> {
 
     @GetMapping("/")
-    fun getAll(): BasicSuccessfulResponse<List<DirectionFullOutputDto>> {
-        return directionsMapper.directionsToFullOutputDto(service.getAll()).toHttpResponse()
-    }
+    fun getAll() = service.getAll().toHttpResponse()
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long) =
