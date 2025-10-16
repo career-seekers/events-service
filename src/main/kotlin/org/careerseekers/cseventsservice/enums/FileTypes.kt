@@ -17,7 +17,11 @@ enum class FileTypes(private val alias: String) {
     FINAL_TASK("Конкурсное задание финального этапа"),
     FINAL_CRITERIA("Критерии оценивания финального этапа"),
     FINAL_STATEMENT("Итоговая ведомость финального этапа"),
-    DESCRIPTION("Описание компетенции");
+    DESCRIPTION("Описание компетенции"),
+    TOTAL_PARTICIPANTS_QUALIFYING("Итоговый список участников отборочного этапа"),
+    TOTAL_PARTICIPANTS_FINAL("Итоговый список участников финального этапа"),
+    REGISTRATION_LIST_QUALIFYING("Лист регистрации отборочного этапа"),
+    REGISTRATION_LIST_FINAL("Лист регистрации финального этапа");
 
     companion object {
         fun FileTypes.getAlias() = this.alias
