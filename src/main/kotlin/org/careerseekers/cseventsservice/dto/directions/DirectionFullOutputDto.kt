@@ -2,7 +2,6 @@ package org.careerseekers.cseventsservice.dto.directions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.careerseekers.cseventsservice.dto.DtoClass
-import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
 
@@ -15,5 +14,5 @@ data class DirectionFullOutputDto(
     @JsonIgnoreProperties(value = ["participants", "direction"])
     val ageCategories: List<DirectionAgeCategories>,
     val documents: List<DirectionDocuments>,
-    val participants: List<ChildToDirection>,
+    val participantsCount: Long
 ) : DtoClass
