@@ -1,14 +1,19 @@
 package org.careerseekers.cseventsservice.controllers
 
-import org.careerseekers.cseventsservice.controllers.interfaces.CrudController
+import org.careerseekers.cseventsservice.controllers.interfaces.crud.ICreateController
+import org.careerseekers.cseventsservice.controllers.interfaces.crud.IDeleteController
+import org.careerseekers.cseventsservice.controllers.interfaces.crud.IUpdateController
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.DirectionFullOutputDto
 import org.careerseekers.cseventsservice.dto.directions.UpdateDirectionDto
 import org.careerseekers.cseventsservice.dto.directions.categories.CreateAgeCategory
 import org.careerseekers.cseventsservice.dto.directions.categories.UpdateAgeCategoryDto
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
+import org.careerseekers.cseventsservice.io.BasicSuccessfulResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toHttpResponse
 import org.careerseekers.cseventsservice.io.converters.extensions.toLongOrThrow
+import org.careerseekers.cseventsservice.mappers.DirectionsMapper
 import org.careerseekers.cseventsservice.services.DirectionAgeCategoriesService
 import org.careerseekers.cseventsservice.services.DirectionsService
 import org.springframework.http.MediaType
@@ -28,14 +33,19 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/events-service/v1/directions")
 class DirectionController(
     override val service: DirectionsService,
-    private val directionAgeCategoriesService: DirectionAgeCategoriesService
-) : CrudController<Directions, Long, CreateDirectionDto, UpdateDirectionDto> {
+    private val directionAgeCategoriesService: DirectionAgeCategoriesService,
+    private val directionsMapper: DirectionsMapper,
+) : ICreateController<Directions, Long, CreateDirectionDto>,
+    IUpdateController<Directions, Long, UpdateDirectionDto>,
+    IDeleteController<Directions, Long> {
 
     @GetMapping("/")
-    override fun getAll() = service.getAll().toHttpResponse()
+    fun getAll(): BasicSuccessfulResponse<List<DirectionFullOutputDto>> {
+        return directionsMapper.directionsToFullOutputDto(service.getAll()).toHttpResponse()
+    }
 
     @GetMapping("/{id}")
-    override fun getById(@PathVariable id: Long) =
+    fun getById(@PathVariable id: Long) =
         service.getById(id, message = "Компетенция с ID $id не найдена.")!!.toHttpResponse()
 
     @GetMapping("/getByUserId/{userId}")
@@ -58,7 +68,7 @@ class DirectionController(
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/createAll")
-    override fun createAll(@RequestBody items: List<CreateDirectionDto>) = service.createAll(items).toHttpResponse()
+    fun createAll(@RequestBody items: List<CreateDirectionDto>) = service.createAll(items).toHttpResponse()
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/")
