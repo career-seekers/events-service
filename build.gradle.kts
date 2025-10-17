@@ -92,7 +92,9 @@ dependencies {
     // Utilities
     implementation("one.stayfocused.spring:dotenv-spring-boot:1.0.0")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("org.apache.poi:poi-ooxml:5.4.0")
     implementation("org.aspectj:aspectjweaver")
+    implementation("org.apache.poi:poi:5.2.3")
 
     // Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
