@@ -49,17 +49,7 @@ class RapportsService(
                 )
             } catch (e: StatusRuntimeException) {
                 when (e.status.code) {
-                    Status.Code.NOT_FOUND -> records.addLast(ChildRecordsRapportDto(
-                        childName = "Участник удален из системы",
-                        parentName = "Данную запись необходимо удалить в личном кабинете эксперта",
-                        email = "—",
-                        mobileNumber = "—",
-                        tgLink = "—",
-                        schoolName = "—",
-                        trainingGroundName = "—",
-                        queueStatus = "Удален из системы",
-                        ageCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
-                    ))
+                    Status.Code.NOT_FOUND -> childToDirectionService.deleteByChildId(record.childId)
                     Status.Code.UNAVAILABLE -> throw GrpcServiceUnavailableException("GRPC сервис пользователей недоступен в данный момент.")
 
                     else -> throw e
