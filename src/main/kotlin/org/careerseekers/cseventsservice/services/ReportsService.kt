@@ -37,10 +37,15 @@ class ReportsService(
                 records.addLast(
                     ChildRecordsRapportDto(
                         childName = "${res.lastName} ${res.firstName} ${res.patronymic}",
+
                         parentName = "${res.user.lastName} ${res.user.firstName} ${res.user.patronymic}",
                         email = res.user.email,
                         mobileNumber = res.user.mobileNumber,
                         tgLink = res.user.tgLink,
+                        mentorName = "${res.mentor.lastName} ${res.mentor.firstName} ${res.mentor.patronymic}",
+                        mentorEmail = res.mentor.email,
+                        mentorPhoneNumber = res.mentor.mobileNumber,
+                        mentorTgLink = res.mentor.tgLink,
                         schoolName = res.schoolName,
                         trainingGroundName = res.trainingGroundName,
                         queueStatus = record.queueStatus.getAlias(),
@@ -80,9 +85,13 @@ class ReportsService(
         val headers = listOf(
             "ФИО ребёнка",
             "ФИО Родителя",
-            "Эл. почта",
-            "Номер телефона",
-            "Ссылка на телеграм аккаунт",
+            "Эл. почта родителя",
+            "Номер телефона родителя",
+            "Ссылка на телеграм аккаунт родителя",
+            "ФИО Наставника",
+            "Эл. почта наставника",
+            "Номер телефона наставника",
+            "Ссылка на телеграм аккаунт наставника",
             "Школа",
             "Площадка подготовки",
             "Статус записи",
@@ -98,14 +107,22 @@ class ReportsService(
         records.forEachIndexed { rowIndex, record ->
             val row = sheet.createRow(rowIndex + 1)
             row.createCell(0).setCellValue(record.childName)
+
             row.createCell(1).setCellValue(record.parentName)
             row.createCell(2).setCellValue(record.email)
             row.createCell(3).setCellValue(record.mobileNumber)
             row.createCell(4).setCellValue(record.tgLink)
-            row.createCell(5).setCellValue(record.schoolName)
-            row.createCell(6).setCellValue(record.trainingGroundName)
-            row.createCell(7).setCellValue(record.queueStatus)
-            row.createCell(8).setCellValue(record.ageCategory)
+
+            row.createCell(5).setCellValue(record.mentorEmail)
+            row.createCell(6).setCellValue(record.mentorEmail)
+            row.createCell(7).setCellValue(record.mentorPhoneNumber)
+            row.createCell(8).setCellValue(record.mentorTgLink)
+
+            row.createCell(9).setCellValue(record.schoolName)
+            row.createCell(10).setCellValue(record.trainingGroundName)
+
+            row.createCell(11).setCellValue(record.queueStatus)
+            row.createCell(12).setCellValue(record.ageCategory)
         }
 
         val outputStream = ByteArrayOutputStream()
