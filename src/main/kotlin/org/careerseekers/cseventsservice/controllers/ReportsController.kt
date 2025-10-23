@@ -1,6 +1,6 @@
 package org.careerseekers.cseventsservice.controllers
 
-import org.careerseekers.cseventsservice.services.RapportsService
+import org.careerseekers.cseventsservice.services.ReportsService
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/events-service/v1/rapports/")
-class RapportsController(private val service: RapportsService) {
+class ReportsController(private val service: ReportsService) {
 
     @GetMapping("/getChildRecords/{directionId}")
     fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {

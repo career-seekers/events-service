@@ -18,7 +18,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 @Service
-class RapportsService(
+class ReportsService(
     private val directionsService: DirectionsService,
     private val childToDirectionService: ChildToDirectionService,
 ) {
