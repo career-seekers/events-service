@@ -43,7 +43,6 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun getByDirectoryId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
 
     @PostMapping("/")
-    @PreAuthorize("hasAuthority('ADMIN')")
     fun create(
         @RequestPart("documentType") documentType: String,
         @RequestPart("ageCategory") ageCategory: String,
@@ -74,7 +73,6 @@ class DirectionDocumentsController(override val service: DirectionDocumentsServi
     fun verify(@PathVariable id: Long, @PathVariable status: Boolean) = service.verifyDirectionDocs(id, status).toHttpResponse()
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     override fun deleteById(@PathVariable id: Long) = service.deleteById(id).toHttpResponse()
 
     @DeleteMapping("/")
