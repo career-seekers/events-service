@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/events-service/v1/childToDirection")
+@PreAuthorize("hasAuthority('ADMIN')")
 class ChildToDirectionController(private val service: ChildToDirectionService) {
 
     @GetMapping("/")
