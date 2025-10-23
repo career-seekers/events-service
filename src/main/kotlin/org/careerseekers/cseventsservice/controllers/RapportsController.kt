@@ -19,7 +19,7 @@ class RapportsController(private val service: RapportsService) {
         val resource = InputStreamResource(service.createChildRecordsRapport(directionId))
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=отчет_о_записях_на_компетенцию.xlsx")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=competition_records_report.xlsx")
             .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
             .body(resource)
     }
