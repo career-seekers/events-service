@@ -5,5 +5,6 @@ enum class ParticipantStatus(private val alias: String) {
     PARTICIPANT("Участник"),
     FINALIST("Финалист"),
     PRIZEWINNER("Призёр"),
-    WINNER("Победитель");
+    WINNER("Победитель"),
+    REFUSED("Отказался от участия");
 }
