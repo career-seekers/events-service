@@ -118,7 +118,7 @@ class ReportsService(
             row.createCell(3).setCellValue(record.mobileNumber)
             row.createCell(4).setCellValue(record.tgLink)
 
-            row.createCell(5).setCellValue(record.mentorEmail)
+            row.createCell(5).setCellValue(record.mentorName)
             row.createCell(6).setCellValue(record.mentorEmail)
             row.createCell(7).setCellValue(record.mentorPhoneNumber)
             row.createCell(8).setCellValue(record.mentorTgLink)
