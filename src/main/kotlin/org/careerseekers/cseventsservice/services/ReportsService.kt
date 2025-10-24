@@ -12,6 +12,7 @@ import org.careerseekers.cseventsservice.dto.rapports.ChildRecordsRapportDto
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.QueueStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.GrpcServiceUnavailableException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.ByteArrayInputStream
@@ -22,6 +23,7 @@ class ReportsService(
     private val directionsService: DirectionsService,
     private val childToDirectionService: ChildToDirectionService,
 ) {
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
     @GrpcClient("users-service")
     lateinit var usersServiceStub: UsersServiceGrpc.UsersServiceBlockingStub
@@ -57,7 +59,10 @@ class ReportsService(
                     Status.Code.NOT_FOUND -> childToDirectionService.deleteByChildId(record.childId)
                     Status.Code.UNAVAILABLE -> throw GrpcServiceUnavailableException("GRPC сервис пользователей недоступен в данный момент.")
 
-                    else -> throw e
+                    else -> {
+                        logger.error("message: ${e.message} code: ${e.status.code} cause: ${e.cause}")
+                        throw e
+                    }
                 }
             }
         }
