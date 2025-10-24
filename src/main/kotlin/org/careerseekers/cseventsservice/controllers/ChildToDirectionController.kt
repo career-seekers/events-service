@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.controllers
 
 import org.careerseekers.cseventsservice.annotations.AccessUntil
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetParticipantStatus
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetTeacherInfoDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
 import org.careerseekers.cseventsservice.entities.ChildToDirection
@@ -53,6 +54,10 @@ class ChildToDirectionController(private val service: ChildToDirectionService) {
         errorMessage = "Ой, кажется время записи на компетенции подошло к концу"
     )
     fun update(@RequestBody item: UpdateChildToDirectionsDto) = service.update(item).toHttpResponse()
+
+    @PatchMapping("/updateParticipantStatus")
+    fun updateParticipantStatus(@RequestBody item: SetParticipantStatus) =
+        service.setParticipantStatus(item).toHttpResponse()
 
     @PatchMapping("/setTeacherInfo")
     fun setTeacherInfo(@RequestBody item: SetTeacherInfoDto) = service.setTeacherInfo(item).toHttpResponse()

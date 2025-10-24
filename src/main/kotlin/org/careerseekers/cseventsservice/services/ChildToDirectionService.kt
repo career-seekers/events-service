@@ -1,6 +1,7 @@
 package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.CreateChildWithDirectionDto
+import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetParticipantStatus
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.SetTeacherInfoDto
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
 import org.careerseekers.cseventsservice.entities.ChildToDirection
@@ -64,6 +65,15 @@ class ChildToDirectionService(
         }.also(repository::save)
 
         return "Запись об участии в компетенции обновлена успешно."
+    }
+
+    @Transactional
+    fun setParticipantStatus(item: SetParticipantStatus): String {
+        getById(item.id, message = "Запись ребенка на компетенцию с ID ${item.id} не найдена.")!!.apply {
+            status = item.status
+        }.also(repository::save)
+
+        return "Статус участия обновлен."
     }
 
     @Transactional
