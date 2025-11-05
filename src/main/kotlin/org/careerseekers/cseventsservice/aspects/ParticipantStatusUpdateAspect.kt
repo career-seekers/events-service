@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Component
-class ParticipatesStatusUpdateAspect(
+class ParticipantStatusUpdateAspect(
     private val childToDirectionService: ChildToDirectionService,
     private val kafkaProducer: ParticipantStatusUpdateKafkaProducer
 ) : IEntityUpdatesAspect {
@@ -43,18 +43,21 @@ class ParticipatesStatusUpdateAspect(
             childrenServiceStub.getByIdFull(Id.newBuilder().setId(childToDirectionRecord.childId).build())
 
         coroutineScope.launch {
-            kafkaProducer.sendMessage(
-                ParticipantStatusUpdate(
-                    status = childToDirectionRecord.status,
-                    user = fullChildDto.user.toCache(),
-                    mentor = if (fullChildDto.hasMentor()) fullChildDto.mentor.toCache() else fullChildDto.user.toCache(),
-                    childName = "${fullChildDto.lastName} ${fullChildDto.firstName} ${fullChildDto.patronymic}",
-                    competitionName = childToDirectionRecord.direction.name,
-                    ageCategory = childToDirectionRecord.directionAgeCategory.ageCategory.getAgeAlias()
+            try {
+                kafkaProducer.sendMessage(
+                    ParticipantStatusUpdate(
+                        status = childToDirectionRecord.status,
+                        user = fullChildDto.user.toCache(),
+                        mentor = if (fullChildDto.hasMentor()) fullChildDto.mentor.toCache() else fullChildDto.user.toCache(),
+                        childName = "${fullChildDto.lastName} ${fullChildDto.firstName} ${fullChildDto.patronymic}",
+                        competitionName = childToDirectionRecord.direction.name,
+                        ageCategory = childToDirectionRecord.directionAgeCategory.ageCategory.getAgeAlias()
+                    )
                 )
-            )
-
-            logger.debug("Request for mail notification sent successfully. Ground: participates status update.")
+                logger.debug("Request for mail notification sent successfully. Ground: participant status update.")
+            } catch (e: Exception) {
+                logger.error("Failed to send mail notification for participates status update", e)
+            }
         }
     }
 }
