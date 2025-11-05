@@ -8,7 +8,6 @@ import org.springframework.kafka.config.TopicBuilder
 
 @Configuration
 class KafkaTopicsConfig {
-
     @Bean
     fun platformCreationTopic(): NewTopic {
         return TopicBuilder
@@ -31,6 +30,15 @@ class KafkaTopicsConfig {
     fun directionDocumentsTasksTopic(): NewTopic {
         return TopicBuilder
             .name(KafkaTopics.DIRECTION_DOCUMENTS_TASKS.name)
+            .partitions(12)
+            .replicas(3)
+            .build()
+    }
+
+    @Bean
+    fun participationStatusUpdateTopic(): NewTopic {
+        return TopicBuilder
+            .name(KafkaTopics.PARTICIPATION_STATUS_UPDATE.name)
             .partitions(12)
             .replicas(3)
             .build()
