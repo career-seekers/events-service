@@ -33,7 +33,6 @@ object ExcelReportBuilder {
             val cell = header.createCell(index)
             cell.setCellValue(title)
             cell.cellStyle = headerCellStyle
-            sheet.autoSizeColumn(index)
         }
 
         rows.forEachIndexed { rowIndex, reportRow ->
