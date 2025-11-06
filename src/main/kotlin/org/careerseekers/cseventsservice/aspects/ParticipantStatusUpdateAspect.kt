@@ -36,6 +36,8 @@ class ParticipantStatusUpdateAspect(
     @AfterReturning(pointcut = "execution(* org.careerseekers.cseventsservice.services.ChildToDirectionService.update(*))")
     override fun afterUpdate(joinPoint: JoinPoint) {
         val methodArgs = joinPoint.args[0] as UpdateChildToDirectionsDto
+        if (methodArgs.status == null) return
+
         val childToDirectionRecord =
             childToDirectionService.getById(methodArgs.id, message = "Запись на компетенцию не найдена.") ?: return
 
