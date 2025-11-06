@@ -64,7 +64,8 @@ class ChildToDirectionReportService(
         val deferredRows = records.map { record ->
             async(Dispatchers.IO) {
                 val res = usersServiceStub.getChildWithUser(ChildId.newBuilder().setId(record.childId).build())
-                val isSameMentorAsUser = res.user == res.mentor
+                val skipMentor = !res.hasMentor() || res.user.id == res.mentor.id
+
                 ReportRow(
                     childName = "${res.lastName} ${res.firstName} ${res.patronymic}",
 
@@ -73,10 +74,10 @@ class ChildToDirectionReportService(
                     mobileNumber = res.user.mobileNumber,
                     tgLink = res.user.tgLink,
 
-                    mentorName = if (isSameMentorAsUser) "—" else "${res.mentor.lastName} ${res.mentor.firstName} ${res.mentor.patronymic}",
-                    mentorEmail = if (isSameMentorAsUser) "—" else res.mentor.email,
-                    mentorPhoneNumber = if (isSameMentorAsUser) "—" else res.mentor.mobileNumber,
-                    mentorTgLink = if (isSameMentorAsUser) "—" else res.mentor.tgLink,
+                    mentorName = if (skipMentor) "—" else "${res.mentor.lastName} ${res.mentor.firstName} ${res.mentor.patronymic}",
+                    mentorEmail = if (skipMentor) "—" else res.mentor.email,
+                    mentorPhoneNumber = if (skipMentor) "—" else res.mentor.mobileNumber,
+                    mentorTgLink = if (skipMentor) "—" else res.mentor.tgLink,
 
                     schoolName = res.schoolName,
                     trainingGroundName = res.trainingGroundName,
