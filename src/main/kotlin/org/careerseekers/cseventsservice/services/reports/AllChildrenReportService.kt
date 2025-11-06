@@ -48,13 +48,16 @@ class AllChildrenReportService(
 
     suspend fun createReport(): ByteArrayInputStream = coroutineScope {
         val allRecords = childToDirectionService.getAll()
-        val allChildren = rpcChildrenService.getAllFull(Empty.newBuilder().build()).childrenList
+        val allChildren = rpcChildrenService
+            .getAllFull(Empty.newBuilder().build())
+            .childrenList
+            .associateBy { it.id }
 
         val sortedRecords = allRecords.sortedWith(compareBy({ it.direction.name }, { it.directionAgeCategory.ageCategory }))
         val rows = mutableListOf<ReportRow>()
 
         for (record in sortedRecords) {
-            val child = allChildren.firstOrNull { it.id == record.childId }
+            val child = allChildren[record.childId]
             if (child == null) {
                 launch { childToDirectionService.deleteById(record.id) }
             } else {
