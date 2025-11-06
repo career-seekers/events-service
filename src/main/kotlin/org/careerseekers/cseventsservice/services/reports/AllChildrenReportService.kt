@@ -3,9 +3,9 @@ package org.careerseekers.cseventsservice.services.reports
 import com.careerseekers.grpc.children.ChildrenServiceGrpc
 import com.careerseekers.grpc.children.Empty
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.apache.poi.ss.usermodel.Row
+import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
@@ -46,6 +46,15 @@ class AllChildrenReportService(
         }
     }
 
+    private suspend fun cleanupRecords(records: List<ChildToDirection>) = coroutineScope {
+        records.filter { record ->
+            rpcChildrenService.getAllFull(Empty.newBuilder().build())
+                .childrenList.none { it.id == record.childId }
+        }.forEach { recordToDelete ->
+            childToDirectionService.deleteById(recordToDelete.id)
+        }
+    }
+
     suspend fun createReport(): ByteArrayInputStream = coroutineScope {
         val allRecords = childToDirectionService.getAll()
         val allChildren = rpcChildrenService
@@ -53,29 +62,28 @@ class AllChildrenReportService(
             .childrenList
             .associateBy { it.id }
 
-        val sortedRecords = allRecords.sortedWith(compareBy({ it.direction.name }, { it.directionAgeCategory.ageCategory }))
+        cleanupRecords(allRecords)
+
+        val validRecords = allRecords.filter { allChildren.containsKey(it.childId) }
+        val sortedRecords = validRecords.sortedWith(compareBy({ it.direction.name }, { it.directionAgeCategory.ageCategory }))
         val rows = mutableListOf<ReportRow>()
 
         for (record in sortedRecords) {
-            val child = allChildren[record.childId]
-            if (child == null) {
-                launch { childToDirectionService.deleteById(record.id) }
-            } else {
-                val skipMentor = !child.hasMentor() || child.user.id == child.mentor.id
-                rows.add(
-                    ReportRow(
-                        childName = "${child.lastName} ${child.firstName} ${child.patronymic}",
-                        userName = "${child.user.lastName} ${child.user.firstName} ${child.user.patronymic}",
-                        userEmail = child.user.email,
-                        userPhone = child.user.mobileNumber,
-                        mentorName = if (!skipMentor) "${child.mentor.lastName} ${child.mentor.firstName} ${child.mentor.patronymic}" else "—",
-                        mentorEmail = if (!skipMentor) child.mentor.email else "—",
-                        mentorPhone = if (!skipMentor) child.mentor.mobileNumber else "—",
-                        directionName = record.direction.name,
-                        directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
-                    )
+            val child = allChildren[record.childId]!!
+            val skipMentor = !child.hasMentor() || child.user.id == child.mentor.id
+            rows.add(
+                ReportRow(
+                    childName = "${child.lastName} ${child.firstName} ${child.patronymic}",
+                    userName = "${child.user.lastName} ${child.user.firstName} ${child.user.patronymic}",
+                    userEmail = child.user.email,
+                    userPhone = child.user.mobileNumber,
+                    mentorName = if (!skipMentor) "${child.mentor.lastName} ${child.mentor.firstName} ${child.mentor.patronymic}" else "—",
+                    mentorEmail = if (!skipMentor) child.mentor.email else "—",
+                    mentorPhone = if (!skipMentor) child.mentor.mobileNumber else "—",
+                    directionName = record.direction.name,
+                    directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
                 )
-            }
+            )
         }
 
         createExcelFile(rows)
