@@ -1,4 +1,4 @@
-package org.careerseekers.cseventsservice.services
+package org.careerseekers.cseventsservice.services.reports
 
 import com.careerseekers.grpc.users.ChildId
 import com.careerseekers.grpc.users.UsersServiceGrpc
@@ -12,6 +12,8 @@ import org.careerseekers.cseventsservice.dto.rapports.ChildRecordsRapportDto
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.QueueStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.exceptions.GrpcServiceUnavailableException
+import org.careerseekers.cseventsservice.services.ChildToDirectionService
+import org.careerseekers.cseventsservice.services.DirectionsService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +21,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 @Service
-class ReportsService(
+class ChildToDirectionReportService(
     private val directionsService: DirectionsService,
     private val childToDirectionService: ChildToDirectionService,
 ) {
