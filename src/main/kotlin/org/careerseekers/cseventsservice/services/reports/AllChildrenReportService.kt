@@ -61,15 +61,16 @@ class AllChildrenReportService(
             if (child == null) {
                 launch { childToDirectionService.deleteById(record.id) }
             } else {
+                val skipMentor = !child.hasMentor() || child.user.id == child.mentor.id
                 rows.add(
                     ReportRow(
                         childName = "${child.lastName} ${child.firstName} ${child.patronymic}",
                         userName = "${child.user.lastName} ${child.user.firstName} ${child.user.patronymic}",
                         userEmail = child.user.email,
                         userPhone = child.user.mobileNumber,
-                        mentorName = if (child.hasMentor()) "${child.mentor.lastName} ${child.mentor.firstName} ${child.mentor.patronymic}" else "—",
-                        mentorEmail = if (child.hasMentor()) child.mentor.email else "—",
-                        mentorPhone = if (child.hasMentor()) child.mentor.mobileNumber else "—",
+                        mentorName = if (!skipMentor) "${child.mentor.lastName} ${child.mentor.firstName} ${child.mentor.patronymic}" else "—",
+                        mentorEmail = if (!skipMentor) child.mentor.email else "—",
+                        mentorPhone = if (!skipMentor) child.mentor.mobileNumber else "—",
                         directionName = record.direction.name,
                         directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
                     )
