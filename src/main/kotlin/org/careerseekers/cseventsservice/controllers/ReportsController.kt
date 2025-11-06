@@ -19,7 +19,7 @@ class ReportsController(
 ) {
 
     @GetMapping("/getChildRecords/{directionId}")
-    fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {
+    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {
         val resource = InputStreamResource(childToDirectionReportService.createChildRecordsRapport(directionId))
 
         return ResponseEntity.ok()
