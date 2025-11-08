@@ -18,14 +18,18 @@ class ReportsController(
     private val allChildrenReportService: AllChildrenReportService,
 ) {
 
-    @GetMapping("/getChildRecords/{directionId}")
-    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {
-        val resource = InputStreamResource(childToDirectionReportService.createChildRecordsRapport(directionId))
+    @GetMapping(
+        "/getChildRecords/{directionId}",
+        produces = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+    )
+    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<ByteArray?> {
+        val inputStream = childToDirectionReportService.createChildRecordsRapport(directionId)
+        val bytes = inputStream.readBytes()
 
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=competition_records_report.xlsx")
             .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-            .body(resource)
+            .body(bytes)
     }
 
     @GetMapping("/getChildrenReport")
