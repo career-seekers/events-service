@@ -1,24 +1,23 @@
 package org.careerseekers.cseventsservice.services.reports
 
-import com.careerseekers.grpc.users.ChildId
-import com.careerseekers.grpc.users.UsersServiceGrpc
+import com.careerseekers.grpc.children.ChildrenServiceGrpc
+import com.careerseekers.grpc.children.Empty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.apache.poi.ss.usermodel.Row
+import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.QueueStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
-import org.careerseekers.cseventsservice.services.DirectionsService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 
 @Service
 class ChildToDirectionReportService(
-    private val directionsService: DirectionsService,
     private val childToDirectionService: ChildToDirectionService,
 ) {
     private data class ReportRow(
@@ -54,16 +53,24 @@ class ChildToDirectionReportService(
     }
 
     @GrpcClient("users-service")
-    lateinit var usersServiceStub: UsersServiceGrpc.UsersServiceBlockingStub
+    lateinit var childrenServiceStub: ChildrenServiceGrpc.ChildrenServiceBlockingStub
 
     suspend fun createChildRecordsRapport(directionId: Long): ByteArrayInputStream = coroutineScope {
-        val direction = directionsService.getById(directionId, message = "Компетенция с ID $directionId не найдена.")!!
-        val records = childToDirectionService.getByDirectionId(direction.id)
+        val removableRecords = mutableListOf<ChildToDirection>()
+        val records = childToDirectionService.getByDirectionId(directionId)
             .sortedBy { it.directionAgeCategory.ageCategory }
+        val allChildren = childrenServiceStub.getAllFull(Empty.newBuilder().build())
+            .childrenList
+            .associateBy { it.id }
 
-        val deferredRows = records.map { record ->
+        val deferredRows = records.mapNotNull { record ->
+            val res = allChildren[record.childId] ?: run {
+                removableRecords.add(record)
+                return@mapNotNull null
+            }
+
+
             async(Dispatchers.IO) {
-                val res = usersServiceStub.getChildWithUser(ChildId.newBuilder().setId(record.childId).build())
                 val skipMentor = !res.hasMentor() || res.user.id == res.mentor.id
 
                 ReportRow(
@@ -87,9 +94,11 @@ class ChildToDirectionReportService(
             }
         }
 
-        val rows = deferredRows.awaitAll()
+        val rows = deferredRows.awaitAll().also {
+            childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
+        }
 
-        createChildRecordsExcel(rows)
+        return@coroutineScope createChildRecordsExcel(rows)
     }
 
     private fun createChildRecordsExcel(rows: List<ReportRow>): ByteArrayInputStream {
