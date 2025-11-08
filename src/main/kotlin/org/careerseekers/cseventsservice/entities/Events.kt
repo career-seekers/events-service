@@ -65,4 +65,10 @@ data class Events(
 
     val directionAgeCategoryName: DirectionAgeCategory
         get() = directionAgeCategory.ageCategory
+
+    val directionExpertId: Long
+        get() = direction.expertId ?: 0
+
+    val directionTutorId: Long
+        get() = direction.userId ?: 0
 }
