@@ -116,9 +116,21 @@ class ChildToDirectionService(
         return "Все записи ребёнка с ID $childId на компетенцию отменены."
     }
 
+    @Transactional
     override fun deleteAll(): String {
         repository.deleteAll()
 
         return "Все записи на компетенции удалены."
     }
+
+    @Transactional
+    fun deleteAllByIds(ids: List<Long>, batchSize: Int = 10): String {
+        ids.chunked(batchSize)
+            .forEach { batch ->
+                repository.deleteAllByIdInBatch(batch)
+            }
+
+        return "Все переданные записи на компетенции удалены."
+    }
+
 }
