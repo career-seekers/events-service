@@ -2,6 +2,9 @@ package org.careerseekers.cseventsservice.services.reports
 
 import com.careerseekers.grpc.children.ChildrenServiceGrpc
 import com.careerseekers.grpc.children.Empty
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import net.devh.boot.grpc.client.inject.GrpcClient
 import org.apache.poi.ss.usermodel.Row
@@ -46,32 +49,24 @@ class AllChildrenReportService(
         }
     }
 
-    private suspend fun cleanupRecords(records: List<ChildToDirection>) = coroutineScope {
-        records.filter { record ->
-            rpcChildrenService.getAllFull(Empty.newBuilder().build())
-                .childrenList.none { it.id == record.childId }
-        }.forEach { recordToDelete ->
-            childToDirectionService.deleteById(recordToDelete.id)
-        }
-    }
-
     suspend fun createReport(): ByteArrayInputStream = coroutineScope {
-        val allRecords = childToDirectionService.getAll()
+        val removableRecords = mutableListOf<ChildToDirection>()
+        val records = childToDirectionService.getAll()
+            .sortedWith(compareBy({ it.direction.name }, { it.directionAgeCategory.ageCategory }))
+
         val allChildren = rpcChildrenService
             .getAllFull(Empty.newBuilder().build())
             .childrenList
             .associateBy { it.id }
 
-        cleanupRecords(allRecords)
+        val deferredRows = records.mapNotNull { record ->
+            val child = allChildren[record.childId] ?: run {
+                removableRecords.add(record)
+                return@mapNotNull null
+            }
 
-        val validRecords = allRecords.filter { allChildren.containsKey(it.childId) }
-        val sortedRecords = validRecords.sortedWith(compareBy({ it.direction.name }, { it.directionAgeCategory.ageCategory }))
-        val rows = mutableListOf<ReportRow>()
-
-        for (record in sortedRecords) {
-            val child = allChildren[record.childId]!!
-            val skipMentor = !child.hasMentor() || child.user.id == child.mentor.id
-            rows.add(
+            async(Dispatchers.IO) {
+                val skipMentor = !child.hasMentor() || child.user.id == child.mentor.id
                 ReportRow(
                     childName = "${child.lastName} ${child.firstName} ${child.patronymic}",
                     userName = "${child.user.lastName} ${child.user.firstName} ${child.user.patronymic}",
@@ -83,10 +78,16 @@ class AllChildrenReportService(
                     directionName = record.direction.name,
                     directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
                 )
-            )
+            }
         }
 
-        createExcelFile(rows)
+        val rows = deferredRows.awaitAll().also {
+            if (removableRecords.isNotEmpty()) {
+                childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
+            }
+        }
+
+        return@coroutineScope createExcelFile(rows)
     }
 
     private fun createExcelFile(rows: List<ReportRow>): ByteArrayInputStream {

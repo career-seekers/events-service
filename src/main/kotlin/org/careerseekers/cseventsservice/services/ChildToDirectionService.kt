@@ -31,7 +31,11 @@ class ChildToDirectionService(
 
     fun getByChildId(childId: Long): List<ChildToDirection> = repository.findByChildId(childId)
 
-    fun getByDirectionId(directionId: Long): List<ChildToDirection> = repository.findByDirectionId(directionId)
+    fun getByDirectionId(directionId: Long): List<ChildToDirection> {
+        return directionService.getById(directionId, message = "Компетенция с ID $directionId не найдена.")!!.let {
+            repository.findByDirectionId(it.id)
+        }
+    }
 
     @Retryable(value = [OptimisticLockingFailureException::class], maxAttempts = 5, backoff = Backoff(delay = 500))
     @Transactional
@@ -112,9 +116,21 @@ class ChildToDirectionService(
         return "Все записи ребёнка с ID $childId на компетенцию отменены."
     }
 
+    @Transactional
     override fun deleteAll(): String {
         repository.deleteAll()
 
         return "Все записи на компетенции удалены."
     }
+
+    @Transactional
+    fun deleteAllByIds(ids: List<Long>, batchSize: Int = 10): String {
+        ids.chunked(batchSize)
+            .forEach { batch ->
+                repository.deleteAllByIdInBatch(batch)
+            }
+
+        return "Все переданные записи на компетенции удалены."
+    }
+
 }
