@@ -13,7 +13,6 @@ import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.ge
 import org.careerseekers.cseventsservice.enums.QueueStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 
@@ -56,20 +55,14 @@ class ChildToDirectionReportService(
     @GrpcClient("users-service")
     lateinit var childrenServiceStub: ChildrenServiceGrpc.ChildrenServiceBlockingStub
 
-    private val logger = LoggerFactory.getLogger(ChildToDirectionReportService::class.java)
-
     suspend fun createChildRecordsRapport(directionId: Long): ByteArrayInputStream = coroutineScope {
         val removableRecords = mutableListOf<ChildToDirection>()
         val records = childToDirectionService.getByDirectionId(directionId)
             .sortedBy { it.directionAgeCategory.ageCategory }
 
-        logger.info("Step 1, records: ${records.size}")
-
         val allChildren = childrenServiceStub.getAllFull(Empty.newBuilder().build())
             .childrenList
             .associateBy { it.id }
-
-        logger.info("Step 2, children: ${allChildren.size}")
 
         val deferredRows = records.mapNotNull { record ->
             val res = allChildren[record.childId] ?: run {
@@ -107,8 +100,6 @@ class ChildToDirectionReportService(
                 childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
             }
         }
-
-        logger.info("Step 3, rows: ${rows.size}")
 
         createChildRecordsExcel(rows)
     }

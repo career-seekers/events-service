@@ -12,7 +12,6 @@ import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 
@@ -22,8 +21,6 @@ class AllChildrenReportService(
 ) {
     @GrpcClient("users-service")
     lateinit var rpcChildrenService: ChildrenServiceGrpc.ChildrenServiceBlockingStub
-
-    private val logger = LoggerFactory.getLogger(AllChildrenReportService::class.java)
 
     private data class ReportRow(
         val childName: String,
@@ -60,14 +57,10 @@ class AllChildrenReportService(
                     .thenBy { it.directionAgeCategory.ageCategory.getAgeAlias() }
             )
 
-        logger.info("Step 1, records: ${records.size}")
-
         val allChildren = rpcChildrenService
             .getAllFull(Empty.newBuilder().build())
             .childrenList
             .associateBy { it.id }
-
-        logger.info("Step 2, children: ${allChildren.size}")
 
         val deferredRows = records.mapNotNull { record ->
             val child = allChildren[record.childId] ?: run {
@@ -96,8 +89,6 @@ class AllChildrenReportService(
                 childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
             }
         }
-
-        logger.info("Step 3, rows: ${rows.size}")
 
         return@coroutineScope createExcelFile(rows)
     }
