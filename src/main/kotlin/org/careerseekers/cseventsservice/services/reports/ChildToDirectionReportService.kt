@@ -95,7 +95,9 @@ class ChildToDirectionReportService(
         }
 
         val rows = deferredRows.awaitAll().also {
-            childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
+            if (removableRecords.isNotEmpty()) {
+                childToDirectionService.deleteAllByIds(removableRecords.map { it.id })
+            }
         }
 
         return@coroutineScope createChildRecordsExcel(rows)
