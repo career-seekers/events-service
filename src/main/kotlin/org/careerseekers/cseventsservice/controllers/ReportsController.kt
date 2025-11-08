@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import org.careerseekers.cseventsservice.services.reports.AllChildrenReportService
 import org.careerseekers.cseventsservice.services.reports.ChildToDirectionReportService
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.io.ByteArrayInputStream
 
 @RestController
 @RequestMapping("/events-service/v1/rapports/")
@@ -26,10 +26,12 @@ class ReportsController(
         "/getChildRecords/{directionId}",
         produces = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
     )
-    fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<ByteArrayInputStream?> {
-        val resource = runBlocking {
+    fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<ByteArrayResource?> {
+        val inputStream = runBlocking {
             childToDirectionReportService.createChildRecordsRapport(directionId)
         }
+        val bytes = inputStream.readBytes()
+        val resource = ByteArrayResource(bytes)
 
         logger.info("Step 4, resource file: $resource")
         return ResponseEntity.ok()
@@ -39,10 +41,12 @@ class ReportsController(
     }
 
     @GetMapping("/getChildrenReport")
-     fun getChildrenReport(): ResponseEntity<ByteArrayInputStream?> {
-        val resource = runBlocking {
+     fun getChildrenReport(): ResponseEntity<ByteArrayResource?> {
+        val inputStream = runBlocking {
             allChildrenReportService.createReport()
         }
+        val bytes = inputStream.readBytes()
+        val resource = ByteArrayResource(bytes)
 
         logger.info("Step 4, resource: $resource")
 
