@@ -38,6 +38,15 @@ data class Events(
     @Column(nullable = true, columnDefinition = "TEXT")
     var description: String?,
 
+    @Column(nullable = true)
+    var verified: Boolean?,
+
+    @Column(nullable = false)
+    var createdAt: ZonedDateTime,
+
+    @Column(nullable = false)
+    var updatedAt: ZonedDateTime,
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id", nullable = false)
