@@ -48,6 +48,10 @@ data class Directions(
     @JsonIgnore
     @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<ChildToDirection>? = mutableListOf(),
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "direction", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val events: MutableList<Events>? = mutableListOf(),
 ) : ConvertableToHttpResponse<Directions> {
 
     val participantsCount: Long
