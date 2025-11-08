@@ -2,9 +2,9 @@ package org.careerseekers.cseventsservice.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
-import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.EventFormats
 import org.careerseekers.cseventsservice.enums.EventTypes
+import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 import java.time.ZonedDateTime
 
 @Entity
@@ -59,12 +59,12 @@ data class Events(
 
     @Version
     var version: Int? = null,
-) {
-    val directionName: String
-        get() = direction.name
+) : ConvertableToHttpResponse<Events> {
+    val directionId: Long
+        get() = direction.id
 
-    val directionAgeCategoryName: DirectionAgeCategory
-        get() = directionAgeCategory.ageCategory
+    val directionAgeCategoryId: Long
+        get() = directionAgeCategory.id
 
     val directionExpertId: Long
         get() = direction.expertId ?: 0
