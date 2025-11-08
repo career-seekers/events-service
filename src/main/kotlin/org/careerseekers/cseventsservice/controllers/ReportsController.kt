@@ -1,9 +1,9 @@
 package org.careerseekers.cseventsservice.controllers
 
+import kotlinx.coroutines.runBlocking
 import org.careerseekers.cseventsservice.services.reports.AllChildrenReportService
 import org.careerseekers.cseventsservice.services.reports.ChildToDirectionReportService
 import org.slf4j.LoggerFactory
-import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.io.ByteArrayInputStream
 
 @RestController
 @RequestMapping("/events-service/v1/rapports/")
@@ -25,8 +26,10 @@ class ReportsController(
         "/getChildRecords/{directionId}",
         produces = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
     )
-    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {
-        val resource = InputStreamResource(childToDirectionReportService.createChildRecordsRapport(directionId))
+    fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<ByteArrayInputStream?> {
+        val resource = runBlocking {
+            childToDirectionReportService.createChildRecordsRapport(directionId)
+        }
 
         logger.info("Step 4, resource file: $resource")
         return ResponseEntity.ok()
@@ -36,8 +39,10 @@ class ReportsController(
     }
 
     @GetMapping("/getChildrenReport")
-    suspend fun getChildrenReport(): ResponseEntity<InputStreamResource?> {
-        val resource = InputStreamResource(allChildrenReportService.createReport())
+     fun getChildrenReport(): ResponseEntity<ByteArrayInputStream?> {
+        val resource = runBlocking {
+            allChildrenReportService.createReport()
+        }
 
         logger.info("Step 4, resource: $resource")
 
