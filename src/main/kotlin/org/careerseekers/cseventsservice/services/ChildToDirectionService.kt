@@ -31,7 +31,11 @@ class ChildToDirectionService(
 
     fun getByChildId(childId: Long): List<ChildToDirection> = repository.findByChildId(childId)
 
-    fun getByDirectionId(directionId: Long): List<ChildToDirection> = repository.findByDirectionId(directionId)
+    fun getByDirectionId(directionId: Long): List<ChildToDirection> {
+        return directionService.getById(directionId, message = "Компетенция с ID $directionId не найдена.")!!.let {
+            repository.findByDirectionId(it.id)
+        }
+    }
 
     @Retryable(value = [OptimisticLockingFailureException::class], maxAttempts = 5, backoff = Backoff(delay = 500))
     @Transactional
