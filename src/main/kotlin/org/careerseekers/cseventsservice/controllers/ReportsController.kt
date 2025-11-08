@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.controllers
 
 import org.careerseekers.cseventsservice.services.reports.AllChildrenReportService
 import org.careerseekers.cseventsservice.services.reports.ChildToDirectionReportService
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -18,23 +19,27 @@ class ReportsController(
     private val allChildrenReportService: AllChildrenReportService,
 ) {
 
+    private val logger = LoggerFactory.getLogger(ReportsController::class.java)
+
     @GetMapping(
         "/getChildRecords/{directionId}",
         produces = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
     )
-    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<ByteArray?> {
-        val inputStream = childToDirectionReportService.createChildRecordsRapport(directionId)
-        val bytes = inputStream.readBytes()
+    suspend fun getChildRecords(@PathVariable directionId: Long): ResponseEntity<InputStreamResource?> {
+        val resource = InputStreamResource(childToDirectionReportService.createChildRecordsRapport(directionId))
 
+        logger.info("Step 4, resource file: $resource")
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=competition_records_report.xlsx")
             .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-            .body(bytes)
+            .body(resource)
     }
 
     @GetMapping("/getChildrenReport")
     suspend fun getChildrenReport(): ResponseEntity<InputStreamResource?> {
         val resource = InputStreamResource(allChildrenReportService.createReport())
+
+        logger.info("Step 4, resource: $resource")
 
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=all_children_report.xlsx")
