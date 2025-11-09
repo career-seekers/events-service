@@ -9,7 +9,7 @@ data class CreateEventDto(
     val name: String,
     val shortDescription: String,
     val eventType: EventTypes,
-    val eventFormats: EventFormats,
+    val eventFormat: EventFormats,
     val startDateTime: ZonedDateTime,
     val endDateTime: ZonedDateTime,
     val eventVenue: String?,

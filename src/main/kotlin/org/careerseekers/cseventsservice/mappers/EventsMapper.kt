@@ -10,7 +10,10 @@ import org.mapstruct.Mapping
 @Mapper(componentModel = "spring")
 interface EventsMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", source = "dto.name")
+    @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "direction", source = "direction")
-    @Mapping(target = "directionAgeCategories", source = "directionAgeCategories")
-    fun eventFromDto(dto: CreateEventDto, direction: Directions, directionAgeCategories: DirectionAgeCategories): Events
+    @Mapping(target = "directionAgeCategory", source = "directionAgeCategory")
+    fun eventFromDto(dto: CreateEventDto, direction: Directions, directionAgeCategory: DirectionAgeCategories): Events
 }

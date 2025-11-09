@@ -12,7 +12,7 @@ import java.time.ZonedDateTime
 data class Events(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long?,
 
     @Column(nullable = false)
     var name: String,
