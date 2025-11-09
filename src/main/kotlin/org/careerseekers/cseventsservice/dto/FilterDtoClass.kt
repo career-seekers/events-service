@@ -1,0 +1,3 @@
+package org.careerseekers.cseventsservice.dto
+
+interface FilterDtoClass

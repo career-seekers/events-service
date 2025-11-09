@@ -1,0 +1,2 @@
+ALTER TABLE events
+    ADD verified BOOLEAN DEFAULT NULL;

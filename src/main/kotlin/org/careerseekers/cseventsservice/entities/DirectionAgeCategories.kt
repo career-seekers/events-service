@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -42,6 +43,10 @@ data class DirectionAgeCategories(
     @JsonIgnoreProperties(value = ["directionAgeCategory"])
     @OneToMany(mappedBy = "directionAgeCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<ChildToDirection>? = mutableListOf(),
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "directionAgeCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val events: MutableList<Events>? = mutableListOf(),
 ) {
     val currentParticipantsCount: Long
         get() = participants?.size?.toLong() ?: 0L
