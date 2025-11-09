@@ -23,7 +23,7 @@ object EventsSpecifications {
     }
 
     fun hasVerified(verified: Boolean?): Specification<Events>? = verified?.let {
-        Specification { root, _, cb -> cb.equal(root.get<EventFormats>("verified"), it) }
+        Specification { root, _, cb -> cb.equal(root.get<Boolean>("verified"), it) }
     }
 
     fun hasStartDateTimeAfter(startDate: ZonedDateTime?): Specification<Events>? = startDate?.let {
