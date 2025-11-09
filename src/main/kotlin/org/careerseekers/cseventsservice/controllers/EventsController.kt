@@ -53,5 +53,5 @@ class EventsController(
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/")
-    override fun deleteAll() = service.deleteAll()
+    override fun deleteAll() = service.deleteAll().toHttpResponse()
 }
