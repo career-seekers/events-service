@@ -66,11 +66,11 @@ class EventsService(
         val batchSize = 50
         val savedEntities = mutableListOf<Events>()
 
+        val directions = directionsService.getAll().associateBy { it.id }
+        val ageCategories = directionAgeCategoriesService.getAll().associateBy { it.id }
+
         for (batchStart in items.indices step batchSize) {
             val batch = items.subList(batchStart, minOf(batchStart + batchSize, items.size))
-
-            val directions = directionsService.getAll().associateBy { it.id }
-            val ageCategories = directionAgeCategoriesService.getAll().associateBy { it.id }
 
             val entities = batch.map { item ->
                 val direction = directions[item.directionId]

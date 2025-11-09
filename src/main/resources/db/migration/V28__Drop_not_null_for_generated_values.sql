@@ -1,0 +1,5 @@
+ALTER TABLE events
+    ALTER COLUMN created_at DROP NOT NULL;
+
+ALTER TABLE events
+    ALTER COLUMN updated_at DROP NOT NULL;

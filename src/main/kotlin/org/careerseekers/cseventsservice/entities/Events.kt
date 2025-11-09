@@ -41,11 +41,11 @@ data class Events(
     @Column(nullable = true)
     var verified: Boolean?,
 
-    @Column(nullable = false)
-    var createdAt: ZonedDateTime,
+    @Column(nullable = true)
+    var createdAt: ZonedDateTime?,
 
-    @Column(nullable = false)
-    var updatedAt: ZonedDateTime,
+    @Column(nullable = true)
+    var updatedAt: ZonedDateTime?,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
