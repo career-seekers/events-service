@@ -42,7 +42,7 @@ object EventsSpecifications {
 
     fun hasAgeCategoryName(ageCategoryName: DirectionAgeCategory?): Specification<Events>? = ageCategoryName?.let {
         Specification { root, _, cb ->
-            cb.equal(root.get<Events>("directionAgeCategory").get<DirectionAgeCategories>("ageCategory"), "%$it%")
+            cb.equal(root.get<Events>("directionAgeCategory").get<DirectionAgeCategories>("ageCategory"), it)
         }
     }
 }
