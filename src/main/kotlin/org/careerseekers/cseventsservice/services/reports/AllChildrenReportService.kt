@@ -10,6 +10,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient
 import org.apache.poi.ss.usermodel.Row
 import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
+import org.careerseekers.cseventsservice.enums.ParticipantStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
 import org.springframework.stereotype.Service
@@ -39,6 +40,7 @@ class AllChildrenReportService(
 
         val directionName: String,
         val directionAgeCategory: String,
+        val recordStatus: String,
     ) : ExcelReportBuilder.ReportRows {
         override fun fillRow(row: Row) {
             row.createCell(0).setCellValue(childName)
@@ -53,6 +55,7 @@ class AllChildrenReportService(
             row.createCell(9).setCellValue(teacherPost)
             row.createCell(10).setCellValue(directionName)
             row.createCell(11).setCellValue(directionAgeCategory)
+            row.createCell(12).setCellValue(recordStatus)
         }
     }
 
@@ -89,7 +92,8 @@ class AllChildrenReportService(
                     teacherInstitution = record.institution ?: "—",
                     teacherPost = record.post ?: "—",
                     directionName = record.direction.name,
-                    directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
+                    directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias(),
+                    recordStatus = record.status.getAlias(),
                 )
             }
         }
@@ -117,6 +121,7 @@ class AllChildrenReportService(
             "Должность педагога",
             "Компетенция",
             "Возрастная категория",
+            "Статус участия",
         )
         return ExcelReportBuilder.build(rows, headers, "Отчёт об участниках чемпионата")
     }

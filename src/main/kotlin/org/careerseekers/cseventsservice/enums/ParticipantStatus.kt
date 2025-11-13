@@ -7,4 +7,8 @@ enum class ParticipantStatus(private val alias: String) {
     PRIZEWINNER("Призёр"),
     WINNER("Победитель"),
     REFUSED("Отказался от участия");
+
+    companion object {
+        fun ParticipantStatus.getAlias() = this.alias
+    }
 }
