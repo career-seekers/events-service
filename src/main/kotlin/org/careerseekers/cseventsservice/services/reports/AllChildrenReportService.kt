@@ -10,6 +10,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient
 import org.apache.poi.ss.usermodel.Row
 import org.careerseekers.cseventsservice.entities.ChildToDirection
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
+import org.careerseekers.cseventsservice.enums.ParticipantStatus
 import org.careerseekers.cseventsservice.enums.ParticipantStatus.Companion.getAlias
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
@@ -61,11 +62,13 @@ class AllChildrenReportService(
 
     suspend fun createReport(): ByteArrayInputStream = coroutineScope {
         val removableRecords = mutableListOf<ChildToDirection>()
+        val statuses = listOf(ParticipantStatus.PARTICIPANT, ParticipantStatus.FINALIST)
         val records = childToDirectionService.getAll()
             .sortedWith(
                 compareBy<ChildToDirection> { it.direction.name }
                     .thenBy { it.directionAgeCategory.ageCategory.getAgeAlias() }
             )
+            .filter { statuses.any { status -> status == it.status } }
 
         val allChildren = rpcChildrenService
             .getAllFull(Empty.newBuilder().build())
