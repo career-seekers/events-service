@@ -33,6 +33,10 @@ class AllChildrenReportService(
         val mentorEmail: String?,
         val mentorPhone: String?,
 
+        val teacherName: String?,
+        val teacherInstitution: String?,
+        val teacherPost: String?,
+
         val directionName: String,
         val directionAgeCategory: String,
     ) : ExcelReportBuilder.ReportRows {
@@ -44,8 +48,11 @@ class AllChildrenReportService(
             row.createCell(4).setCellValue(mentorName)
             row.createCell(5).setCellValue(mentorEmail)
             row.createCell(6).setCellValue(mentorPhone)
-            row.createCell(7).setCellValue(directionName)
-            row.createCell(8).setCellValue(directionAgeCategory)
+            row.createCell(7).setCellValue(teacherName)
+            row.createCell(8).setCellValue(teacherInstitution)
+            row.createCell(9).setCellValue(teacherPost)
+            row.createCell(10).setCellValue(directionName)
+            row.createCell(11).setCellValue(directionAgeCategory)
         }
     }
 
@@ -78,6 +85,9 @@ class AllChildrenReportService(
                     mentorName = if (!skipMentor) "${child.mentor.lastName} ${child.mentor.firstName} ${child.mentor.patronymic}" else "—",
                     mentorEmail = if (!skipMentor) child.mentor.email else "—",
                     mentorPhone = if (!skipMentor) child.mentor.mobileNumber else "—",
+                    teacherName = record.teacherName ?: "—",
+                    teacherInstitution = record.institution ?: "—",
+                    teacherPost = record.post ?: "—",
                     directionName = record.direction.name,
                     directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias()
                 )
@@ -96,12 +106,15 @@ class AllChildrenReportService(
     private fun createExcelFile(rows: List<ReportRow>): ByteArrayInputStream {
         val headers = listOf(
             "ФИО ребёнка",
-            "ФИО Родителя",
+            "ФИО родителя",
             "Эл. почта родителя",
             "Номер телефона родителя",
-            "ФИО Наставника",
+            "ФИО наставника",
             "Эл. почта наставника",
             "Номер телефона наставника",
+            "ФИО педагога",
+            "Место работы педагога",
+            "Должность педагога",
             "Компетенция",
             "Возрастная категория",
         )
