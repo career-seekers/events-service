@@ -48,6 +48,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
 
+    // Spring WebSocket
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.webjars:sockjs-client:1.0.2")
+    implementation("org.webjars:stomp-websocket:2.3.3")
+
     // JWT Auth
     implementation("io.jsonwebtoken:jjwt:0.12.6")
     implementation("javax.xml.bind:jaxb-api:2.3.0")
