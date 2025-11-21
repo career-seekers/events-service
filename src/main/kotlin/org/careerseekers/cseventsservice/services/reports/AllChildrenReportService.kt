@@ -42,6 +42,9 @@ class AllChildrenReportService(
         val directionName: String,
         val directionAgeCategory: String,
         val recordStatus: String,
+
+        val schoolName: String,
+        val trainingGroundName: String,
     ) : ExcelReportBuilder.ReportRows {
         override fun fillRow(row: Row) {
             row.createCell(0).setCellValue(childName)
@@ -57,6 +60,8 @@ class AllChildrenReportService(
             row.createCell(10).setCellValue(directionName)
             row.createCell(11).setCellValue(directionAgeCategory)
             row.createCell(12).setCellValue(recordStatus)
+            row.createCell(13).setCellValue(schoolName)
+            row.createCell(14).setCellValue(trainingGroundName)
         }
     }
 
@@ -97,6 +102,8 @@ class AllChildrenReportService(
                     directionName = record.direction.name,
                     directionAgeCategory = record.directionAgeCategory.ageCategory.getAgeAlias(),
                     recordStatus = record.status.getAlias(),
+                    schoolName = child.schoolName,
+                    trainingGroundName = child.trainingGroundName,
                 )
             }
         }
@@ -125,6 +132,8 @@ class AllChildrenReportService(
             "Компетенция",
             "Возрастная категория",
             "Статус участия",
+            "Название школы",
+            "Название площадки подготовки",
         )
         return ExcelReportBuilder.build(rows, headers, "Отчёт об участниках чемпионата")
     }
