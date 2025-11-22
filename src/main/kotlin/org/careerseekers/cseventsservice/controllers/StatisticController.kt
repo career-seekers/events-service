@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Deprecated("Deprecated controller, use org.careerseekers.cseventsservice.controllers.WebSocketStatisticController with WebSocket connections")
 @RestController
 @RequestMapping("/events-service/v1/statistics")
 class StatisticController {
