@@ -3,12 +3,13 @@ package org.careerseekers.cseventsservice.controllers
 import org.careerseekers.cseventsservice.utils.StatisticsStorage
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicLong
 
 @Controller
-class WebSocketStatisticController {
+class WebSocketStatisticController(private val messagingTemplate: SimpMessagingTemplate) {
 
     data class StatisticsMessage(
         val platformsCount: AtomicLong,
@@ -21,7 +22,7 @@ class WebSocketStatisticController {
 
     @MessageMapping("/getStatistics")
     @SendTo("/events-service/topic/statistics")
-    fun greetings(): StatisticsMessage {
+    fun sendStatistics(): StatisticsMessage {
         return StatisticsMessage(
             platformsCount = StatisticsStorage.platformsCount,
             verifiedPlatformsCount = StatisticsStorage.verifiedPlatformsCount,
@@ -30,5 +31,10 @@ class WebSocketStatisticController {
             directionDocsCount = StatisticsStorage.directionDocsCount,
             lastDocumentUpload = StatisticsStorage.lastDocumentUpload
         )
+    }
+
+    fun sendStatisticsManually() {
+        val statistics = sendStatistics()
+        messagingTemplate.convertAndSend("/events-service/topic/statistics", statistics)
     }
 }
