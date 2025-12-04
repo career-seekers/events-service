@@ -52,6 +52,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.webjars:stomp-websocket:2.3.3")
 
+    // AI
+    implementation("ai.timefold.solver:timefold-solver-spring-boot-starter:1.28.0")
+
     // JWT Auth
     implementation("io.jsonwebtoken:jjwt:0.12.6")
     implementation("javax.xml.bind:jaxb-api:2.3.0")

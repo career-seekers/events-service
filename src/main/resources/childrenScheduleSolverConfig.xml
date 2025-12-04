@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+
+    <solutionClass>org.careerseekers.cseventsservice.utils.timefold.ChildrenSchedule</solutionClass>
+    <entityClass>org.careerseekers.cseventsservice.utils.timefold.ChildDirectionAssignment</entityClass>
+
+    <scoreDirectorFactory>
+        <constraintProviderClass>
+            org.careerseekers.cseventsservice.utils.timefold.ChildrenScheduleConstraintProvider
+        </constraintProviderClass>
+    </scoreDirectorFactory>
+
+    <termination>
+        <secondsSpentLimit>30</secondsSpentLimit>
+    </termination>
+
+</solver>

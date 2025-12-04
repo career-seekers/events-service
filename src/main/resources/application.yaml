@@ -62,3 +62,8 @@ management:
     metrics:
       export:
         enabled: true
+
+timefold:
+  solver:
+    childrenschedule:              # имя солвера (любое, но в нижнем регистре и без тире)
+      solver-config-xml: childrenScheduleSolverConfig.xml
