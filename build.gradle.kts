@@ -50,11 +50,14 @@ dependencies {
 
     // Spring WebSocket
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation("org.webjars:stomp-websocket:2.3.3")
+    implementation("org.webjars:stomp-websocket")
+
+    // AI
+    implementation("ai.timefold.solver:timefold-solver-spring-boot-starter")
 
     // JWT Auth
-    implementation("io.jsonwebtoken:jjwt:0.12.6")
-    implementation("javax.xml.bind:jaxb-api:2.3.0")
+    implementation("io.jsonwebtoken:jjwt")
+    implementation("javax.xml.bind:jaxb-api")
 
     // Databases
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -68,7 +71,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Mapper
-    implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("org.mapstruct:mapstruct")
     kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
     // Kafka messaging
@@ -76,11 +79,11 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // gRPC messaging
-    implementation("net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE")
-    implementation("net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE")
-    implementation("com.google.protobuf:protobuf-java:4.28.2")
-    implementation("io.grpc:grpc-protobuf:1.57.2")
-    implementation("io.grpc:grpc-stub:1.57.2")
+    implementation("net.devh:grpc-server-spring-boot-starter")
+    implementation("net.devh:grpc-client-spring-boot-starter")
+    implementation("com.google.protobuf:protobuf-java")
+    implementation("io.grpc:grpc-protobuf")
+    implementation("io.grpc:grpc-stub")
 
     //Kotlinx coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -89,22 +92,22 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 
     //Kotlinx serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 
     // Utilities
-    implementation("one.stayfocused.spring:dotenv-spring-boot:1.0.0")
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("one.stayfocused.spring:dotenv-spring-boot")
+    implementation("javax.annotation:javax.annotation-api")
     implementation("org.aspectj:aspectjweaver")
-    implementation("org.apache.poi:poi:5.4.0")
-    implementation("org.apache.poi:poi-ooxml:5.4.0")
+    implementation("org.apache.poi:poi")
+    implementation("org.apache.poi:poi-ooxml")
 
     // Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("io.mockk:mockk-agent-jvm:1.13.7")
-    testImplementation("io.mockk:mockk:1.13.7")
+    testImplementation("io.mockk:mockk-agent-jvm")
+    testImplementation("io.mockk:mockk")
 
     // Metrics
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
