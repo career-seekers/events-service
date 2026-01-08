@@ -19,24 +19,23 @@ class EventVerificationAspect(
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @AfterReturning(
-        value = "@annotation(org.careerseekers.cseventsservice.annotations.EventVerification)",
-        returning = "result"
-    )
+    @AfterReturning(value = "@annotation(org.careerseekers.cseventsservice.annotations.EventVerification)")
     fun afterReturning(joinPoint: JoinPoint) {
         val args = joinPoint.args
         if (args.isNotEmpty()) {
             val dto = args[0] as UpdateEventVerificationDto
-            val event = eventsRepository.findById(dto.id).orElse(null) ?: return
-            logger.info("Sending EventCreation message for verified event ID: ${dto.id}")
+            if (dto.verified) {
+                val event = eventsRepository.findById(dto.id).orElse(null) ?: return
+                logger.info("Sending EventCreation message for verified event ID: ${dto.id}")
 
-            eventCreationProducer.sendMessage(
-                EventCreationDto(
-                    eventType = event.eventType,
-                    directionId = event.direction.id,
-                    participantsList = event.direction.participants?.map { it.id } ?: emptyList(),
+                eventCreationProducer.sendMessage(
+                    EventCreationDto(
+                        eventType = event.eventType,
+                        directionId = event.direction.id,
+                        participantsList = event.direction.participants?.map { it.id } ?: emptyList(),
+                    )
                 )
-            )
+            }
         }
     }
 }
