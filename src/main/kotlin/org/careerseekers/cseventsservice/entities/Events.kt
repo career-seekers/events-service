@@ -30,9 +30,6 @@ data class Events(
     @Column(nullable = false)
     var startDateTime: ZonedDateTime,
 
-    @Column(nullable = false)
-    var endDateTime: ZonedDateTime,
-
     @Column(nullable = true, columnDefinition = "TEXT")
     var eventVenue: String?,
 

@@ -5,7 +5,6 @@ import org.careerseekers.cseventsservice.dto.events.EventsFilterDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventVerificationDto
 import org.careerseekers.cseventsservice.entities.Events
-import org.careerseekers.cseventsservice.exceptions.BadRequestException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.EventsMapper
 import org.careerseekers.cseventsservice.repositories.EventsRepository
@@ -102,11 +101,7 @@ class EventsService(
                     message = "Возрастная категория с ID ${item.directionAgeCategoryId} не найдена."
                 )!!
             }
-            if (validateTimePeriod(item.startDateTime ?: this.startDateTime, item.endDateTime ?: this.endDateTime)) {
-                startDateTime = item.startDateTime ?: this.startDateTime
-                endDateTime = item.endDateTime ?: this.endDateTime
-            }
-
+            startDateTime = item.startDateTime ?: this.startDateTime
             updatedAt = ZonedDateTime.now()
             repository.save(this)
             return "Информация о событии обновлена."
@@ -136,12 +131,5 @@ class EventsService(
     override fun deleteAll(): String {
         super.deleteAll()
         return "Все события удалены успешно."
-    }
-
-    private fun validateTimePeriod(timeStart: ZonedDateTime, timeEnd: ZonedDateTime): Boolean {
-        if (timeStart.isAfter(timeEnd)) throw BadRequestException("Время начала мероприятия не может быть позже времени окончания.")
-        if (timeStart.isBefore(ZonedDateTime.now())) throw BadRequestException("Время начала мероприятия не может быть раньше текущей даты.")
-
-        return true
     }
 }
