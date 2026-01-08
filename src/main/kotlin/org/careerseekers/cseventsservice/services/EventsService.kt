@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
+import org.careerseekers.cseventsservice.annotations.EventVerification
 import org.careerseekers.cseventsservice.dto.events.CreateEventDto
 import org.careerseekers.cseventsservice.dto.events.EventsFilterDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventDto
@@ -114,6 +115,7 @@ class EventsService(
     }
 
     @Transactional
+    @EventVerification
     fun verifyEvent(item: UpdateEventVerificationDto): String {
         getById(item.id, message = basicNotFoundMessage(item.id))!!.apply {
             verified = item.verified
