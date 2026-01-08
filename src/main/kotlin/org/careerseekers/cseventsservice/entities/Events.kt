@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
+import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.EventFormats
 import org.careerseekers.cseventsservice.enums.EventTypes
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
@@ -71,4 +72,10 @@ data class Events(
 
     val directionTutorId: Long
         get() = direction.userId ?: 0
+
+    val directionName: String
+        get() = direction.name
+
+    val directionAgeCategoryName: String
+        get() = directionAgeCategory.ageCategory.getAgeAlias()
 }
