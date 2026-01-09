@@ -35,6 +35,12 @@ class EventsController(
     @GetMapping("/{id}")
     override fun getById(@PathVariable id: Long) = service.getById(id, message = "Событие с ID $id не найдено.")!!.toHttpResponse()
 
+    @GetMapping("/getByDirectionId/{id}")
+    fun getByDirectionId(@PathVariable id: Long) = service.getByDirectionId(id).toHttpResponse()
+
+    @GetMapping("/getByAgeCategoryId/{id}")
+    fun getByAgeCategoryId(@PathVariable id: Long) = service.getByAgeCategoryId(id).toHttpResponse()
+
     @PostMapping("/")
     override fun create(@RequestBody item: CreateEventDto) = service.create(item).toHttpResponse()
 
