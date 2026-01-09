@@ -49,6 +49,10 @@ class EventsService(
         return repository.findAll(Specification.allOf(specs), pageable)
     }
 
+    fun getByDirectionId(id: Long): List<Events> = repository.findByDirectionId(id)
+
+    fun getByAgeCategoryId(id: Long): List<Events> = repository.findByDirectionAgeCategoryId(id)
+
     @Transactional
     override fun create(item: CreateEventDto): Events {
         val direction =
