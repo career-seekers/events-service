@@ -1,0 +1,7 @@
+name: 'Career-seekers GraphQL Clients'
+
+projects:
+  users:
+    schema: ${GQL_USERS_SERVICE}
+    documents:
+      - 'src/main/resources/graphql/**/*.graphql'

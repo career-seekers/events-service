@@ -1,0 +1,23 @@
+package org.careerseekers.cseventsservice.clients
+
+import org.careerseekers.cseventsservice.dto.graphql.GqlUser
+import org.careerseekers.cseventsservice.exceptions.NotFoundException
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.graphql.client.HttpGraphQlClient
+import org.springframework.stereotype.Service
+
+@Service
+class GraphQlUsersServiceClient(
+    @param:Qualifier("users-service-graphql")
+    private val usersServiceGraphQlClient: HttpGraphQlClient,
+) {
+
+    fun getUserById(id: Long): GqlUser {
+        return usersServiceGraphQlClient
+            .documentName("getUser")
+            .variable("id", id)
+            .retrieve("user")
+            .toEntity(GqlUser::class.java)
+            .block() ?: throw NotFoundException("Пользователь с id $id не найден.")
+    }
+}

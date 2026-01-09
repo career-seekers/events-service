@@ -33,6 +33,7 @@ repositories {
 }
 
 val websocketVersion: String by project
+val graphqlVersion: String by project
 val jsonwebtokenVersion: String by project
 val jaxbApiVersion: String by project
 val mapstructVersion: String by project
@@ -65,6 +66,11 @@ dependencies {
     // Spring WebSocket
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.webjars:stomp-websocket:$websocketVersion")
+
+    // Spring GraphQL
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation("com.netflix.graphql.dgs.codegen:graphql-dgs-codegen-gradle:$graphqlVersion")
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 
     // JWT Auth
     implementation("io.jsonwebtoken:jjwt:$jsonwebtokenVersion")
