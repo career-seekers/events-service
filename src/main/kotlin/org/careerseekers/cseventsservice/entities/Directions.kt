@@ -56,4 +56,7 @@ data class Directions(
 
     val participantsCount: Long
         get() = ageCategories?.sumOf { it.currentParticipantsCount } ?: 0L
+
+    val eventsCount: Int?
+        get() = events?.size
 }
