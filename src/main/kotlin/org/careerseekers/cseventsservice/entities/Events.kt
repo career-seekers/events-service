@@ -38,7 +38,7 @@ data class Events(
     var description: String?,
 
     @Column(nullable = false)
-    var verificationStatus: VerificationStatus,
+    var verified: VerificationStatus,
 
     @Column(nullable = true)
     var createdAt: ZonedDateTime?,
