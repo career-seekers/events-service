@@ -100,7 +100,7 @@ class EventsService(
             item.name?.let { name = it }
             item.shortDescription?.let { shortDescription = it }
             item.eventType?.let { eventType = it }
-            item.eventFormats?.let { eventFormat = it }
+            item.eventFormat?.let { eventFormat = it }
             item.eventVenue?.let { eventVenue = it }
             item.description?.let { description = it }
             item.directionAgeCategoryId?.let {

@@ -10,7 +10,7 @@ data class UpdateEventDto(
     val name: String?,
     val shortDescription: String?,
     val eventType: EventTypes?,
-    val eventFormats: EventFormats?,
+    val eventFormat: EventFormats?,
     val startDateTime: ZonedDateTime?,
     val eventVenue: String?,
     val description: String?,
