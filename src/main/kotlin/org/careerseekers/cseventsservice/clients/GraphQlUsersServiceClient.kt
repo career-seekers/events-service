@@ -31,6 +31,6 @@ class GraphQlUsersServiceClient(
             .toEntityList(GqlUserEmailResponse::class.java)
             .map { emails: List<GqlUserEmailResponse> -> emails.map { it.email } }
             .block()
-            ?: throw BadRequestException("Что-то пошло не так в работе сервера. Проверьте работу метода usersByChildIds в GraphQlUSersServiceClient.")
+            ?: throw BadRequestException("Что-то пошло не так в работе сервера. Проверьте работу метода usersByChildIds в GraphQlUsersServiceClient.")
     }
 }
