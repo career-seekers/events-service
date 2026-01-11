@@ -6,6 +6,7 @@ import org.careerseekers.cseventsservice.dto.events.EventsFilterDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventVerificationDto
 import org.careerseekers.cseventsservice.entities.Events
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.EventsMapper
 import org.careerseekers.cseventsservice.repositories.EventsRepository
@@ -62,7 +63,7 @@ class EventsService(
             message = "Возрастная категория с ID ${item.directionAgeCategoryId} не найдена."
         )!!
 
-        return repository.save<Events>(eventsMapper.eventFromDto(item, direction, ageCategory))
+        return repository.save<Events>(eventsMapper.eventFromDto(item, direction, ageCategory, VerificationStatus.UNCHECKED))
     }
 
     @Transactional
@@ -81,7 +82,7 @@ class EventsService(
                     ?: throw NotFoundException("Компетенция с ID ${item.directionId} не найдена.")
                 val ageCategory = ageCategories[item.directionAgeCategoryId]
                     ?: throw NotFoundException("Возрастная категория с ID ${item.directionAgeCategoryId} не найдена.")
-                eventsMapper.eventFromDto(item, direction, ageCategory)
+                eventsMapper.eventFromDto(item, direction, ageCategory, VerificationStatus.UNCHECKED)
             }
 
             savedEntities += repository.saveAll(entities)

@@ -6,6 +6,7 @@ import org.careerseekers.cseventsservice.entities.Events
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.EventFormats
 import org.careerseekers.cseventsservice.enums.EventTypes
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.springframework.data.jpa.domain.Specification
 import java.time.ZonedDateTime
 
@@ -22,8 +23,8 @@ object EventsSpecifications {
         Specification { root, _, cb -> cb.equal(root.get<EventFormats>("eventFormat"), it) }
     }
 
-    fun hasVerified(verified: Boolean?): Specification<Events>? = verified?.let {
-        Specification { root, _, cb -> cb.equal(root.get<Boolean>("verified"), it) }
+    fun hasVerified(verified: VerificationStatus?): Specification<Events>? = verified?.let {
+        Specification { root, _, cb -> cb.equal(root.get<VerificationStatus>("verified"), it) }
     }
 
     fun hasStartDateTimeAfter(startDate: ZonedDateTime?): Specification<Events>? = startDate?.let {
