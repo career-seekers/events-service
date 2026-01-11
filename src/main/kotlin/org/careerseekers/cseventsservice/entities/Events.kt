@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
 import org.careerseekers.cseventsservice.enums.EventFormats
 import org.careerseekers.cseventsservice.enums.EventTypes
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.io.converters.ConvertableToHttpResponse
 import java.time.ZonedDateTime
 
@@ -36,8 +37,8 @@ data class Events(
     @Column(nullable = true, columnDefinition = "TEXT")
     var description: String?,
 
-    @Column(nullable = true)
-    var verified: Boolean?,
+    @Column(nullable = false)
+    var verified: VerificationStatus,
 
     @Column(nullable = true)
     var createdAt: ZonedDateTime?,

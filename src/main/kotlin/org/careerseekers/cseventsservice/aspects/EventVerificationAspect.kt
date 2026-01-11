@@ -7,6 +7,7 @@ import org.careerseekers.cseventsservice.clients.GraphQlUsersServiceClient
 import org.careerseekers.cseventsservice.dto.EventCreationDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventVerificationDto
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.repositories.EventsRepository
 import org.careerseekers.cseventsservice.services.kafka.producers.EventCreationProducer
 import org.slf4j.LoggerFactory
@@ -27,7 +28,7 @@ class EventVerificationAspect(
         val args = joinPoint.args
         if (args.isNotEmpty()) {
             val dto = args[0] as UpdateEventVerificationDto
-            if (dto.verified) {
+            if (dto.verified == VerificationStatus.ACCEPTED) {
                 val event = eventsRepository.findById(dto.id).orElse(null) ?: return
                 val expert = event.direction.expertId?.let { usersServiceClient.getUserById(it) }
                 val usersEmail =

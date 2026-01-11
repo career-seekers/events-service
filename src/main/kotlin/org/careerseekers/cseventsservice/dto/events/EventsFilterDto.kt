@@ -5,13 +5,14 @@ import org.careerseekers.cseventsservice.dto.FilterDtoClass
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.EventFormats
 import org.careerseekers.cseventsservice.enums.EventTypes
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import java.time.ZonedDateTime
 
 data class EventsFilterDto(
     val name: String?,
     val eventType: EventTypes?,
     val eventFormat: EventFormats?,
-    val verified: Boolean?,
+    val verified: VerificationStatus?,
     val startDateTime: ZonedDateTime?,
     val endDateTime: ZonedDateTime?,
     val directionName: String?,
