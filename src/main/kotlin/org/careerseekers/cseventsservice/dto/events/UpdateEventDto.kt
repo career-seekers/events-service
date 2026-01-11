@@ -12,7 +12,6 @@ data class UpdateEventDto(
     val eventType: EventTypes?,
     val eventFormats: EventFormats?,
     val startDateTime: ZonedDateTime?,
-    val endDateTime: ZonedDateTime?,
     val eventVenue: String?,
     val description: String?,
     val directionAgeCategoryId: Long?
