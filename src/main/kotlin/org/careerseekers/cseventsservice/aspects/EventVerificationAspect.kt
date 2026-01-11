@@ -30,6 +30,9 @@ class EventVerificationAspect(
             if (dto.verified) {
                 val event = eventsRepository.findById(dto.id).orElse(null) ?: return
                 val expert = event.direction.expertId?.let { usersServiceClient.getUserById(it) }
+                val usersEmail =
+                    usersServiceClient.usersByChildIds(event.directionAgeCategory.participants?.map { it.id }
+                        ?: emptyList())
 
                 logger.info("Sending EventCreation message for verified event ID: ${dto.id}")
 
@@ -40,7 +43,7 @@ class EventVerificationAspect(
                         ageCategory = event.directionAgeCategory.ageCategory.getAgeAlias(),
                         expertName = expert?.getFullName() ?: "",
                         expertEmail = expert?.email ?: "",
-                        participantsList = event.direction.participants?.map { it.id } ?: emptyList(),
+                        participantsEmailList = usersEmail,
                     )
                 )
             }
