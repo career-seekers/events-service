@@ -1,5 +1,6 @@
 package org.careerseekers.cseventsservice.repositories.spec
 
+import jakarta.persistence.criteria.Path
 import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.entities.Events
@@ -12,7 +13,7 @@ import java.time.ZonedDateTime
 
 object EventsSpecifications {
     fun hasName(name: String?): Specification<Events>? = name?.let {
-        Specification { root, _, cb -> cb.like(root.get("name"), "%$it%") }
+        Specification { root, _, cb -> cb.like(root["name"], "%$it%") }
     }
 
     fun hasEventType(eventType: EventTypes?): Specification<Events>? = eventType?.let {
@@ -28,11 +29,11 @@ object EventsSpecifications {
     }
 
     fun hasStartDateTimeAfter(startDate: ZonedDateTime?): Specification<Events>? = startDate?.let {
-        Specification { root, _, cb -> cb.greaterThanOrEqualTo(root.get("startDateTime"), it) }
+        Specification { root, _, cb -> cb.greaterThanOrEqualTo(root["startDateTime"], it) }
     }
 
     fun hasEndDateTimeBefore(endDate: ZonedDateTime?): Specification<Events>? = endDate?.let {
-        Specification { root, _, cb -> cb.lessThanOrEqualTo(root.get("endDateTime"), it) }
+        Specification { root, _, cb -> cb.lessThanOrEqualTo(root["endDateTime"], it) }
     }
 
     fun hasDirectionName(directionName: String?): Specification<Events>? = directionName?.let {
@@ -44,6 +45,19 @@ object EventsSpecifications {
     fun hasAgeCategoryName(ageCategoryName: DirectionAgeCategory?): Specification<Events>? = ageCategoryName?.let {
         Specification { root, _, cb ->
             cb.equal(root.get<Events>("directionAgeCategory").get<DirectionAgeCategories>("ageCategory"), it)
+        }
+    }
+
+    fun hasRelatedUsersId(relatedUserId: Long?): Specification<Events>? = relatedUserId?.let {
+        Specification { root, _, cb ->
+            val directionPath: Path<Directions> = root["direction"]
+            val expertId: Path<Long?> = directionPath["expertId"]
+            val userId: Path<Long?> = directionPath["userId"]
+
+            val expertMatch = cb.equal(expertId, it)
+            val tutorMatch = cb.equal(userId, it)
+
+            cb.or(expertMatch, tutorMatch)
         }
     }
 }

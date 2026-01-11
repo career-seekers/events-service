@@ -16,6 +16,7 @@ import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasEventFormat
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasEventType
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasName
+import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasRelatedUsersId
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasStartDateTimeAfter
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasVerified
 import org.careerseekers.cseventsservice.services.interfaces.PagedCrudService
@@ -44,7 +45,8 @@ class EventsService(
             hasStartDateTimeAfter(filters.startDateTime),
             hasEndDateTimeBefore(filters.endDateTime),
             hasDirectionName(filters.directionName),
-            hasAgeCategoryName(filters.ageCategory)
+            hasAgeCategoryName(filters.ageCategory),
+            hasRelatedUsersId(filters.relatedUserId),
         )
 
         return repository.findAll(Specification.allOf(specs), pageable)

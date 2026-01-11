@@ -17,4 +17,5 @@ data class EventsFilterDto(
     val endDateTime: ZonedDateTime?,
     val directionName: String?,
     val ageCategory: DirectionAgeCategory?,
+    val relatedUserId: Long?,
 ) : DtoClass, FilterDtoClass
