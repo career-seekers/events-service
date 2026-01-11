@@ -37,9 +37,6 @@ data class Events(
     @Column(nullable = true, columnDefinition = "TEXT")
     var description: String?,
 
-    @Column(nullable = true)
-    var verified: Boolean?,
-
     @Column(nullable = false)
     var verificationStatus: VerificationStatus,
 
