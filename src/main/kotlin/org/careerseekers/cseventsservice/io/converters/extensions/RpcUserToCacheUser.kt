@@ -3,6 +3,7 @@ package org.careerseekers.cseventsservice.io.converters.extensions
 import com.careerseekers.grpc.users.User
 import org.careerseekers.cseventsservice.dto.UsersCacheDto
 import org.careerseekers.cseventsservice.enums.UsersRoles
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 
 fun User.toCache() : UsersCacheDto {
     return UsersCacheDto(
@@ -16,7 +17,7 @@ fun User.toCache() : UsersCacheDto {
         password = this.password,
         role = UsersRoles.valueOf(this.role),
         avatarId = this.avatarId,
-        verified = this.verified,
+        verified = VerificationStatus.valueOf(this.verified.name),
         isMentor = this.isMentor,
     )
 }
