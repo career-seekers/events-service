@@ -7,6 +7,7 @@ import org.careerseekers.cseventsservice.clients.GraphQlUsersServiceClient
 import org.careerseekers.cseventsservice.dto.EventCreationDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventVerificationDto
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
+import org.careerseekers.cseventsservice.enums.ParticipantStatus
 import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.repositories.EventsRepository
 import org.careerseekers.cseventsservice.services.kafka.producers.EventCreationProducer
@@ -32,7 +33,8 @@ class EventVerificationAspect(
                 val event = eventsRepository.findById(dto.id).orElse(null) ?: return
                 val expert = event.direction.expertId?.let { usersServiceClient.getUserById(it) }
                 val usersEmail =
-                    usersServiceClient.usersByChildIds(event.directionAgeCategory.participants?.map { it.childId }
+                    usersServiceClient.usersByChildIds(
+                        event.directionAgeCategory.participants?.filter { it.status == ParticipantStatus.FINALIST }?.map { it.childId }
                         ?: emptyList())
 
                 logger.info("Sending EventCreation message for verified event ID: ${dto.id}")
