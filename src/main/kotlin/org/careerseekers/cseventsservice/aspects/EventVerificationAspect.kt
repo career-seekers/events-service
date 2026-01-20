@@ -23,7 +23,7 @@ class EventVerificationAspect(
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @AfterReturning(value = "@annotation(org.careerseekers.cseventsservice.annotations.EventVerification)")
+    @AfterReturning("@annotation(org.careerseekers.cseventsservice.annotations.EventVerification)")
     fun afterReturning(joinPoint: JoinPoint) {
         val args = joinPoint.args
         if (args.isNotEmpty()) {
@@ -32,7 +32,7 @@ class EventVerificationAspect(
                 val event = eventsRepository.findById(dto.id).orElse(null) ?: return
                 val expert = event.direction.expertId?.let { usersServiceClient.getUserById(it) }
                 val usersEmail =
-                    usersServiceClient.usersByChildIds(event.directionAgeCategory.participants?.map { it.id }
+                    usersServiceClient.usersByChildIds(event.directionAgeCategory.participants?.map { it.childId }
                         ?: emptyList())
 
                 logger.info("Sending EventCreation message for verified event ID: ${dto.id}")
