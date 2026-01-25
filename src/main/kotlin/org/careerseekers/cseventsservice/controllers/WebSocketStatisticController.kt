@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import java.time.LocalDateTime
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
 @Controller
@@ -19,8 +18,8 @@ class WebSocketStatisticController(private val messagingTemplate: SimpMessagingT
         val directionsWithoutDocs: AtomicLong,
         val directionDocsCount: AtomicLong,
         val lastDocumentUpload: LocalDateTime?,
-        val eventsCount: AtomicInteger,
-        val verifiedEventsCount: AtomicInteger,
+        val eventsCount: AtomicLong,
+        val verifiedEventsCount: AtomicLong,
     )
 
     @MessageMapping("/getStatistics")
