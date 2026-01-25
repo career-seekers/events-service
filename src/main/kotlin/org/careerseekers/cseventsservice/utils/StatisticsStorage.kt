@@ -1,6 +1,7 @@
 package org.careerseekers.cseventsservice.utils
 
 import java.time.LocalDateTime
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
 object StatisticsStorage {
@@ -22,6 +23,12 @@ object StatisticsStorage {
     var lastDocumentUpload: LocalDateTime? = null
         private set
 
+    var eventsCount: AtomicInteger = AtomicInteger(0)
+        private set
+
+    var verifiedEventsCount: AtomicInteger = AtomicInteger(0)
+        private set
+
     fun setPlatformsCount(platformsCount: Long) = apply { this.platformsCount.set(platformsCount) }
     fun setVerifiedPlatformsCount(platformsCount: Long) = apply { this.verifiedPlatformsCount.set(platformsCount) }
 
@@ -30,4 +37,6 @@ object StatisticsStorage {
 
     fun setDirectionDocsCount(count: Long) = apply { this.directionDocsCount.set(count) }
     fun setLastDocumentUpload(lastDocumentUpload: LocalDateTime?) = apply { this.lastDocumentUpload = lastDocumentUpload }
+    fun setEventsCount(count: Int) = apply { this.eventsCount.set(count) }
+    fun setVerifiedEventsCount(count: Int) = apply { this.verifiedEventsCount.set(count) }
 }
