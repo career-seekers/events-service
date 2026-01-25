@@ -36,7 +36,7 @@ class StatisticsScrapperService(
     fun setDirectionsWithoutDocs() =
         StatisticsStorage.setDirectionsWithoutDocs(directionsRepository.countByDocumentsIsNull())
 
-    fun setDirectionDocsCount() = StatisticsStorage.setDirectionDocsCount(directionsRepository.count())
+    fun setDirectionDocsCount() = StatisticsStorage.setDirectionDocsCount(directionDocumentsRepository.count())
 
     fun setLastDocumentUpload() = StatisticsStorage.setLastDocumentUpload(
         directionDocumentsRepository
