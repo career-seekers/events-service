@@ -39,11 +39,7 @@ class StatisticsScrapperService(
     fun setDirectionDocsCount() = StatisticsStorage.setDirectionDocsCount(directionDocumentsRepository.count())
 
     fun setLastDocumentUpload() = StatisticsStorage.setLastDocumentUpload(
-        directionDocumentsRepository
-            .findAll()
-            .sortedByDescending { it.createdAt }
-            .firstOrNull()
-            ?.createdAt
+        directionDocumentsRepository.findFirstByOrderByCreatedAtDesc()?.createdAt
     )
 
     fun setEventsCount() = StatisticsStorage.setEventsCount(eventsRepository.count())
