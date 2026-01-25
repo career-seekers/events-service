@@ -1,10 +1,11 @@
 package org.careerseekers.cseventsservice.services
 
-import org.careerseekers.cseventsservice.annotations.DirectionDocsUpdate
+import org.careerseekers.cseventsservice.annotations.RequestStatisticsUpdate
 import org.careerseekers.cseventsservice.dto.docs.CreateDirectionDocumentDto
 import org.careerseekers.cseventsservice.dto.docs.UpdateDirectionDocumentDto
 import org.careerseekers.cseventsservice.entities.DirectionDocuments
 import org.careerseekers.cseventsservice.enums.DirectionDocsEventTypes
+import org.careerseekers.cseventsservice.enums.StatisticsUpdateRequestTypes
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionDocumentsMapper
 import org.careerseekers.cseventsservice.repositories.DirectionDocumentsRepository
@@ -32,8 +33,8 @@ class DirectionDocumentsService(
 
     fun getByDirectionId(id: Long) = repository.findByDirectionId(id)
 
-    @DirectionDocsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTION_DOCUMENTS_UPDATE)
     override fun create(item: CreateDirectionDocumentDto): DirectionDocuments {
         val direction =
             directionsService.getById(item.directionId, message = "Компетенция с ID ${item.directionId} не найдена.")!!
@@ -85,16 +86,16 @@ class DirectionDocumentsService(
         } ?: throw NotFoundException("Документ компетенции с ID $id не найден.")
     }
 
-    @DirectionDocsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTION_DOCUMENTS_UPDATE)
     override fun deleteById(id: Long): String {
         getById(id, message = "Документ с ID '${id}' не найден.")!!.apply(repository::delete)
 
         return "Документ удален успешно."
     }
 
-    @DirectionDocsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTION_DOCUMENTS_UPDATE)
     override fun deleteAll(): String {
         repository.deleteAll()
 

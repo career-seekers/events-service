@@ -1,11 +1,13 @@
 package org.careerseekers.cseventsservice.services
 
 import org.careerseekers.cseventsservice.annotations.EventVerification
+import org.careerseekers.cseventsservice.annotations.RequestStatisticsUpdate
 import org.careerseekers.cseventsservice.dto.events.CreateEventDto
 import org.careerseekers.cseventsservice.dto.events.EventsFilterDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventDto
 import org.careerseekers.cseventsservice.dto.events.UpdateEventVerificationDto
 import org.careerseekers.cseventsservice.entities.Events
+import org.careerseekers.cseventsservice.enums.StatisticsUpdateRequestTypes
 import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.EventsMapper
@@ -57,6 +59,7 @@ class EventsService(
     fun getByAgeCategoryId(id: Long): List<Events> = repository.findByDirectionAgeCategoryId(id)
 
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.EVENTS_UPDATE)
     override fun create(item: CreateEventDto): Events {
         val direction =
             directionsService.getById(item.directionId, message = "Компетенция с ID ${item.directionId} не найдена.")!!
@@ -69,6 +72,7 @@ class EventsService(
     }
 
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.EVENTS_UPDATE)
     override fun createAll(items: List<CreateEventDto>): String {
         val batchSize = 50
         val savedEntities = mutableListOf<Events>()
@@ -118,6 +122,7 @@ class EventsService(
 
     @Transactional
     @EventVerification
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.EVENTS_UPDATE)
     fun verifyEvent(item: UpdateEventVerificationDto): String {
         getById(item.id, message = basicNotFoundMessage(item.id))!!.apply {
             verified = item.verified
@@ -129,6 +134,7 @@ class EventsService(
     }
 
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.EVENTS_UPDATE)
     override fun deleteById(id: Long): String {
         getById(id, message = basicNotFoundMessage(id))!!.let {
             repository.delete(it)
@@ -137,6 +143,7 @@ class EventsService(
     }
 
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.EVENTS_UPDATE)
     override fun deleteAll(): String {
         super.deleteAll()
         return "Все события удалены успешно."

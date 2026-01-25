@@ -1,6 +1,6 @@
 package org.careerseekers.cseventsservice.services
 
-import org.careerseekers.cseventsservice.annotations.DirectionsUpdate
+import org.careerseekers.cseventsservice.annotations.RequestStatisticsUpdate
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.DirectionCreation
 import org.careerseekers.cseventsservice.dto.directions.CreateDirectionDto
@@ -12,6 +12,7 @@ import org.careerseekers.cseventsservice.entities.DirectionAgeCategories
 import org.careerseekers.cseventsservice.entities.Directions
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory
 import org.careerseekers.cseventsservice.enums.QueueStatus
+import org.careerseekers.cseventsservice.enums.StatisticsUpdateRequestTypes
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.mappers.DirectionsMapper
 import org.careerseekers.cseventsservice.repositories.ChildToDirectionRepository
@@ -21,7 +22,6 @@ import org.careerseekers.cseventsservice.services.kafka.producers.DirectionCreat
 import org.careerseekers.cseventsservice.utils.DocumentsApiResolver
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.also
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 @Service
@@ -42,8 +42,8 @@ class DirectionsService(
     fun getByAgeCategory(ageCategory: DirectionAgeCategory): List<DirectionsOutputDto> =
         directionsMapper.directionsToOutputDto(repository.findByAgeCategory(ageCategory))
 
-    @DirectionsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTIONS_UPDATE)
     override fun create(item: CreateDirectionDto): Directions {
         val tutor = item.userId?.let {
             usersCacheClient.getItemFromCache(it) ?: throw NotFoundException("Пользователь с ID $it не найден.")
@@ -83,8 +83,8 @@ class DirectionsService(
         }
     }
 
-    @DirectionsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTIONS_UPDATE)
     override fun createAll(items: List<CreateDirectionDto>): String {
         for (item in items) {
             create(item)
@@ -156,11 +156,7 @@ class DirectionsService(
 
             var statusChanged = false
             if (child.queueStatus == QueueStatus.IN_QUEUE) {
-                if (maxCount != 0L && activeCount < maxCount) {
-                    child.queueStatus = QueueStatus.PARTICIPATES
-                    activeCountsByCategory[catId] = activeCount + 1
-                    statusChanged = true
-                } else if (maxCount == 0L) {
+                if ((maxCount != 0L && activeCount < maxCount) || maxCount == 0L) {
                     child.queueStatus = QueueStatus.PARTICIPATES
                     activeCountsByCategory[catId] = activeCount + 1
                     statusChanged = true
@@ -177,8 +173,8 @@ class DirectionsService(
         if (modifiedChildren.isNotEmpty()) childToDirectionRepository.saveAll(modifiedChildren)
     }
 
-    @DirectionsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTIONS_UPDATE)
     override fun deleteById(id: Long): String {
         getById(id, message = "Компетенция с ID '${id}' не найдена.")!!.run {
             this.iconId?.run { documentsApiResolver.deleteDocument(this) }
@@ -188,8 +184,8 @@ class DirectionsService(
         }
     }
 
-    @DirectionsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.DIRECTIONS_UPDATE)
     override fun deleteAll(): String {
         getAll().forEach { direction ->
             direction.iconId?.run { documentsApiResolver.deleteDocument(this) }
