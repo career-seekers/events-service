@@ -1,12 +1,13 @@
 package org.careerseekers.cseventsservice.services
 
-import org.careerseekers.cseventsservice.annotations.PlatformsUpdate
+import org.careerseekers.cseventsservice.annotations.RequestStatisticsUpdate
 import org.careerseekers.cseventsservice.cache.UsersCacheClient
 import org.careerseekers.cseventsservice.dto.PlatformCreation
 import org.careerseekers.cseventsservice.dto.platforms.ChangePlatformOwnerDto
 import org.careerseekers.cseventsservice.dto.platforms.CreatePlatformDto
 import org.careerseekers.cseventsservice.dto.platforms.UpdatePlatformDto
 import org.careerseekers.cseventsservice.entities.Platforms
+import org.careerseekers.cseventsservice.enums.StatisticsUpdateRequestTypes
 import org.careerseekers.cseventsservice.exceptions.DoubleRecordException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
 import org.careerseekers.cseventsservice.io.converters.extensions.toKafkaPlatformDto
@@ -31,7 +32,7 @@ class PlatformsService(
         return repository.findByUserId(userId) ?: throw NotFoundException("Площадка с userID $userId не найдена.")
     }
 
-    @PlatformsUpdate
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.PLATFORMS_UPDATE)
     @Transactional
     override fun create(item: CreatePlatformDto): Platforms {
         return usersCacheClient.getItemFromCache(item.userId)?.let {
@@ -98,8 +99,8 @@ class PlatformsService(
         return "Платформа верифицирована успешно."
     }
 
-    @PlatformsUpdate
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.PLATFORMS_UPDATE)
     override fun deleteById(id: Long): String {
         getById(id, message = "Платформа с ID $id не найдена.")?.let {
             repository.delete(it)
@@ -109,6 +110,7 @@ class PlatformsService(
     }
 
     @Transactional
+    @RequestStatisticsUpdate(StatisticsUpdateRequestTypes.PLATFORMS_UPDATE)
     override fun deleteAll(): String {
         repository.deleteAll()
 

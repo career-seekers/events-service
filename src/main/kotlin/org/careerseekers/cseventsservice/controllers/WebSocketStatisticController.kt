@@ -18,6 +18,8 @@ class WebSocketStatisticController(private val messagingTemplate: SimpMessagingT
         val directionsWithoutDocs: AtomicLong,
         val directionDocsCount: AtomicLong,
         val lastDocumentUpload: LocalDateTime?,
+        val eventsCount: AtomicLong,
+        val verifiedEventsCount: AtomicLong,
     )
 
     @MessageMapping("/getStatistics")
@@ -29,7 +31,9 @@ class WebSocketStatisticController(private val messagingTemplate: SimpMessagingT
             directionsCount = StatisticsStorage.directionsCount,
             directionsWithoutDocs = StatisticsStorage.directionsWithoutDocs,
             directionDocsCount = StatisticsStorage.directionDocsCount,
-            lastDocumentUpload = StatisticsStorage.lastDocumentUpload
+            lastDocumentUpload = StatisticsStorage.lastDocumentUpload,
+            eventsCount = StatisticsStorage.eventsCount,
+            verifiedEventsCount = StatisticsStorage.verifiedEventsCount,
         )
     }
 

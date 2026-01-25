@@ -2,6 +2,7 @@ package org.careerseekers.cseventsservice.mocks.generators
 
 import org.careerseekers.cseventsservice.dto.UsersCacheDto
 import org.careerseekers.cseventsservice.enums.UsersRoles
+import org.careerseekers.cseventsservice.enums.VerificationStatus
 import org.careerseekers.cseventsservice.mocks.generators.MocksGenerator.randomBoolean
 import org.careerseekers.cseventsservice.mocks.generators.MocksGenerator.randomDateOfBirth
 import org.careerseekers.cseventsservice.mocks.generators.MocksGenerator.randomEmail
@@ -22,7 +23,7 @@ object CachedUsersGenerator {
         password = randomString(12),
         role = roles.random(),
         avatarId = nextLong(1, 100000),
-        verified = randomBoolean(),
+        verified = VerificationStatus.UNCHECKED,
         isMentor = randomBoolean(),
     )
 }

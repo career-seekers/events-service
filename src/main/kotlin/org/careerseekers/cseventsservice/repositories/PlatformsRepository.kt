@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface PlatformsRepository : JpaRepository<Platforms, Long> {
     fun findByUserId(userId: Long): Platforms?
     fun findByEmail(email: String): Platforms?
+    fun countByVerified(verified: Boolean): Long
 }

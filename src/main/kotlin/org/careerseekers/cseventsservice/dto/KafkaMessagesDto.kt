@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import org.careerseekers.cseventsservice.enums.DirectionDocsEventTypes
 import org.careerseekers.cseventsservice.enums.EventTypes
 import org.careerseekers.cseventsservice.enums.ParticipantStatus
+import org.careerseekers.cseventsservice.enums.StatisticsUpdateRequestTypes
 
 @Serializable
 @Polymorphic
@@ -66,4 +67,10 @@ data class EventCreationDto(
     val expertName: String,
     val expertEmail: String,
     val participantsEmailList: List<String>
+) : KafkaMessagesDto()
+
+@Serializable
+@SerialName("StatisticsUpdateDto")
+data class StatisticsUpdateRequestDto(
+    val type: StatisticsUpdateRequestTypes
 ) : KafkaMessagesDto()

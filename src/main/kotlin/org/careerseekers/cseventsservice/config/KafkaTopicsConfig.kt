@@ -52,4 +52,13 @@ class KafkaTopicsConfig {
             .replicas(3)
             .build()
     }
+
+    @Bean
+    fun statisticsUpdate(): NewTopic {
+        return TopicBuilder
+            .name(KafkaTopics.STATISTICS_UPDATE.name)
+            .partitions(12)
+            .replicas(3)
+            .build()
+    }
 }

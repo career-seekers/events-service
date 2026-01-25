@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository
 interface DirectionsRepository : JpaRepository<Directions, Long> {
     fun findByUserId(userId: Long): List<Directions>
     fun findByExpertId(expertId: Long): List<Directions>
+    fun countByDocumentsIsNull(): Long
 
     @Query("select d from Directions d join d.ageCategories a where a.ageCategory = :ageCategory")
     fun findByAgeCategory(@Param("ageCategory") ageCategory: DirectionAgeCategory): List<Directions>

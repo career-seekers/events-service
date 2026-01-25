@@ -22,6 +22,12 @@ object StatisticsStorage {
     var lastDocumentUpload: LocalDateTime? = null
         private set
 
+    var eventsCount: AtomicLong = AtomicLong(0)
+        private set
+
+    var verifiedEventsCount: AtomicLong = AtomicLong(0)
+        private set
+
     fun setPlatformsCount(platformsCount: Long) = apply { this.platformsCount.set(platformsCount) }
     fun setVerifiedPlatformsCount(platformsCount: Long) = apply { this.verifiedPlatformsCount.set(platformsCount) }
 
@@ -30,4 +36,6 @@ object StatisticsStorage {
 
     fun setDirectionDocsCount(count: Long) = apply { this.directionDocsCount.set(count) }
     fun setLastDocumentUpload(lastDocumentUpload: LocalDateTime?) = apply { this.lastDocumentUpload = lastDocumentUpload }
+    fun setEventsCount(count: Long) = apply { this.eventsCount.set(count) }
+    fun setVerifiedEventsCount(count: Long) = apply { this.verifiedEventsCount.set(count) }
 }
