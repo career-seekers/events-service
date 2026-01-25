@@ -1,17 +1,17 @@
 package org.careerseekers.cseventsservice.utils
 
 import org.careerseekers.cseventsservice.enums.VerificationStatus
+import org.careerseekers.cseventsservice.repositories.DirectionDocumentsRepository
+import org.careerseekers.cseventsservice.repositories.DirectionsRepository
 import org.careerseekers.cseventsservice.repositories.EventsRepository
-import org.careerseekers.cseventsservice.services.DirectionDocumentsService
-import org.careerseekers.cseventsservice.services.DirectionsService
-import org.careerseekers.cseventsservice.services.PlatformsService
+import org.careerseekers.cseventsservice.repositories.PlatformsRepository
 import org.springframework.beans.factory.SmartInitializingSingleton
 
 @Utility
 class StatisticsScrapperService(
-    private val platformsService: PlatformsService,
-    private val directionsService: DirectionsService,
-    private val directionDocumentsService: DirectionDocumentsService,
+    private val platformsRepository: PlatformsRepository,
+    private val directionsRepository: DirectionsRepository,
+    private val directionDocumentsRepository: DirectionDocumentsRepository,
     private val eventsRepository: EventsRepository,
 ) : SmartInitializingSingleton {
 
@@ -27,24 +27,20 @@ class StatisticsScrapperService(
 
 
     fun setPlatformsCount() {
-        val platforms = platformsService.getAll()
-
-        StatisticsStorage.setPlatformsCount(platforms.size.toLong())
-        StatisticsStorage.setVerifiedPlatformsCount(platforms.filter { it.verified }.size.toLong())
+        StatisticsStorage.setPlatformsCount(platformsRepository.count())
+        StatisticsStorage.setVerifiedPlatformsCount(platformsRepository.countByVerified(true))
     }
 
-    fun setDirectionsCount() = StatisticsStorage.setDirectionsCount(directionsService.getAll().size.toLong())
+    fun setDirectionsCount() = StatisticsStorage.setDirectionsCount(directionsRepository.count())
 
-    fun setDirectionsWithoutDocs() = StatisticsStorage.setDirectionsWithoutDocs(
-        directionsService.getAll().filter { it.documents == null }.size.toLong()
-    )
+    fun setDirectionsWithoutDocs() =
+        StatisticsStorage.setDirectionsWithoutDocs(directionsRepository.countByDocumentsIsNull())
 
-    fun setDirectionDocsCount() =
-        StatisticsStorage.setDirectionDocsCount(directionDocumentsService.getAll().size.toLong())
+    fun setDirectionDocsCount() = StatisticsStorage.setDirectionDocsCount(directionsRepository.count())
 
     fun setLastDocumentUpload() = StatisticsStorage.setLastDocumentUpload(
-        directionDocumentsService
-            .getAll()
+        directionDocumentsRepository
+            .findAll()
             .sortedByDescending { it.createdAt }
             .firstOrNull()
             ?.createdAt
