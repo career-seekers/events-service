@@ -24,7 +24,7 @@ class StatisticsUpdateKafkaConsumer(
         consumerRecord: ConsumerRecord<String, StatisticsUpdateRequestDto>,
         acknowledgment: Acknowledgment
     ) {
-        when (consumerRecord.value().type) {
+        when (consumerRecord.value().updateRequestType) {
             StatisticsUpdateRequestTypes.PLATFORMS_UPDATE -> {
                 statisticsScrapperService.setPlatformsCount()
             }

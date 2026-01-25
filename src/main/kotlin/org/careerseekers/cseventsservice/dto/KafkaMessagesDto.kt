@@ -72,5 +72,5 @@ data class EventCreationDto(
 @Serializable
 @SerialName("StatisticsUpdateDto")
 data class StatisticsUpdateRequestDto(
-    val type: StatisticsUpdateRequestTypes
+    val updateRequestType: StatisticsUpdateRequestTypes
 ) : KafkaMessagesDto()
