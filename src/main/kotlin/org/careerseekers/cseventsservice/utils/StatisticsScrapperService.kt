@@ -1,5 +1,7 @@
 package org.careerseekers.cseventsservice.utils
 
+import org.careerseekers.cseventsservice.enums.VerificationStatus
+import org.careerseekers.cseventsservice.repositories.EventsRepository
 import org.careerseekers.cseventsservice.services.DirectionDocumentsService
 import org.careerseekers.cseventsservice.services.DirectionsService
 import org.careerseekers.cseventsservice.services.PlatformsService
@@ -9,7 +11,8 @@ import org.springframework.beans.factory.SmartInitializingSingleton
 class StatisticsScrapperService(
     private val platformsService: PlatformsService,
     private val directionsService: DirectionsService,
-    private val directionDocumentsService: DirectionDocumentsService
+    private val directionDocumentsService: DirectionDocumentsService,
+    private val eventsRepository: EventsRepository,
 ) : SmartInitializingSingleton {
 
     override fun afterSingletonsInstantiated() {
@@ -18,6 +21,8 @@ class StatisticsScrapperService(
         setDirectionsWithoutDocs()
         setDirectionDocsCount()
         setLastDocumentUpload()
+        setEventsCount()
+        setVerifiedEventsCount()
     }
 
 
@@ -43,5 +48,13 @@ class StatisticsScrapperService(
             .sortedByDescending { it.createdAt }
             .firstOrNull()
             ?.createdAt
+    )
+
+    fun setEventsCount() = StatisticsStorage.setEventsCount(eventsRepository.count())
+
+    fun setVerifiedEventsCount() = StatisticsStorage.setVerifiedEventsCount(
+        eventsRepository.countEventsByVerified(
+            VerificationStatus.ACCEPTED
+        )
     )
 }
