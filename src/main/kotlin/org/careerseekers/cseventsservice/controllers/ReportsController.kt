@@ -57,7 +57,7 @@ class ReportsController(
         val resource = ByteArrayResource(bytes)
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Отчёт_о_событиях_чемпионата.xlsx")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=all_events_report.xlsx")
             .contentType(contentType)
             .body(resource)
     }
