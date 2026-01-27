@@ -47,7 +47,7 @@ class EventsReportService(private val eventsRepository: EventsRepository) {
             row.createCell(3).setCellValue(eventFormat)
             row.createCell(4).setCellValue(eventVenue)
             row.createCell(5).setCellValue(eventDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-            row.createCell(6).setCellValue(eventType.format(DateTimeFormatter.ofPattern("HH:mm")))
+            row.createCell(6).setCellValue(eventDate.format(DateTimeFormatter.ofPattern("HH:mm")))
             row.createCell(7).setCellValue(expertName)
             row.createCell(8).setCellValue(shortDescription)
             row.createCell(9).setCellValue(description)
@@ -95,8 +95,8 @@ class EventsReportService(private val eventsRepository: EventsRepository) {
             "Название компетенции",
             "Возрастная категория",
             "Тип события",
-            "Место проведения / Ссылка",
             "Формат проведения",
+            "Место проведения / Ссылка",
             "Дата начала",
             "Время начала",
             "ФИО Эксперта",
