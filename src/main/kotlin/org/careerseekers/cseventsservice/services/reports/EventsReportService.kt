@@ -18,6 +18,7 @@ import org.careerseekers.cseventsservice.utils.ExcelReportBuilder
 import org.careerseekers.cseventsservice.utils.mapParallel
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -40,14 +41,16 @@ class EventsReportService(private val eventsRepository: EventsRepository) {
         val shortDescription: String,
         val description: String,
     ) : ExcelReportBuilder.ReportRows {
+        private val mskDateTime: ZonedDateTime = eventDate.withZoneSameInstant(ZoneId.of("Europe/Moscow"))
+
         override fun fillRow(row: Row) {
             row.createCell(0).setCellValue(directionName)
             row.createCell(1).setCellValue(ageCategory)
             row.createCell(2).setCellValue(eventType)
             row.createCell(3).setCellValue(eventFormat)
             row.createCell(4).setCellValue(eventVenue)
-            row.createCell(5).setCellValue(eventDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-            row.createCell(6).setCellValue(eventDate.format(DateTimeFormatter.ofPattern("HH:mm")))
+            row.createCell(5).setCellValue(mskDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+            row.createCell(6).setCellValue(mskDateTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             row.createCell(7).setCellValue(expertName)
             row.createCell(8).setCellValue(shortDescription)
             row.createCell(9).setCellValue(description)
