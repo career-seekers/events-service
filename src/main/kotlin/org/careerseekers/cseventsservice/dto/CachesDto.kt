@@ -31,7 +31,13 @@ data class UsersCacheDto(
     val avatarId: Long,
     val verified: VerificationStatus,
     val isMentor: Boolean,
-) : CachesDto()
+) : CachesDto() {
+    companion object {
+        fun UsersCacheDto.getName(): String {
+            return "${this.firstName} ${this.lastName} ${this.patronymic}".trim()
+        }
+    }
+}
 
 @Serializable
 @SerialName("VerificationCodeDto")

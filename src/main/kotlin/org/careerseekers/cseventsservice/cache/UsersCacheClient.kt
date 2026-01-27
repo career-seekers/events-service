@@ -8,7 +8,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient
 import org.careerseekers.cseventsservice.dto.UsersCacheDto
 import org.careerseekers.cseventsservice.exceptions.GrpcServiceUnavailableException
 import org.careerseekers.cseventsservice.exceptions.NotFoundException
-import org.careerseekers.cseventsservice.io.converters.extensions.toCache
+import org.careerseekers.cseventsservice.io.converters.extensions.rpc.toCache
 import org.springframework.cache.CacheManager
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component

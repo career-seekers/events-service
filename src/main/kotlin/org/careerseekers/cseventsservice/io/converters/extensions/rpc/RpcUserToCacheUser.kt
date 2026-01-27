@@ -1,9 +1,10 @@
-package org.careerseekers.cseventsservice.io.converters.extensions
+package org.careerseekers.cseventsservice.io.converters.extensions.rpc
 
 import com.careerseekers.grpc.users.User
 import org.careerseekers.cseventsservice.dto.UsersCacheDto
 import org.careerseekers.cseventsservice.enums.UsersRoles
 import org.careerseekers.cseventsservice.enums.VerificationStatus
+import org.careerseekers.cseventsservice.io.converters.extensions.toDate
 
 fun User.toCache() : UsersCacheDto {
     return UsersCacheDto(

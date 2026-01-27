@@ -14,7 +14,7 @@ import org.careerseekers.cseventsservice.aspects.interfaces.IEntityUpdatesAspect
 import org.careerseekers.cseventsservice.dto.ParticipantStatusUpdate
 import org.careerseekers.cseventsservice.dto.directions.childToDirection.UpdateChildToDirectionsDto
 import org.careerseekers.cseventsservice.enums.DirectionAgeCategory.Companion.getAgeAlias
-import org.careerseekers.cseventsservice.io.converters.extensions.toCache
+import org.careerseekers.cseventsservice.io.converters.extensions.rpc.toCache
 import org.careerseekers.cseventsservice.services.ChildToDirectionService
 import org.careerseekers.cseventsservice.services.kafka.producers.ParticipantStatusUpdateKafkaProducer
 import org.slf4j.LoggerFactory
