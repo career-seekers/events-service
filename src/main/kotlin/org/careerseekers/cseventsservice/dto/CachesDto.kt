@@ -34,7 +34,7 @@ data class UsersCacheDto(
 ) : CachesDto() {
     companion object {
         fun UsersCacheDto.getName(): String {
-            return "${this.firstName} ${this.lastName} ${this.patronymic}".trim()
+            return "${this.lastName} ${this.firstName} ${this.patronymic}".trim()
         }
     }
 }
