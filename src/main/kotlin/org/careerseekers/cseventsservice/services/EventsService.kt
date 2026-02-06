@@ -17,6 +17,7 @@ import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasEndDateTimeBefore
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasEventFormat
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasEventType
+import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasIsDraft
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasName
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasRelatedUsersId
 import org.careerseekers.cseventsservice.repositories.spec.EventsSpecifications.hasStartDateTimeAfter
@@ -49,6 +50,7 @@ class EventsService(
             hasDirectionName(filters.directionName),
             hasAgeCategoryName(filters.ageCategory),
             hasRelatedUsersId(filters.relatedUserId),
+            hasIsDraft(filters.isDraft),
         )
 
         return repository.findAll(Specification.allOf(specs), pageable)
@@ -113,6 +115,7 @@ class EventsService(
                     message = "Возрастная категория с ID ${item.directionAgeCategoryId} не найдена."
                 )!!
             }
+            item.isDraft?.let { isDraft = it }
             startDateTime = item.startDateTime ?: this.startDateTime
             updatedAt = ZonedDateTime.now()
             repository.save(this)
@@ -126,6 +129,7 @@ class EventsService(
     fun verifyEvent(item: UpdateEventVerificationDto): String {
         getById(item.id, message = basicNotFoundMessage(item.id))!!.apply {
             verified = item.verified
+            isDraft = false
 
             updatedAt = ZonedDateTime.now()
             repository.save(this)

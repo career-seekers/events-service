@@ -14,5 +14,6 @@ data class UpdateEventDto(
     val startDateTime: ZonedDateTime?,
     val eventVenue: String?,
     val description: String?,
-    val directionAgeCategoryId: Long?
+    val directionAgeCategoryId: Long?,
+    val isDraft: Boolean?,
 ) : DtoClass
