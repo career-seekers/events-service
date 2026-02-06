@@ -38,6 +38,9 @@ data class Events(
     var description: String?,
 
     @Column(nullable = false)
+    var isDraft: Boolean,
+
+    @Column(nullable = false)
     var verified: VerificationStatus,
 
     @Column(nullable = true)
