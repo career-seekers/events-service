@@ -15,6 +15,7 @@ data class CreateEventDto(
     val description: String?,
     val directionId: Long,
     val directionAgeCategoryId: Long,
+    val isDraft: Boolean,
     val createdAt: ZonedDateTime? = ZonedDateTime.now(),
     val updatedAt: ZonedDateTime? = ZonedDateTime.now(),
 ) : DtoClass

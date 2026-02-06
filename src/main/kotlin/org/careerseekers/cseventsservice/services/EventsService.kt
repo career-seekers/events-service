@@ -113,6 +113,7 @@ class EventsService(
                     message = "Возрастная категория с ID ${item.directionAgeCategoryId} не найдена."
                 )!!
             }
+            item.isDraft?.let { isDraft = it }
             startDateTime = item.startDateTime ?: this.startDateTime
             updatedAt = ZonedDateTime.now()
             repository.save(this)
@@ -126,6 +127,7 @@ class EventsService(
     fun verifyEvent(item: UpdateEventVerificationDto): String {
         getById(item.id, message = basicNotFoundMessage(item.id))!!.apply {
             verified = item.verified
+            isDraft = false
 
             updatedAt = ZonedDateTime.now()
             repository.save(this)
