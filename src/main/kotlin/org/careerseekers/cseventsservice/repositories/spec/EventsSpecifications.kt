@@ -60,4 +60,12 @@ object EventsSpecifications {
             cb.or(expertMatch, tutorMatch)
         }
     }
+
+    fun hasIsDraft(isDraft: Boolean?): Specification<Events>? = isDraft?.let {
+        Specification { root, _, cb ->
+            val isDraftPath: Path<Boolean> = root["isDraft"]
+
+            cb.equal(isDraftPath, it)
+        }
+    }
 }

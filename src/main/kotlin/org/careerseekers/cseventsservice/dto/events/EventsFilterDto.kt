@@ -18,4 +18,5 @@ data class EventsFilterDto(
     val directionName: String?,
     val ageCategory: DirectionAgeCategory?,
     val relatedUserId: Long?,
+    val isDraft: Boolean?,
 ) : DtoClass, FilterDtoClass
